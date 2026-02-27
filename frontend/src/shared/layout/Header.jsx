@@ -1,40 +1,47 @@
 import Button from "../ui/Button";
 import { Link } from "react-router-dom";
-function Header() {
+function Header({ isLogin }) {
   return (
     <>
-      <header className="bg-gray-800 text-white py-4 px-8 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Team Task Manager</h1>
+      <header className="fixed top-0 left-0 right-0 bg-gray-800 text-white h-16 px-8 flex justify-between items-center z-60">
+        <Link to={`${isLogin ? "/dashboard" : "/"}`}>
+          <h1 className="text-2xl font-bold">Team Task Manager</h1>
+        </Link>
+
         <ul>
-          <li className="inline-block mr-4">
-            <Link to="/dashboard" className="hover:underline">
-              Home
+          {isLogin && (
+            <div>
+              <li className="inline-block mr-4">
+                <Link to="/dashboard" className="hover:underline">
+                  Home
+                </Link>
+              </li>
+              <li className="inline-block mr-4">
+                <Link to="/tasks" className="hover:underline">
+                  Tasks
+                </Link>
+              </li>
+              <li className="inline-block mr-4">
+                <Link to="/projects" className="hover:underline">
+                  Projects
+                </Link>
+              </li>
+              <li className="inline-block mr-4">
+                <Link to="/profile" className="hover:underline">
+                  Profile
+                </Link>
+              </li>
+            </div>
+          )}
+          {!isLogin && (
+            <Link to="/register">
+              <li className="inline-block">
+                <Button variant="primary" size="medium">
+                  Get started
+                </Button>
+              </li>
             </Link>
-          </li>
-          <li className="inline-block mr-4">
-            <Link to="/tasks" className="hover:underline">
-              Tasks
-            </Link>
-          </li>
-          <li className="inline-block mr-4">
-            <Link to="/projects" className="hover:underline">
-              Projects
-            </Link>
-          </li>
-          <li className="inline-block mr-4">
-            <Link to="/profile" className="hover:underline">
-              Profile
-            </Link>
-          </li>
-          <li className="inline-block">
-            <Button
-              variant="primary"
-              size="medium"
-              onClick={() => alert("Get Started clicked!")}
-            >
-              Get started
-            </Button>
-          </li>
+          )}
         </ul>
       </header>
     </>
