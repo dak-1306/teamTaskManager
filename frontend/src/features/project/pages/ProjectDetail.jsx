@@ -6,13 +6,18 @@ import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
 import ConfirmDialog from "../../../shared/ui/ConfirmDialog";
 
+import Task from "../../task/pages/Task";
+
 import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
+
+import AddTask from "../../task/components/AddTask";
 
 function ProjectDetail() {
   const [openAddMember, setOpenAddMember] = useState(false);
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [openAddTask, setOpenAddTask] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,7 +48,11 @@ function ProjectDetail() {
         >
           Delete Project
         </Button>
-        <Button variant="outline" size="medium">
+        <Button
+          variant="outline"
+          size="medium"
+          onClick={() => setOpenAddTask(true)}
+        >
           Add Task
         </Button>
       </Card>
@@ -56,6 +65,8 @@ function ProjectDetail() {
         </Button>
       </Card>
       <hr className="my-4 border-gray-300" />
+
+      <Task id={id} />
 
       {/* modal */}
       {/* modal add member */}
@@ -89,6 +100,11 @@ function ProjectDetail() {
           title="Delete Project"
           message="Are you sure you want to delete this project?"
         />
+      )}
+
+      {/* modal add task */}
+      {openAddTask && (
+        <AddTask open={openAddTask} onClose={() => setOpenAddTask(false)} />
       )}
     </MainLayout>
   );
