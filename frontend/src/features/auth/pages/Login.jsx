@@ -8,27 +8,27 @@ function Login() {
   const { login } = useAuth();
 
   // Refs cho các trường nhập liệu
-  const usernameRef = useRef(null);
+  const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
   // Xử lý Đăng nhập
   const handleSubmit = (e) => {
     e.preventDefault();
-    const username = usernameRef.current.value;
+    const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    console.log("Login attempt with:", { username, password });
-    login();
+    console.log("Login attempt with:", { email, password });
+    login({ email, password });
     navigate("/dashboard");
   };
 
   // Cấu hình các trường nhập liệu cho AuthForm
   const field = [
     {
-      id: "username",
-      type: "text",
-      placeHolder: "Username",
-      label: "Username",
-      ref: usernameRef,
+      id: "email",
+      type: "email",
+      placeHolder: "Email",
+      label: "Email",
+      ref: emailRef,
     },
     {
       id: "password",

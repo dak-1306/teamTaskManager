@@ -6,6 +6,7 @@ import Dashboard from "../features/dashboard/pages/Dashboard";
 import Task from "../features/task/pages/Task";
 import ProjectList from "../features/project/pages/ProjectList";
 import ProjectDetail from "../features/project/pages/ProjectDetail";
+import Profile from "../features/auth/pages/profile";
 
 function Router() {
   return (
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/tasks" element={<Task />} />
       <Route path="/projects" element={<ProjectList />} />
       <Route path="/projects/:id" element={<ProjectDetail />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }

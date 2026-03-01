@@ -12,17 +12,17 @@ function ProjectList() {
 
   const sampleProjects = [
     {
-      id: 1,
+      _id: 1,
       name: "Project Alpha",
       description: "This is the first project.",
     },
     {
-      id: 2,
+      _id: 2,
       name: "Project Beta",
       description: "This is the second project.",
     },
     {
-      id: 3,
+      _id: 3,
       name: "Project Gamma",
       description: "This is the third project.",
     },
@@ -71,10 +71,10 @@ function ProjectList() {
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projectList().map((project) => (
-              <li key={project.id} className="mb-4">
+              <li key={project._id} className="mb-4">
                 <Card title={project.name} description={project.description}>
                   <div className="flex space-x-2">
-                    <Link to={`/projects/${project.id}`}>
+                    <Link to={`/projects/${project._id}`}>
                       <Button variant="secondary" size="small">
                         View Details
                       </Button>

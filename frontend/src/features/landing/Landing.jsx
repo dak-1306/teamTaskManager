@@ -1,7 +1,14 @@
 import MainLayout from "../../shared/layout/MainLayout";
 import Button from "../../shared/ui/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../auth/hooks/useAuth";
 function Landing() {
+  const { isLogin } = useAuth();
+  const navigate = useNavigate();
+  if (isLogin) {
+    navigate("/dashboard");
+  }
   return (
     <MainLayout>
       <div className="text-center mt-20">
