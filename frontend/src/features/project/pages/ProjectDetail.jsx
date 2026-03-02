@@ -10,6 +10,7 @@ import Task from "../../task/pages/Task";
 
 import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
+import DeleteProject from "../components/DeleteProject";
 
 import AddTask from "../../task/components/AddTask";
 
@@ -90,15 +91,9 @@ function ProjectDetail() {
       )}
       {/* modal dialog delete */}
       {openDialogDelete && (
-        <ConfirmDialog
+        <DeleteProject
           isOpen={openDialogDelete}
           onClose={() => setOpenDialogDelete(false)}
-          onConfirm={() => {
-            setOpenDialogDelete(false);
-            navigate("/projects");
-          }}
-          title="Delete Project"
-          message="Are you sure you want to delete this project?"
         />
       )}
 

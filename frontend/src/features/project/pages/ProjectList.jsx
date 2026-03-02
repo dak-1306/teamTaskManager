@@ -2,37 +2,30 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import CreateProject from "../components/CreateProject";
+import EditProject from "../components/EditProject";
+import DeleteProject from "../components/DeleteProject";
 
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
-function ProjectList() {
-  const [projects, setProjects] = useState([]);
-  const [openCreateProject, setOpenCreateProject] = useState(false);
 
-  const sampleProjects = [
-    {
-      _id: 1,
-      name: "Project Alpha",
-      description: "This is the first project.",
-    },
-    {
-      _id: 2,
-      name: "Project Beta",
-      description: "This is the second project.",
-    },
-    {
-      _id: 3,
-      name: "Project Gamma",
-      description: "This is the third project.",
-    },
-  ];
-  const projectList = () => {
-    if (projects.length === 0) {
-      return sampleProjects;
-    }
-    return projects;
-  };
+import { useEffect } from "react";
+import useProjectStore from "../stores/projectStore";
+
+function ProjectList() {
+  const [openCreateProject, setOpenCreateProject] = useState(false);
+  const [openEditProject, setOpenEditProject] = useState(false);
+  const [openDeleteProject, setOpenDeleteProject] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const { projects, fetchAllProjects } = useProjectStore();
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      await fetchAllProjects();
+    };
+    loadProjects();
+  }, [fetchAllProjects]);
+
   return (
     <MainLayout>
       <div className="space-y-4 p-8">
@@ -46,7 +39,7 @@ function ProjectList() {
         >
           Create New Project
         </Button>
-        {projectList().length === 0 ? (
+        {projects.length === 0 ? (
           <div className="space-y-2">
             <p className="text-center text-gray-500">No projects found.</p>
             <p className="text-center text-gray-500">
@@ -58,10 +51,6 @@ function ProjectList() {
                 size="medium"
                 onClick={() => {
                   setOpenCreateProject(true);
-                  console.log(
-                    "Create Project button clicked",
-                    openCreateProject,
-                  );
                 }}
               >
                 Create Project
@@ -70,7 +59,7 @@ function ProjectList() {
           </div>
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projectList().map((project) => (
+            {projects.map((project) => (
               <li key={project._id} className="mb-4">
                 <Card title={project.name} description={project.description}>
                   <div className="flex space-x-2">
@@ -79,10 +68,24 @@ function ProjectList() {
                         View Details
                       </Button>
                     </Link>
-                    <Button variant="primary" size="small">
+                    <Button
+                      variant="primary"
+                      size="small"
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setOpenEditProject(true);
+                      }}
+                    >
                       Edit Project
                     </Button>
-                    <Button variant="danger" size="small">
+                    <Button
+                      variant="danger"
+                      size="small"
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setOpenDeleteProject(true);
+                      }}
+                    >
                       Delete Project
                     </Button>
                   </div>
@@ -97,8 +100,20 @@ function ProjectList() {
         <CreateProject
           isOpen={openCreateProject}
           onClose={() => setOpenCreateProject(false)}
-          setProjects={setProjects}
-          projects={projects}
+        />
+      )}
+      {openEditProject && (
+        <EditProject
+          isOpen={openEditProject}
+          onClose={() => setOpenEditProject(false)}
+          project={selectedProject}
+        />
+      )}
+      {openDeleteProject && (
+        <DeleteProject
+          isOpen={openDeleteProject}
+          onClose={() => setOpenDeleteProject(false)}
+          project={selectedProject}
         />
       )}
     </MainLayout>

@@ -4,17 +4,20 @@ import Modal from "../../../shared/ui/Modal";
 
 import { useRef } from "react";
 
-function CreateProject({ isOpen, onClose, setProjects, projects }) {
+import useProjectStore from "../stores/projectStore";
+
+function CreateProject({ isOpen, onClose }) {
   const projectNameRef = useRef(null);
   const projectDescriptionRef = useRef(null);
 
+  const { createProject } = useProjectStore();
+
   const handleCreateProject = () => {
     const newProject = {
-      id: Date.now(),
       name: projectNameRef.current.value,
       description: projectDescriptionRef.current.value,
     };
-    setProjects([...projects, newProject]);
+    createProject(newProject);
     console.log("Project created:", newProject);
     onClose();
   };
