@@ -16,7 +16,12 @@ const getAllProjects = async (req, res) => {
 const createProject = async (req, res) => {
   try {
     const { name, description } = req.body;
-    const newProject = new Project({ name, description });
+    const newProject = new Project({ name, description, owner: req.user.id });
+    console.log("Creating project with data:", {
+      name,
+      description,
+      owner: req.user.id,
+    });
     const savedProject = await newProject.save();
     res.status(201).json(savedProject);
   } catch (error) {
@@ -26,11 +31,10 @@ const createProject = async (req, res) => {
   }
 };
 
-// GET /project/owner/:ownerId - Get projects by owner ID
-const getProjectByIdOwner = async (req, res) => {
+// GET /project/me
+const getProjectMe = async (req, res) => {
   try {
-    const { ownerId } = req.params;
-    const projects = await Project.find({ owner: ownerId }).populate(
+    const projects = await Project.find({ owner: req.user.id }).populate(
       "owner",
       "username email",
     );
@@ -109,7 +113,7 @@ const deleteProject = async (req, res) => {
 module.exports = {
   getAllProjects,
   createProject,
-  getProjectByIdOwner,
+  getProjectMe,
   getProjectById,
   updateProject,
   deleteProject,

@@ -1,9 +1,8 @@
 import { AuthContext } from "./AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { getAllUser, registerUser, loginUser } from "../api/authAPI";
+import { registerUser, loginUser, getUserCurrent } from "../api/authAPI";
 
-// import { getAllUser, registerUser } from "../services/authService";
 export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
@@ -11,17 +10,6 @@ export function AuthProvider({ children }) {
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
     setIsLogin(token ? true : false);
-  };
-
-  const profile = async () => {
-    try {
-      const users = await getAllUser();
-      console.log("Profile API response:", users);
-      setUserProfile(users);
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      return null;
-    }
   };
 
   const register = async (userData) => {
@@ -33,11 +21,25 @@ export function AuthProvider({ children }) {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      getUserCurrent()
+        .then((user) => {
+          setUserProfile(user);
+        })
+        .catch((error) => {
+          console.error("Error fetching current user:", error);
+        });
+    }
+  }, []);
+
   const login = async (credentials) => {
     try {
       const response = await loginUser(credentials);
       console.log("Login successful:", response);
       localStorage.setItem("token", response.token);
+      setUserProfile(response.user);
       setIsLogin(true);
     } catch (error) {
       console.error("Error logging in user:", error);
@@ -46,13 +48,13 @@ export function AuthProvider({ children }) {
   const logout = () => {
     localStorage.removeItem("token");
     setIsLogin(false);
+    setUserProfile(null);
   };
 
   const value = {
     isLogin,
     checkLoginStatus,
     userProfile,
-    profile,
     register,
     login,
     logout,

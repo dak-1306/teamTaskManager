@@ -17,29 +17,21 @@ function ProjectList() {
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDeleteProject, setOpenDeleteProject] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const { projects, fetchAllProjects } = useProjectStore();
+  const { projects, fetchProjectMe, loading } = useProjectStore();
 
   useEffect(() => {
-    const loadProjects = async () => {
-      await fetchAllProjects();
-    };
-    loadProjects();
-  }, [fetchAllProjects]);
+    fetchProjectMe();
+  }, [fetchProjectMe]);
 
   return (
     <MainLayout>
       <div className="space-y-4 p-8">
         <h1 className="text-2xl font-bold mb-4 text-center">Project List</h1>
-        <Button
-          variant="primary"
-          size="medium"
-          onClick={() => {
-            setOpenCreateProject(true);
-          }}
-        >
-          Create New Project
-        </Button>
-        {projects.length === 0 ? (
+
+        {loading && (
+          <p className="text-center text-gray-500">Loading projects...</p>
+        )}
+        {projects.length === 0 && !loading ? (
           <div className="space-y-2">
             <p className="text-center text-gray-500">No projects found.</p>
             <p className="text-center text-gray-500">
@@ -58,41 +50,52 @@ function ProjectList() {
             </div>
           </div>
         ) : (
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
-              <li key={project._id} className="mb-4">
-                <Card title={project.name} description={project.description}>
-                  <div className="flex space-x-2">
-                    <Link to={`/projects/${project._id}`}>
-                      <Button variant="secondary" size="small">
-                        View Details
+          <div className="space-y-4">
+            <Button
+              variant="primary"
+              size="medium"
+              onClick={() => {
+                setOpenCreateProject(true);
+              }}
+            >
+              Create New Project
+            </Button>
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {projects.map((project) => (
+                <li key={project._id} className="mb-4">
+                  <Card title={project.name} description={project.description}>
+                    <div className="flex space-x-2">
+                      <Link to={`/projects/${project._id}`}>
+                        <Button variant="secondary" size="small">
+                          View Details
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="primary"
+                        size="small"
+                        onClick={() => {
+                          setSelectedProject(project);
+                          setOpenEditProject(true);
+                        }}
+                      >
+                        Edit Project
                       </Button>
-                    </Link>
-                    <Button
-                      variant="primary"
-                      size="small"
-                      onClick={() => {
-                        setSelectedProject(project);
-                        setOpenEditProject(true);
-                      }}
-                    >
-                      Edit Project
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="small"
-                      onClick={() => {
-                        setSelectedProject(project);
-                        setOpenDeleteProject(true);
-                      }}
-                    >
-                      Delete Project
-                    </Button>
-                  </div>
-                </Card>
-              </li>
-            ))}
-          </ul>
+                      <Button
+                        variant="danger"
+                        size="small"
+                        onClick={() => {
+                          setSelectedProject(project);
+                          setOpenDeleteProject(true);
+                        }}
+                      >
+                        Delete Project
+                      </Button>
+                    </div>
+                  </Card>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
 

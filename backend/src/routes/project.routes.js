@@ -1,9 +1,10 @@
 const express = require("express");
+const protect = require("../middleware/auth.middleware");
 const router = express.Router();
 const {
   getAllProjects,
   createProject,
-  getProjectByIdOwner,
+  getProjectMe,
   getProjectById,
   updateProject,
   deleteProject,
@@ -12,14 +13,14 @@ const {
 // GET /project - Get all projects
 router.get("/", getAllProjects);
 // POST /project - Create a new project
-router.post("/create", createProject);
-// GET /project/:id - Get a project by ID owner
-router.get("/owner/:ownerId", getProjectByIdOwner);
+router.post("/create", protect, createProject);
+// GET /project/me - Get projects for the current user
+router.get("/me", protect, getProjectMe);
 // GET /project/:id - Get a project by ID
-router.get("/:id", getProjectById);
+router.get("/:id", protect, getProjectById);
 // PUT /project/:id - Update a project by ID
-router.put("/:id", updateProject);
+router.put("/:id", protect, updateProject);
 // DELETE /project/:id - Delete a project by ID
-router.delete("/:id", deleteProject);
+router.delete("/:id", protect, deleteProject);
 
 module.exports = router;

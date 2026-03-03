@@ -16,11 +16,11 @@ const useProjectStore = create((set) => ({
       set({ error: error.message, loading: false });
     }
   },
-  // Fetch projects by owner ID
-  fetchProjectsByOwnerId: async (ownerId) => {
+  // Fetch projects by owner ID (current user)
+  fetchProjectMe: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await axiosClient.get(`/projects/owner/${ownerId}`);
+      const response = await axiosClient.get(`/projects/me`);
       set({ projects: response.data, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
@@ -32,7 +32,7 @@ const useProjectStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axiosClient.get(`/projects/${projectId}`);
-      set({ projects: [response.data], loading: false });
+      set({ projects: response.data, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
     }

@@ -20,6 +20,18 @@ const loginUser = async (credentials) => {
   }
 };
 
+const getUserCurrent = async () => {
+  try {
+    const response = await axiosClient.get("/users/me");
+    console.log("Get Current User API response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to retrieve user profile",
+    );
+  }
+};
+
 const getAllUser = async () => {
   try {
     const response = await axiosClient.get("/users");
@@ -32,4 +44,4 @@ const getAllUser = async () => {
   }
 };
 
-export { registerUser, loginUser, getAllUser };
+export { registerUser, loginUser, getAllUser, getUserCurrent };
