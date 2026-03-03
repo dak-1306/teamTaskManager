@@ -1,4 +1,5 @@
 const Project = require("../models/project.model");
+const User = require("../models/user.model");
 
 // GET /project - Get all projects
 const getAllProjects = async (req, res) => {
@@ -38,7 +39,12 @@ const getProjectMe = async (req, res) => {
       "owner",
       "username email",
     );
-    res.status(200).json(projects);
+    console.log("Projects for user:", req.user.id, "Owned projects:", projects);
+    const memberProjects = await Project.find({
+      members: req.user.id,
+    }).populate("owner", "username email");
+    console.log("Member projects:", memberProjects);
+    res.status(200).json({ projects, memberProjects });
   } catch (error) {
     res
       .status(500)
@@ -110,6 +116,41 @@ const deleteProject = async (req, res) => {
   }
 };
 
+// POST /project/:id/members - Add a member to a project
+const addMemberProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { memberEmail } = req.body;
+
+    const project = await Project.findById(id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Kiểm tra quyền
+    if (project.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // Tìm user theo email
+    const user = await User.findOne({ email: memberEmail });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Thêm member nếu chưa tồn tại
+    if (!project.members.includes(user._id)) {
+      project.members.push(user._id);
+      await project.save();
+    }
+
+    res.status(200).json({ message: "Member added successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllProjects,
   createProject,
@@ -117,4 +158,5 @@ module.exports = {
   getProjectById,
   updateProject,
   deleteProject,
+  addMemberProject,
 };

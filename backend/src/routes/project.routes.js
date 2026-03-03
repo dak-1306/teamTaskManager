@@ -8,6 +8,7 @@ const {
   getProjectById,
   updateProject,
   deleteProject,
+  addMemberProject,
 } = require("../controllers/project.controller");
 
 // GET /project - Get all projects
@@ -22,5 +23,7 @@ router.get("/:id", protect, getProjectById);
 router.put("/:id", protect, updateProject);
 // DELETE /project/:id - Delete a project by ID
 router.delete("/:id", protect, deleteProject);
+// POST /project/:id/members - Add a member to a project
+router.post("/:id/members", protect, addMemberProject);
 
 module.exports = router;

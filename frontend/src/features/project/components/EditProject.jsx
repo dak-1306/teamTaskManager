@@ -12,6 +12,8 @@ function EditProject({ isOpen, onClose, project }) {
   const nameRef = useRef();
   const descriptionRef = useRef();
 
+  console.log("EditProject component received project:", project);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h1 className="text-3xl font-bold">Edit Project</h1>

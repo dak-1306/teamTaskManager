@@ -4,7 +4,6 @@ import { useState } from "react";
 import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
-import ConfirmDialog from "../../../shared/ui/ConfirmDialog";
 
 import Task from "../../task/pages/Task";
 
@@ -20,7 +19,8 @@ function ProjectDetail() {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openAddTask, setOpenAddTask] = useState(false);
 
-  const { id } = useParams();
+  const { id, variant } = useParams();
+
   const navigate = useNavigate();
   return (
     <MainLayout>
@@ -28,27 +28,32 @@ function ProjectDetail() {
         Project Detail
       </h1>
       <Card className="mb-4 flex space-x-2 justify-center">
-        <Button
-          variant="primary"
-          size="medium"
-          onClick={() => setOpenAddMember(true)}
-        >
-          Add Members
-        </Button>
-        <Button
-          variant="secondary"
-          size="medium"
-          onClick={() => setOpenEditProject(true)}
-        >
-          Edit Project
-        </Button>
-        <Button
-          variant="danger"
-          size="medium"
-          onClick={() => setOpenDialogDelete(true)}
-        >
-          Delete Project
-        </Button>
+        {variant === "owner" && (
+          <div className="flex space-x-2">
+            <Button
+              variant="primary"
+              size="medium"
+              onClick={() => setOpenAddMember(true)}
+            >
+              Add Members
+            </Button>
+            <Button
+              variant="secondary"
+              size="medium"
+              onClick={() => setOpenEditProject(true)}
+            >
+              Edit Project
+            </Button>
+            <Button
+              variant="danger"
+              size="medium"
+              onClick={() => setOpenDialogDelete(true)}
+            >
+              Delete Project
+            </Button>
+          </div>
+        )}
+
         <Button
           variant="outline"
           size="medium"
@@ -75,6 +80,7 @@ function ProjectDetail() {
         <AddMember
           isOpen={openAddMember}
           onClose={() => setOpenAddMember(false)}
+          projectId={id}
         />
       )}
       {/* modal edit project */}
@@ -82,11 +88,7 @@ function ProjectDetail() {
         <EditProject
           isOpen={openEditProject}
           onClose={() => setOpenEditProject(false)}
-          project={{
-            id,
-            name: "Sample Project",
-            description: "This is a sample project.",
-          }}
+          project={{ id }}
         />
       )}
       {/* modal dialog delete */}

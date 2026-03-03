@@ -17,7 +17,7 @@ function Router() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/tasks" element={<Task />} />
       <Route path="/projects" element={<ProjectList />} />
-      <Route path="/projects/:id" element={<ProjectDetail />} />
+      <Route path="/projects/:id/:variant" element={<ProjectDetail />} />
       <Route path="/profile" element={<Profile />} />
     </Routes>
   );

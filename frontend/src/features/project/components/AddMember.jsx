@@ -2,15 +2,34 @@ import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 
-function AddMember({ isOpen, onClose }) {
+import { useRef } from "react";
+
+import useProjectStore from "../stores/projectStore";
+
+function AddMember({ isOpen, onClose, projectId }) {
+  const memberEmailRef = useRef();
+  const { addMemberProject } = useProjectStore();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const memberEmail = memberEmailRef.current.value;
+    if (memberEmail) {
+      addMemberProject(projectId, memberEmail);
+      onClose();
+    }
+  };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h1 className="text-3xl font-bold">Add Member</h1>
-      <form className="w-full max-w-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form
+        className="w-full max-w-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        onSubmit={handleSubmit}
+      >
         <Input
-          id="memberName"
-          label="Member Name"
-          placeHolder="Enter member name"
+          id="memberEmail"
+          label="Member Email"
+          placeHolder="Enter member email"
+          ref={memberEmailRef}
         />
         <div className="flex space-x-4">
           <Button type="submit" variant="primary" size="medium">

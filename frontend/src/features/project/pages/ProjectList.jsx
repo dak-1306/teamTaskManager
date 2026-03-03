@@ -17,7 +17,8 @@ function ProjectList() {
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDeleteProject, setOpenDeleteProject] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const { projects, fetchProjectMe, loading } = useProjectStore();
+  const { projects, memberProject, fetchProjectMe, loading } =
+    useProjectStore();
 
   useEffect(() => {
     fetchProjectMe();
@@ -31,7 +32,7 @@ function ProjectList() {
         {loading && (
           <p className="text-center text-gray-500">Loading projects...</p>
         )}
-        {projects.length === 0 && !loading ? (
+        {projects.length === 0 && memberProject.length === 0 && (
           <div className="space-y-2">
             <p className="text-center text-gray-500">No projects found.</p>
             <p className="text-center text-gray-500">
@@ -49,23 +50,29 @@ function ProjectList() {
               </Button>
             </div>
           </div>
+        )}
+        {projects && (
+          <Button
+            variant="primary"
+            size="medium"
+            onClick={() => {
+              setOpenCreateProject(true);
+            }}
+          >
+            Create New Project
+          </Button>
+        )}
+        {projects.length === 0 ? (
+          <p className="text-center text-gray-500">No projects found.</p>
         ) : (
           <div className="space-y-4">
-            <Button
-              variant="primary"
-              size="medium"
-              onClick={() => {
-                setOpenCreateProject(true);
-              }}
-            >
-              Create New Project
-            </Button>
+            <h2 className="text-xl font-semibold">My Projects</h2>
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {projects.map((project) => (
                 <li key={project._id} className="mb-4">
                   <Card title={project.name} description={project.description}>
                     <div className="flex space-x-2">
-                      <Link to={`/projects/${project._id}`}>
+                      <Link to={`/projects/${project._id}/owner`}>
                         <Button variant="secondary" size="small">
                           View Details
                         </Button>
@@ -96,6 +103,26 @@ function ProjectList() {
               ))}
             </ul>
           </div>
+        )}
+        <h2 className="text-xl font-semibold mt-8">Projects I'm a Member Of</h2>
+        {memberProject.length === 0 ? (
+          <p className="text-center text-gray-500">No member projects found.</p>
+        ) : (
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {memberProject.map((project) => (
+              <li key={project._id} className="mb-4">
+                <Card title={project.name} description={project.description}>
+                  <div className="flex space-x-2">
+                    <Link to={`/projects/${project._id}/member`}>
+                      <Button variant="secondary" size="small">
+                        View Details
+                      </Button>
+                    </Link>
+                  </div>
+                </Card>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 

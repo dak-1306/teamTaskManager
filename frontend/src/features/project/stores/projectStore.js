@@ -3,6 +3,7 @@ import axiosClient from "../../../app/axios";
 
 const useProjectStore = create((set) => ({
   projects: [],
+  memberProject: [],
   loading: false,
   error: null,
 
@@ -21,7 +22,11 @@ const useProjectStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axiosClient.get(`/projects/me`);
-      set({ projects: response.data, loading: false });
+      set({
+        projects: response.data.projects,
+        memberProject: response.data.memberProjects,
+        loading: false,
+      });
     } catch (error) {
       set({ error: error.message, loading: false });
     }
@@ -78,6 +83,25 @@ const useProjectStore = create((set) => ({
       await axiosClient.delete(`/projects/${projectId}`);
       set((state) => ({
         projects: state.projects.filter((project) => project._id !== projectId),
+        loading: false,
+      }));
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  //  Add a member to a project
+  addMemberProject: async (projectId, memberEmail) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.post(
+        `/projects/${projectId}/members`,
+        { memberEmail: memberEmail },
+      );
+      set((state) => ({
+        projects: state.projects.map((project) =>
+          project._id === projectId ? response.data : project,
+        ),
         loading: false,
       }));
     } catch (error) {
