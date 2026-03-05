@@ -1,18 +1,17 @@
 import ConfirmDialog from "../../../shared/ui/ConfirmDialog";
 import useProjectStore from "../stores/projectStore";
 
-function DeleteProject({ isOpen, onClose, project }) {
+function DeleteProject({ isOpen, onClose, projectId }) {
   const { deleteProject } = useProjectStore();
-  const id = project._id;
   return (
     <ConfirmDialog
       isOpen={isOpen}
       onClose={onClose}
       onConfirm={() => {
-        deleteProject(id);
+        deleteProject(projectId);
         onClose();
       }}
-      title={`Delete Project ${id}`}
+      title={`Delete Project ${projectId}`}
       message="Are you sure you want to delete this project? This action cannot be undone."
     />
   );

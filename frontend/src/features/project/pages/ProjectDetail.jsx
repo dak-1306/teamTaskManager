@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
@@ -13,13 +13,20 @@ import DeleteProject from "../components/DeleteProject";
 
 import AddTask from "../../task/components/AddTask";
 
+import useProjectStore from "../stores/projectStore";
+
 function ProjectDetail() {
+  const { id, variant } = useParams();
+
   const [openAddMember, setOpenAddMember] = useState(false);
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openAddTask, setOpenAddTask] = useState(false);
 
-  const { id, variant } = useParams();
+  const { projectDetail, fetchProjectById } = useProjectStore();
+  useEffect(() => {
+    fetchProjectById(id);
+  }, [fetchProjectById, id]);
 
   const navigate = useNavigate();
   return (
@@ -63,8 +70,8 @@ function ProjectDetail() {
         </Button>
       </Card>
       <Card
-        title={`Project ID: ${id}`}
-        description="This is the detail view for the selected project."
+        title={`Project: ${projectDetail ? projectDetail.name : "Loading..."}`}
+        description={projectDetail ? projectDetail.description : "Loading..."}
       >
         <Button variant="secondary" size="medium" onClick={() => navigate(-1)}>
           Back to Projects
@@ -72,7 +79,7 @@ function ProjectDetail() {
       </Card>
       <hr className="my-4 border-gray-300" />
 
-      <Task id={id} />
+      <Task projectId={id} />
 
       {/* modal */}
       {/* modal add member */}
@@ -96,12 +103,17 @@ function ProjectDetail() {
         <DeleteProject
           isOpen={openDialogDelete}
           onClose={() => setOpenDialogDelete(false)}
+          projectId={id}
         />
       )}
 
       {/* modal add task */}
       {openAddTask && (
-        <AddTask open={openAddTask} onClose={() => setOpenAddTask(false)} />
+        <AddTask
+          open={openAddTask}
+          onClose={() => setOpenAddTask(false)}
+          projectId={id}
+        />
       )}
     </MainLayout>
   );

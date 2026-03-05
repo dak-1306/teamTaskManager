@@ -4,6 +4,7 @@ import axiosClient from "../../../app/axios";
 const useProjectStore = create((set) => ({
   projects: [],
   memberProject: [],
+  projectDetail: null,
   loading: false,
   error: null,
 
@@ -37,7 +38,7 @@ const useProjectStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axiosClient.get(`/projects/${projectId}`);
-      set({ projects: response.data, loading: false });
+      set({ projectDetail: response.data, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
     }

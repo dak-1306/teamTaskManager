@@ -1,4 +1,4 @@
-function Input({ label, type = "text", placeHolder, id, ref }) {
+function Input({ label, type = "text", placeHolder, id, ref, defaultValue }) {
   return (
     <div className="mb-4">
       {label && (
@@ -14,6 +14,7 @@ function Input({ label, type = "text", placeHolder, id, ref }) {
         id={id}
         type={type}
         placeholder={placeHolder}
+        defaultValue={defaultValue}
         ref={ref}
       />
     </div>
