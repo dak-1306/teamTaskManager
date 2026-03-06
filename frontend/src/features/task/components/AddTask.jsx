@@ -36,28 +36,44 @@ function AddTask({ open, onClose, projectId }) {
       <div className="space-y-4">
         <Input
           label="Task Title"
-          placeholder="Enter task title"
+          placeHolder="Enter task title"
           ref={titleRef}
         />
         <Input
           label="Description"
-          placeholder="Enter task description"
+          placeHolder="Enter task description"
           ref={descriptionRef}
         />
         <Input label="Due Date" type="date" ref={dueDateRef} />
-        <Input label="Status" placeholder="Enter task status" ref={statusRef} />
-        <Input
-          label="Priority"
-          placeholder="Enter task priority"
+        <select
+          id="taskStatus"
+          name="status"
+          className="w-full p-2 border rounded"
+          ref={statusRef}
+        >
+          <option value="">-- Select Status --</option>
+          <option value="todo">To Do</option>
+          <option value="doing">Doing</option>
+          <option value="done">Done</option>
+        </select>
+        <select
+          name="priority"
+          id="priority"
+          className="w-full p-2 border rounded"
           ref={priorityRef}
-        />
+        >
+          <option value="">-- Select Priority --</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
         <Input
           label="Assign To"
-          placeholder="Enter assignee email"
+          placeHolder="Enter assignee email"
           ref={emailAssignToRef}
         />
         <div className="flex justify-end space-x-2">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="primary" onClick={handleAddTask}>

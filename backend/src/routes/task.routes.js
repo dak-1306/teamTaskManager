@@ -9,7 +9,7 @@ const {
   getTaskByProjectId,
   updateTask,
   deleteTask,
-  addMemberTask,
+  addAssignees,
 } = require("../controllers/task.controller");
 
 // GET /tasks - Get all tasks
@@ -26,7 +26,7 @@ router.get("/projects/:id", protect, getTaskByProjectId);
 router.put("/:id", protect, updateTask);
 // DELETE /tasks/:id - Delete a task by ID
 router.delete("/:id", protect, deleteTask);
-// POST /tasks/:id/members - Add a member to a task
-router.post("/:id/members", protect, addMemberTask);
+// POST /tasks/:id/assignees - Add assignees to a task
+router.post("/:id/assignees", protect, addAssignees);
 
 module.exports = router;

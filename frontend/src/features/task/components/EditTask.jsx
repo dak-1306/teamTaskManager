@@ -2,64 +2,75 @@ import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import useTaskStore from "../stores/taskStore";
 
-function EditTask({ open, onClose, task }) {
+function EditTask({ open, onClose, taskDetail }) {
+  const { updateTask } = useTaskStore();
   const titleRef = useRef();
   const descriptionRef = useRef();
   const dueDateRef = useRef();
   const statusRef = useRef();
   const priorityRef = useRef();
-
-  const { updateTask } = useTaskStore();
+  console.log("Task Detail for Edit:", taskDetail);
+  const [assignedEmailEdit, setAssignedEmailEdit] = useState(
+    taskDetail ? taskDetail.assignedTo.map((user) => user.email) : [],
+  );
 
   const handleSave = (e) => {
     e.preventDefault();
     const updatedTask = {
-      ...task,
+      ...taskDetail,
       title: titleRef.current.value,
       description: descriptionRef.current.value,
       dueDate: dueDateRef.current.value,
       status: statusRef.current.value,
       priority: priorityRef.current.value,
+      assignedTo: assignedEmailEdit,
     };
 
-    updateTask(task._id, updatedTask);
+    updateTask(taskDetail._id, updatedTask);
     onClose();
   };
 
-  console.log("Editing Task:", task);
+  const handleCancel = () => {
+    const initial = taskDetail?.assignedTo?.map((u) => u.email) ?? [];
+    setAssignedEmailEdit(initial);
+    onClose();
+  };
+
   return (
-    <Modal isOpen={open} onClose={onClose} title="Edit Task">
+    <Modal isOpen={open} onClose={handleCancel} title="Edit Task">
       <form className="space-y-4" onSubmit={handleSave}>
         <Input
           id="taskTitle"
           label="Task Name"
-          placeHolder={task ? task.title : "Enter task name"}
+          placeHolder={taskDetail ? taskDetail.title : "Enter task name"}
           ref={titleRef}
-          defaultValue={task ? task.title : ""}
+          defaultValue={taskDetail ? taskDetail.title : ""}
         />
         <Input
           id="taskDescription"
           label="Description"
-          placeHolder={task ? task.description : "Enter task description"}
+          placeHolder={
+            taskDetail ? taskDetail.description : "Enter task description"
+          }
           ref={descriptionRef}
-          defaultValue={task ? task.description : ""}
+          defaultValue={taskDetail ? taskDetail.description : ""}
         />
         <Input
           id="taskDueDate"
           label="Due Date"
           type="date"
           ref={dueDateRef}
-          defaultValue={task ? task.dueDate.split("T")[0] : ""}
+          defaultValue={taskDetail ? taskDetail.dueDate.split("T")[0] : ""}
         />
         <select
           id="taskStatus"
           className="w-full p-2 border rounded"
           ref={statusRef}
-          defaultValue={task?.status}
+          defaultValue={taskDetail ? taskDetail.status : ""}
         >
           <option value="">Select Status</option>
           <option value="todo">To Do</option>
@@ -70,16 +81,38 @@ function EditTask({ open, onClose, task }) {
           id="taskPriority"
           className="w-full p-2 border rounded"
           ref={priorityRef}
-          defaultValue={task?.priority}
+          defaultValue={taskDetail ? taskDetail.priority : ""}
         >
           <option value="">Select Priority</option>
           <option value="low">Low</option>
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
+        <p className="font-semibold ">Assigned Users:</p>
+        {assignedEmailEdit
+          ? assignedEmailEdit.map((email) => (
+              <Input
+                key={email}
+                id={`assignedUser-${email}`}
+                placeHolder={email}
+                defaultValue={email}
+              >
+                <Button
+                  variant="danger"
+                  onClick={() =>
+                    setAssignedEmailEdit(
+                      assignedEmailEdit.filter((item) => item !== email),
+                    )
+                  }
+                >
+                  Remove
+                </Button>
+              </Input>
+            ))
+          : null}
 
         <div className="flex justify-end space-x-2">
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={handleCancel}>
             Cancel
           </Button>
           <Button variant="primary" type="submit">

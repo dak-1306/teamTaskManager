@@ -56,10 +56,9 @@ const getProjectMe = async (req, res) => {
 const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findById(id).populate(
-      "owner",
-      "username email",
-    );
+    const project = await Project.findById(id)
+      .populate("owner", "username email")
+      .populate("members", "username email");
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -75,7 +74,7 @@ const getProjectById = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, members } = req.body;
     console.log(
       "Updating project with ID:",
       id,
@@ -83,12 +82,16 @@ const updateProject = async (req, res) => {
       name,
       "Description:",
       description,
+      "Members:",
+      members,
     );
     const updatedProject = await Project.findByIdAndUpdate(
       id,
-      { name, description },
-      { new: true },
-    ).populate("owner", "username email");
+      { name, description, members },
+      { returnDocument: "after" },
+    )
+      .populate("owner", "username email")
+      .populate("members", "username email");
     if (!updatedProject) {
       return res.status(404).json({ message: "Project not found" });
     }

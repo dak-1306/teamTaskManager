@@ -24,9 +24,12 @@ function ProjectDetail() {
   const [openAddTask, setOpenAddTask] = useState(false);
 
   const { projectDetail, fetchProjectById } = useProjectStore();
+
   useEffect(() => {
     fetchProjectById(id);
   }, [fetchProjectById, id]);
+
+  console.log("Project Detail:", projectDetail);
 
   const navigate = useNavigate();
   return (
@@ -73,6 +76,17 @@ function ProjectDetail() {
         title={`Project: ${projectDetail ? projectDetail.name : "Loading..."}`}
         description={projectDetail ? projectDetail.description : "Loading..."}
       >
+        {projectDetail && (
+          <div className="space-y-2">
+            <p><strong>Owner:</strong> {projectDetail.owner.username}</p>
+            <p><strong>Members:</strong></p>
+            <ul className="list-disc list-inside">
+              {projectDetail.members.map((member) => (
+                <li key={member._id}>{member.username} ({member.email})</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <Button variant="secondary" size="medium" onClick={() => navigate(-1)}>
           Back to Projects
         </Button>
@@ -95,7 +109,7 @@ function ProjectDetail() {
         <EditProject
           isOpen={openEditProject}
           onClose={() => setOpenEditProject(false)}
-          project={{ id }}
+          project={projectDetail}
         />
       )}
       {/* modal dialog delete */}

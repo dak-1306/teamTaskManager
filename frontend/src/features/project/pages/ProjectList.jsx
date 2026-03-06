@@ -51,60 +51,65 @@ function ProjectList() {
             </div>
           </div>
         )}
-        {projects && (
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => {
-              setOpenCreateProject(true);
-            }}
-          >
-            Create New Project
-          </Button>
-        )}
-        {projects.length === 0 ? (
-          <p className="text-center text-gray-500">No projects found.</p>
-        ) : (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">My Projects</h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {projects.map((project) => (
-                <li key={project._id} className="mb-4">
-                  <Card title={project.name} description={project.description}>
-                    <div className="flex space-x-2">
-                      <Link to={`/projects/${project._id}/owner`}>
-                        <Button variant="secondary" size="small">
-                          View Details
+        {projects.length > 0 && (
+          <div>
+            <Button
+              variant="primary"
+              size="medium"
+              onClick={() => {
+                setOpenCreateProject(true);
+              }}
+            >
+              Create New Project
+            </Button>
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">My Projects</h2>
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {projects.map((project) => (
+                  <li key={project._id} className="mb-4">
+                    <Card
+                      title={project.name}
+                      description={project.description}
+                    >
+                      <div className="flex space-x-2">
+                        <Link to={`/projects/${project._id}/owner`}>
+                          <Button variant="secondary" size="small">
+                            View Details
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="primary"
+                          size="small"
+                          onClick={() => {
+                            setSelectedProject(project);
+                            setOpenEditProject(true);
+                          }}
+                        >
+                          Edit Project
                         </Button>
-                      </Link>
-                      <Button
-                        variant="primary"
-                        size="small"
-                        onClick={() => {
-                          setSelectedProject(project);
-                          setOpenEditProject(true);
-                        }}
-                      >
-                        Edit Project
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="small"
-                        onClick={() => {
-                          setSelectedProject(project);
-                          setOpenDeleteProject(true);
-                        }}
-                      >
-                        Delete Project
-                      </Button>
-                    </div>
-                  </Card>
-                </li>
-              ))}
-            </ul>
+                        <Button
+                          variant="danger"
+                          size="small"
+                          onClick={() => {
+                            setSelectedProject(project);
+                            setOpenDeleteProject(true);
+                          }}
+                        >
+                          Delete Project
+                        </Button>
+                      </div>
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
-        <h2 className="text-xl font-semibold mt-8">Projects I'm a Member Of</h2>
+
+        <hr className="my-8" />
+        <h2 className="text-xl font-semibold mt-8 text-center">
+          Projects I'm a Member Of
+        </h2>
         {memberProject.length === 0 ? (
           <p className="text-center text-gray-500">No member projects found.</p>
         ) : (

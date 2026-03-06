@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import EditTask from "../components/EditTask";
 import DeleteTask from "../components/DeleteTask";
+import AddAssignees from "../components/AddAssignees";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 
@@ -16,6 +17,8 @@ function TaskDetail() {
   const { taskDetail, fetchTaskById } = useTaskStore();
   const [openEditTask, setOpenEditTask] = useState(false);
   const [openDeleteTask, setOpenDeleteTask] = useState(false);
+  const [openAddAssignees, setOpenAddAssignees] = useState(false);
+
   useEffect(() => {
     fetchTaskById(taskId);
   }, [taskId, fetchTaskById]);
@@ -78,7 +81,14 @@ function TaskDetail() {
 
       <div className="mt-4 flex space-x-2">
         <Button
-          variant="outline"
+          variant="primary"
+          size="medium"
+          onClick={() => setOpenAddAssignees(true)}
+        >
+          Add Assignees
+        </Button>
+        <Button
+          variant="primary"
           size="small"
           onClick={() => setOpenEditTask(true)}
         >
@@ -93,10 +103,15 @@ function TaskDetail() {
         </Button>
       </div>
       {/* modals */}
+      <AddAssignees
+        isOpen={openAddAssignees}
+        onClose={() => setOpenAddAssignees(false)}
+        taskId={taskId}
+      />
       <EditTask
         open={openEditTask}
         onClose={() => setOpenEditTask(false)}
-        task={taskDetail}
+        taskDetail={taskDetail}
       />
       <DeleteTask
         open={openDeleteTask}

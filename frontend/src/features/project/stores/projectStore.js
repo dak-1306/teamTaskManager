@@ -70,6 +70,11 @@ const useProjectStore = create((set) => ({
         projects: state.projects.map((project) =>
           project._id === projectId ? response.data : project,
         ),
+        projectDetail:
+          state.projectDetail?._id === projectId
+            ? response.data
+            : state.projectDetail,
+
         loading: false,
       }));
     } catch (error) {

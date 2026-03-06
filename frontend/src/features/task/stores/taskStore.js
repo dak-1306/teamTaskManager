@@ -56,7 +56,11 @@ const useTaskStore = create((set) => ({
     try {
       const response = await axiosClient.put(`/tasks/${taskId}`, updatedData);
       set((state) => ({
-        tasks: state.tasks.map((task) => (task._id === taskId ? response.data : task)),
+        tasks: state.tasks.map((task) =>
+          task._id === taskId ? response.data : task,
+        ),
+        taskDetail:
+          state.taskDetail?._id === taskId ? response.data : state.taskDetail,
         loading: false,
       }));
     } catch (error) {
@@ -70,6 +74,24 @@ const useTaskStore = create((set) => ({
       await axiosClient.delete(`/tasks/${taskId}`);
       set((state) => ({
         tasks: state.tasks.filter((task) => task._id !== taskId),
+        taskDetail: state.taskDetail?._id === taskId ? null : state.taskDetail,
+        loading: false,
+      }));
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  // Add assignees to a task
+  addAssignees: async (taskId, assigneeEmail) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.post(`/tasks/${taskId}/assignees`, {
+        email: assigneeEmail,
+      });
+      set((state) => ({
+        taskDetail:
+          state.taskDetail?._id === taskId ? response.data : state.taskDetail,
         loading: false,
       }));
     } catch (error) {

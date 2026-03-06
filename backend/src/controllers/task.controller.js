@@ -37,10 +37,12 @@ const createTask = async (req, res) => {
     if (project.owner.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized to create task" });
     }
-    const user = await User.findOne({ email: emailAssignTo });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const userToAssign = await User.findOne({ email: emailAssignTo });
+    console.log("Fetched user to assign for task creation:", userToAssign);
+    if (!userToAssign) {
+      return res.status(404).json({ message: "User to assign not found" });
     }
+
     const newTask = new Task({
       title: title || "Untitled Task",
       description: description || "",
@@ -48,7 +50,7 @@ const createTask = async (req, res) => {
       priority: priority || "medium",
       status: status || "todo",
       project: projectId,
-      assignedTo: [user._id],
+      assignedTo: emailAssignTo ? [userToAssign._id] : [],
     });
     console.log("Created new task object:", newTask);
     const savedTask = await newTask.save();
@@ -151,13 +153,24 @@ const updateTask = async (req, res) => {
     if (task.project.owner.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized to update task" });
     }
+    let assignedUserIds = task.assignedTo;
+
+    if (assignedTo) {
+      const users = await User.find({
+        email: { $in: assignedTo },
+      });
+
+      assignedUserIds = users.map((user) => user._id);
+    }
+
     task.title = title || task.title;
     task.description = description || task.description;
     task.dueDate = dueDate || task.dueDate;
     task.priority = priority || task.priority;
     task.status = status || task.status;
-    task.assignedTo = assignedTo || task.assignedTo;
+    task.assignedTo = assignedUserIds;
     const updatedTask = await task.save();
+    await updatedTask.populate("assignedTo", "username email");
     res.status(200).json(updatedTask);
   } catch (error) {
     res
@@ -186,11 +199,11 @@ const deleteTask = async (req, res) => {
   }
 };
 
-// POST /tasks/:id/members - Add a member to a task
-const addMemberTask = async (req, res) => {
+// POST /tasks/:id/assignees - Add assignees to a task
+const addAssignees = async (req, res) => {
   try {
     const { id } = req.params;
-    const { emailMember } = req.body;
+    const { email } = req.body;
     const task = await Task.findById(id).populate("project");
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
@@ -198,22 +211,24 @@ const addMemberTask = async (req, res) => {
     if (task.project.owner.toString() !== req.user.id) {
       return res
         .status(403)
-        .json({ message: "Unauthorized to add member to task" });
+        .json({ message: "Unauthorized to add assignees to task" });
     }
-    const user = await User.findOne({ email: emailMember });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const userToAssign = await User.findOne({ email });
+    if (!userToAssign) {
+      return res.status(404).json({ message: "User to assign not found" });
     }
-    if (task.assignedTo.includes(user._id)) {
+    if (task.assignedTo.includes(userToAssign._id)) {
       return res.status(400).json({ message: "User already assigned to task" });
     }
-    task.assignedTo.push(user._id);
+    task.assignedTo.push(userToAssign._id);
     await task.save();
-    res.status(200).json({ message: "Member added to task successfully" });
+    await task.populate("assignedTo", "username email");
+    res.status(200).json(task);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to add member to task", error: error.message });
+    res.status(500).json({
+      message: "Failed to add assignees to task",
+      error: error.message,
+    });
   }
 };
 
@@ -225,5 +240,5 @@ module.exports = {
   getTaskByProjectId,
   updateTask,
   deleteTask,
-  addMemberTask,
+  addAssignees,
 };
