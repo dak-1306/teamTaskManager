@@ -7,7 +7,7 @@ import Button from "../../../shared/ui/Button";
 
 import useTaskStore from "../stores/taskStore";
 
-function Task({ projectId }) {
+function Task({ projectId, variant }) {
   const { tasks, fetchTasksByProjectId } = useTaskStore();
   useEffect(() => {
     fetchTasksByProjectId(projectId);
@@ -64,7 +64,7 @@ function Task({ projectId }) {
                 ))}
               </ul>
             </div>
-            <Link to={`/projects/${projectId}/member/tasks/${t._id}`}>
+            <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
               <Button variant="link" className="ml-4">
                 View Details
               </Button>

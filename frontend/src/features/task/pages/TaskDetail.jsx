@@ -14,7 +14,10 @@ import useTaskStore from "../stores/taskStore";
 function TaskDetail() {
   const { taskId } = useParams();
   const navigate = useNavigate();
-  const { taskDetail, fetchTaskById } = useTaskStore();
+
+  const taskDetail = useTaskStore((state) => state.taskDetail);
+  const fetchTaskById = useTaskStore((state) => state.fetchTaskById);
+
   const [openEditTask, setOpenEditTask] = useState(false);
   const [openDeleteTask, setOpenDeleteTask] = useState(false);
   const [openAddAssignees, setOpenAddAssignees] = useState(false);
@@ -22,6 +25,7 @@ function TaskDetail() {
   useEffect(() => {
     fetchTaskById(taskId);
   }, [taskId, fetchTaskById]);
+
   console.log("Task Detail for Task ID:", taskId, taskDetail);
   return (
     <MainLayout>
@@ -107,6 +111,7 @@ function TaskDetail() {
         isOpen={openAddAssignees}
         onClose={() => setOpenAddAssignees(false)}
         taskId={taskId}
+        projectId={taskDetail ? taskDetail.project._id : null}
       />
       <EditTask
         open={openEditTask}

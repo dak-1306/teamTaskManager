@@ -2,7 +2,7 @@ import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import useTaskStore from "../stores/taskStore";
 
@@ -13,10 +13,13 @@ function EditTask({ open, onClose, taskDetail }) {
   const dueDateRef = useRef();
   const statusRef = useRef();
   const priorityRef = useRef();
-  console.log("Task Detail for Edit:", taskDetail);
-  const [assignedEmailEdit, setAssignedEmailEdit] = useState(
-    taskDetail ? taskDetail.assignedTo.map((user) => user.email) : [],
-  );
+  const [assignedEmailEdit, setAssignedEmailEdit] = useState([]);
+
+  useEffect(() => {
+    const emails = taskDetail?.assignedTo?.map((u) => u.email) ?? [];
+    setAssignedEmailEdit(emails);
+  }, [taskDetail]);
+  console.log("Assigned Emails for Edit:", assignedEmailEdit);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -89,7 +92,7 @@ function EditTask({ open, onClose, taskDetail }) {
           <option value="high">High</option>
         </select>
         <p className="font-semibold ">Assigned Users:</p>
-        {assignedEmailEdit
+        {assignedEmailEdit.length > 0
           ? assignedEmailEdit.map((email) => (
               <Input
                 key={email}

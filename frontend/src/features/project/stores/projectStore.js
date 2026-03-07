@@ -105,9 +105,11 @@ const useProjectStore = create((set) => ({
         { memberEmail: memberEmail },
       );
       set((state) => ({
-        projects: state.projects.map((project) =>
-          project._id === projectId ? response.data : project,
-        ),
+        projectDetail:
+          state.projectDetail?._id === projectId
+            ? response.data
+            : state.projectDetail,
+
         loading: false,
       }));
     } catch (error) {

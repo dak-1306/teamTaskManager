@@ -143,12 +143,15 @@ const addMemberProject = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     // Thêm member nếu chưa tồn tại
-    if (!project.members.includes(user._id)) {
-      project.members.push(user._id);
-      await project.save();
-    }
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      { $addToSet: { members: user._id } },
+      { returnDocument: "after" },
+    )
+      .populate("owner", "username email")
+      .populate("members", "username email");
 
-    res.status(200).json({ message: "Member added successfully" });
+    res.status(200).json(updatedProject);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

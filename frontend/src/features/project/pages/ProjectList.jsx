@@ -2,8 +2,6 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import CreateProject from "../components/CreateProject";
-import EditProject from "../components/EditProject";
-import DeleteProject from "../components/DeleteProject";
 
 import { Link } from "react-router-dom";
 
@@ -14,9 +12,7 @@ import useProjectStore from "../stores/projectStore";
 
 function ProjectList() {
   const [openCreateProject, setOpenCreateProject] = useState(false);
-  const [openEditProject, setOpenEditProject] = useState(false);
-  const [openDeleteProject, setOpenDeleteProject] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
+
   const { projects, memberProject, fetchProjectMe, loading } =
     useProjectStore();
 
@@ -77,26 +73,6 @@ function ProjectList() {
                             View Details
                           </Button>
                         </Link>
-                        <Button
-                          variant="primary"
-                          size="small"
-                          onClick={() => {
-                            setSelectedProject(project);
-                            setOpenEditProject(true);
-                          }}
-                        >
-                          Edit Project
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="small"
-                          onClick={() => {
-                            setSelectedProject(project);
-                            setOpenDeleteProject(true);
-                          }}
-                        >
-                          Delete Project
-                        </Button>
                       </div>
                     </Card>
                   </li>
@@ -135,20 +111,6 @@ function ProjectList() {
         <CreateProject
           isOpen={openCreateProject}
           onClose={() => setOpenCreateProject(false)}
-        />
-      )}
-      {openEditProject && (
-        <EditProject
-          isOpen={openEditProject}
-          onClose={() => setOpenEditProject(false)}
-          project={selectedProject}
-        />
-      )}
-      {openDeleteProject && (
-        <DeleteProject
-          isOpen={openDeleteProject}
-          onClose={() => setOpenDeleteProject(false)}
-          project={selectedProject}
         />
       )}
     </MainLayout>

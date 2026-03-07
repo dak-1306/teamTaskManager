@@ -23,7 +23,8 @@ function ProjectDetail() {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openAddTask, setOpenAddTask] = useState(false);
 
-  const { projectDetail, fetchProjectById } = useProjectStore();
+  const projectDetail = useProjectStore((state) => state.projectDetail);
+  const fetchProjectById = useProjectStore((state) => state.fetchProjectById);
 
   useEffect(() => {
     fetchProjectById(id);
@@ -78,11 +79,17 @@ function ProjectDetail() {
       >
         {projectDetail && (
           <div className="space-y-2">
-            <p><strong>Owner:</strong> {projectDetail.owner.username}</p>
-            <p><strong>Members:</strong></p>
+            <p>
+              <strong>Owner:</strong> {projectDetail.owner.username}
+            </p>
+            <p>
+              <strong>Members:</strong>
+            </p>
             <ul className="list-disc list-inside">
               {projectDetail.members.map((member) => (
-                <li key={member._id}>{member.username} ({member.email})</li>
+                <li key={member._id}>
+                  {member.username} ({member.email})
+                </li>
               ))}
             </ul>
           </div>
@@ -93,7 +100,7 @@ function ProjectDetail() {
       </Card>
       <hr className="my-4 border-gray-300" />
 
-      <Task projectId={id} />
+      <Task projectId={id} variant={variant} />
 
       {/* modal */}
       {/* modal add member */}

@@ -54,7 +54,8 @@ const createTask = async (req, res) => {
     });
     console.log("Created new task object:", newTask);
     const savedTask = await newTask.save();
-    console.log("Saved task to database:", savedTask);
+    await savedTask.populate("assignedTo", "username email");
+    console.log("Populated task with assigned user details:", savedTask);
     res.status(201).json(savedTask);
   } catch (error) {
     res
@@ -122,7 +123,7 @@ const getTaskByProjectId = async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
     }
     const tasks = await Task.find({ project: id })
-      .populate("project", "name owner")
+      .populate("project", "name owner ")
       .populate("assignedTo", "username email");
     console.log("Received request to get task by project ID:", id);
     console.log("Fetched task by project ID:", tasks);
