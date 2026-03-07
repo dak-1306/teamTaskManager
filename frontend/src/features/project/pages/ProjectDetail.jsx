@@ -39,39 +39,40 @@ function ProjectDetail() {
         Project Detail
       </h1>
       <Card className="mb-4 flex space-x-2 justify-center">
-        {variant === "owner" && (
-          <div className="flex space-x-2">
-            <Button
-              variant="primary"
-              size="medium"
-              onClick={() => setOpenAddMember(true)}
-            >
-              Add Members
-            </Button>
-            <Button
-              variant="secondary"
-              size="medium"
-              onClick={() => setOpenEditProject(true)}
-            >
-              Edit Project
-            </Button>
-            <Button
-              variant="danger"
-              size="medium"
-              onClick={() => setOpenDialogDelete(true)}
-            >
-              Delete Project
-            </Button>
-          </div>
-        )}
-
-        <Button
-          variant="outline"
-          size="medium"
-          onClick={() => setOpenAddTask(true)}
-        >
-          Add Task
-        </Button>
+        <div className="flex space-x-2">
+          {variant === "owner" && (
+            <div className="space-x-2">
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => setOpenAddMember(true)}
+              >
+                Add Members
+              </Button>
+              <Button
+                variant="secondary"
+                size="medium"
+                onClick={() => setOpenEditProject(true)}
+              >
+                Edit Project
+              </Button>
+              <Button
+                variant="danger"
+                size="medium"
+                onClick={() => setOpenDialogDelete(true)}
+              >
+                Delete Project
+              </Button>
+            </div>
+          )}
+          <Button
+            variant="primary"
+            size="medium"
+            onClick={() => setOpenAddTask(true)}
+          >
+            Add Task
+          </Button>
+        </div>
       </Card>
       <Card
         title={`Project: ${projectDetail ? projectDetail.name : "Loading..."}`}

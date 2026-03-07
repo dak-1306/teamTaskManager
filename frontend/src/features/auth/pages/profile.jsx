@@ -4,27 +4,17 @@ import Button from "../../../shared/ui/Button";
 
 import LogoutDialog from "../components/LogoutDialog";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../hooks/useAuth";
 
-import useTaskStore from "../../task/stores/taskStore";
-
 function Profile() {
   const { userProfile } = useAuth();
-  const { tasks, fetchTasks } = useTaskStore();
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (userProfile) {
-      fetchTasks();
-    }
-  }, [userProfile, fetchTasks]);
-
   console.log("User Profile:", userProfile);
-  console.log("User Tasks:", tasks);
 
   return (
     <MainLayout>
@@ -50,28 +40,6 @@ function Profile() {
             <Button variant="primary" onClick={() => navigate("/login")}>
               Go to Login
             </Button>
-          </Card>
-        )}
-        {tasks && tasks.length > 0 && (
-          <Card>
-            <h2 className="text-2xl font-bold mb-4">Your Tasks</h2>
-            <ul>
-              {tasks.map((task) => (
-                <li key={task._id} className="mb-2">
-                  {task.title}
-                  <span className="text-sm text-gray-500 ml-2">
-                    (Due: {new Date(task.dueDate).toLocaleDateString()})
-                  </span>
-                  <Button
-                    variant="link"
-                    className="ml-4"
-                    onClick={() => navigate(`/projects/${task.project._id}/member`)}
-                  >
-                    View Details
-                  </Button>
-                </li>
-              ))}
-            </ul>
           </Card>
         )}
       </div>

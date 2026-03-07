@@ -16,11 +16,7 @@ function Header({ isLogin }) {
                   Home
                 </Link>
               </li>
-              <li className="inline-block mr-4">
-                <Link to="/tasks" className="hover:underline">
-                  Tasks
-                </Link>
-              </li>
+
               <li className="inline-block mr-4">
                 <Link to="/projects" className="hover:underline">
                   Projects
