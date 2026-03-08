@@ -1,4 +1,6 @@
 const User = require("../models/user.model");
+const Project = require("../models/project.model");
+const Task = require("../models/task.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -74,7 +76,7 @@ const loginUser = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         username: user.username,
         email: user.email,
       },
@@ -130,6 +132,52 @@ const changePassword = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const projects = await Project.find({ owner: userId });
+
+    for (const project of projects) {
+      const newOwner = project.members.find(
+        (member) => member.toString() !== userId,
+      );
+
+      if (newOwner) {
+        project.owner = newOwner;
+
+        // remove new owner khỏi members
+        project.members = project.members.filter(
+          (member) => member.toString() !== newOwner.toString(),
+        );
+
+        await project.save();
+      } else {
+        // project chỉ có owner -> delete
+        await Project.findByIdAndDelete(project._id);
+      }
+    }
+
+    // remove user khỏi project members
+    await Project.updateMany(
+      { members: userId },
+      { $pull: { members: userId } },
+    );
+
+    // remove user khỏi task assignees
+    await Task.updateMany(
+      { assignedTo: userId },
+      { $pull: { assignedTo: userId } },
+    );
+
+    await User.findByIdAndDelete(userId);
+
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserCurrent,
@@ -137,4 +185,5 @@ module.exports = {
   loginUser,
   updateUser,
   changePassword,
+  deleteUser,
 };

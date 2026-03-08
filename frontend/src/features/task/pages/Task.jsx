@@ -7,6 +7,8 @@ import Button from "../../../shared/ui/Button";
 
 import useTaskStore from "../stores/taskStore";
 
+import formatDate from "../../../shared/utils/formatDate";
+
 function Task({ projectId, variant, projectName }) {
   const { tasks, fetchTasksByProjectId } = useTaskStore();
   useEffect(() => {
@@ -25,11 +27,6 @@ function Task({ projectId, variant, projectName }) {
     high: "text-red-500",
     medium: "text-yellow-500",
     low: "text-green-500",
-  };
-
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -71,7 +68,7 @@ function Task({ projectId, variant, projectName }) {
                 </ul>
               </div>
               <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
-                <Button variant="link" size="small">
+                <Button variant="outline" size="small">
                   View Details
                 </Button>
               </Link>

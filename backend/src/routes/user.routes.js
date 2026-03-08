@@ -8,6 +8,7 @@ const {
   getUserCurrent,
   updateUser,
   changePassword,
+  deleteUser,
 } = require("../controllers/user.controller");
 
 // GET /user - Get all users
@@ -22,5 +23,7 @@ router.post("/login", loginUser);
 router.put("/:id", protect, updateUser);
 // PUT /user/:id/password - Change password by ID
 router.put("/:id/password", protect, changePassword);
+// DELETE /user/:id - Delete user by ID
+router.delete("/:id", protect, deleteUser);
 
 module.exports = router;

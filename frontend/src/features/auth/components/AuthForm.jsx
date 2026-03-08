@@ -1,7 +1,14 @@
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
+
+import { Eye, EyeOff, House } from "lucide-react";
+
 import { Link } from "react-router-dom";
+
+import { useState } from "react";
 function AuthForm({ onSubmit, field, title }) {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">{title} page</h1>
@@ -13,11 +20,32 @@ function AuthForm({ onSubmit, field, title }) {
           <div key={input.id} className="mb-4">
             <Input
               id={input.id}
-              type={input.type}
+              type={
+                showPassword && input.type === "password" ? "text" : input.type
+              }
+              classNameInput="relative"
               placeHolder={input.placeHolder}
               label={input.label}
               ref={input.ref}
-            />
+            >
+              {input.type === "password" && (
+                <button
+                  type="button"
+                  className="absolute right-0 top-0 mt-2 mr-3 text-gray-600"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                    const inputField = input.ref.current;
+                    if (inputField.type === "password") {
+                      inputField.type = "text";
+                    } else {
+                      inputField.type = "password";
+                    }
+                  }}
+                >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                </button>
+              )}
+            </Input>
           </div>
         ))}
         <div className="flex flex-col items-center justify-between space-y-4">
@@ -41,7 +69,7 @@ function AuthForm({ onSubmit, field, title }) {
             </p>
           )}
           <Link to="/" className="text-sm text-gray-600 hover:underline">
-            Back to Home
+            <House className="inline-block" />
           </Link>
         </div>
       </form>

@@ -69,6 +69,18 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
   }
 };
 
+const deleteUser = async (userId) => {
+  try {
+    const response = await axiosClient.delete(`/users/${userId}`);
+    console.log("Delete User API response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to delete user account",
+    );
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -76,4 +88,5 @@ export {
   getUserCurrent,
   updateUser,
   changePassword,
+  deleteUser,
 };

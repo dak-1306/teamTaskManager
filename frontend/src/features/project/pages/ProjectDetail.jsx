@@ -5,6 +5,14 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
 
+import {
+  ArrowBigLeft,
+  UserRoundPlus,
+  Pencil,
+  Trash2,
+  FilePlus,
+} from "lucide-react";
+
 import Task from "../../task/pages/Task";
 
 import AddMember from "../components/AddMember";
@@ -39,10 +47,10 @@ function ProjectDetail() {
         <Button
           className="absolute top-0 left-0"
           variant="secondary"
-          size="small"
+          size="medium"
           onClick={() => navigate(-1)}
         >
-          Back to Projects
+          <ArrowBigLeft />
         </Button>
 
         <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
@@ -50,29 +58,29 @@ function ProjectDetail() {
         </h1>
 
         <Card className="mb-4 flex space-x-2 justify-center">
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             {variant === "owner" && (
-              <div className="space-x-2">
+              <div className="space-x-4">
                 <Button
                   variant="primary"
                   size="medium"
                   onClick={() => setOpenAddMember(true)}
                 >
-                  Add Members
+                  <UserRoundPlus />
                 </Button>
                 <Button
                   variant="secondary"
                   size="medium"
                   onClick={() => setOpenEditProject(true)}
                 >
-                  Edit Project
+                  <Pencil />
                 </Button>
                 <Button
                   variant="danger"
                   size="medium"
                   onClick={() => setOpenDialogDelete(true)}
                 >
-                  Delete Project
+                  <Trash2 />
                 </Button>
               </div>
             )}
@@ -81,7 +89,7 @@ function ProjectDetail() {
               size="medium"
               onClick={() => setOpenAddTask(true)}
             >
-              Add Task
+              <FilePlus />
             </Button>
           </div>
         </Card>

@@ -1,6 +1,8 @@
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
+import { FolderPlus } from "lucide-react";
+
 import CreateProject from "../components/CreateProject";
 
 import { Link } from "react-router-dom";
@@ -23,8 +25,6 @@ function ProjectList() {
   return (
     <MainLayout>
       <div className="space-y-4 mt-4 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4 text-center">Project List</h1>
-
         {loading && (
           <p className="text-center text-gray-500">Loading projects...</p>
         )}
@@ -48,35 +48,31 @@ function ProjectList() {
           </div>
         )}
         {projects.length > 0 && (
-          <div className="space-y-4">
+          <div className="relative space-y-6">
             <Button
               variant="primary"
-              size="medium"
+              className="absolute top-0 left-0"
+              size="large"
               onClick={() => {
                 setOpenCreateProject(true);
               }}
             >
-              Create New Project
+              <FolderPlus />
             </Button>
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-center">My Projects</h2>
-              <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {projects.map((project) => (
-                  <li key={project._id} className="mb-4">
-                    <Card
-                      title={project.name}
-                      description={project.description}
-                    >
-                      <Link to={`/projects/${project._id}/owner`}>
-                        <Button variant="secondary" size="small">
-                          View Details
-                        </Button>
-                      </Link>
-                    </Card>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <h2 className="text-xl font-semibold text-center">My Projects</h2>
+            <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {projects.map((project) => (
+                <li key={project._id} className="mb-4">
+                  <Card title={project.name} description={project.description}>
+                    <Link to={`/projects/${project._id}/owner`}>
+                      <Button variant="outline" size="small">
+                        View Details
+                      </Button>
+                    </Link>
+                  </Card>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
@@ -92,7 +88,7 @@ function ProjectList() {
               <li key={project._id} className="mb-4">
                 <Card title={project.name} description={project.description}>
                   <Link to={`/projects/${project._id}/member`}>
-                    <Button variant="secondary" size="small">
+                    <Button variant="outline" size="small">
                       View Details
                     </Button>
                   </Link>

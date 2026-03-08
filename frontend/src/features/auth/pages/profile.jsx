@@ -2,7 +2,9 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 
-import LogoutDialog from "../components/LogoutDialog";
+import { User, Mail, Pencil, SquareArrowRightExit } from "lucide-react";
+
+import AuthDialog from "../components/AuthDialog";
 import EditProfile from "../components/EditProfile";
 import ChangePassword from "../components/ChangePassword";
 
@@ -12,10 +14,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 function Profile() {
-  const { userProfile } = useAuth();
+  const { userProfile, deleteUserProvider, logout } = useAuth();
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
   const [openEditProfile, setOpenEditProfile] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [openDeleteAccountDialog, setOpenDeleteAccountDialog] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,30 +29,45 @@ function Profile() {
       <div className="max-w-2xl mx-auto mt-10">
         {userProfile ? (
           <div className="space-y-6">
-            <Card>
+            <Card className="space-y-4">
               <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-              <p className="mb-4">Name: {userProfile.username}</p>
-              <p className="mb-4">Email: {userProfile.email}</p>
-              <Button
-                variant="primary"
-                onClick={() => setOpenEditProfile(true)}
-              >
-                Edit Profile
-              </Button>
-              <Button
-                variant="danger"
-                className="ml-2"
-                onClick={() => setOpenLogoutDialog(true)}
-              >
-                Logout
-              </Button>
+              <p>
+                <User className="inline mr-2" /> {userProfile.username}
+              </p>
+              <p>
+                <Mail className="inline mr-2" /> {userProfile.email}
+              </p>
+              <div className="flex space-x-2">
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={() => setOpenEditProfile(true)}
+                >
+                  <Pencil />
+                </Button>
+                <Button
+                  variant="danger"
+                  size="small"
+                  onClick={() => setOpenLogoutDialog(true)}
+                >
+                  <SquareArrowRightExit />
+                </Button>
+              </div>
             </Card>
-            <Card>
+            <Card className="space-x-4">
               <Button
                 variant="secondary"
                 onClick={() => setOpenChangePassword(true)}
+                size="small"
               >
                 Change password
+              </Button>
+              <Button
+                variant="danger"
+                size="small"
+                onClick={() => setOpenDeleteAccountDialog(true)}
+              >
+                Delete Account
               </Button>
             </Card>
           </div>
@@ -64,11 +82,15 @@ function Profile() {
         )}
       </div>
       {openLogoutDialog && (
-        <LogoutDialog
+        <AuthDialog
           isOpen={openLogoutDialog}
           onClose={() => setOpenLogoutDialog(false)}
+          title="Logout"
+          message="Are you sure you want to logout?"
+          onConfirm={logout}
         />
       )}
+
       {openEditProfile && (
         <EditProfile
           user={userProfile}
@@ -81,6 +103,15 @@ function Profile() {
           isOpen={openChangePassword}
           onClose={() => setOpenChangePassword(false)}
           userId={userProfile._id}
+        />
+      )}
+      {openDeleteAccountDialog && (
+        <AuthDialog
+          isOpen={openDeleteAccountDialog}
+          onClose={() => setOpenDeleteAccountDialog(false)}
+          title="Delete Account"
+          message="Are you sure you want to delete your account?"
+          onConfirm={() => deleteUserProvider(userProfile._id)}
         />
       )}
     </MainLayout>

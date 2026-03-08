@@ -7,6 +7,7 @@ import {
   getUserCurrent,
   updateUser,
   changePassword,
+  deleteUser,
 } from "../api/authAPI";
 
 export function AuthProvider({ children }) {
@@ -78,6 +79,17 @@ export function AuthProvider({ children }) {
       });
   };
 
+  const deleteUserProvider = (userId) => {
+    deleteUser(userId)
+      .then((response) => {
+        console.log("Account deleted successfully:", response);
+        logout();
+      })
+      .catch((error) => {
+        console.error("Error deleting account:", error);
+      });
+  };
+
   const value = {
     isLogin,
     checkLoginStatus,
@@ -87,6 +99,7 @@ export function AuthProvider({ children }) {
     logout,
     updateInfoUser,
     changePasswordUser,
+    deleteUserProvider,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
