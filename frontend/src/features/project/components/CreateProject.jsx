@@ -23,9 +23,11 @@ function CreateProject({ isOpen, onClose }) {
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h1 className="text-3xl font-bold">Create Project Page</h1>
+      <h1 className="text-3xl font-bold text-gray-800 text-center">
+        Create Project Page
+      </h1>
       <form
-        className="w-full max-w-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="w-full max-w-sm bg-white shadow-md rounded p-6 mt-4"
         onSubmit={handleCreateProject}
       >
         <Input
@@ -40,7 +42,7 @@ function CreateProject({ isOpen, onClose }) {
           placeHolder="Enter project description"
           ref={projectDescriptionRef}
         />
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 justify-center">
           <Button type="submit" variant="primary" size="medium">
             Create Project
           </Button>

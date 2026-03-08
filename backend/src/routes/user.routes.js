@@ -6,6 +6,8 @@ const {
   createUser,
   loginUser,
   getUserCurrent,
+  updateUser,
+  changePassword,
 } = require("../controllers/user.controller");
 
 // GET /user - Get all users
@@ -16,5 +18,9 @@ router.get("/me", protect, getUserCurrent);
 router.post("/create", createUser);
 // POST /user/login - User login
 router.post("/login", loginUser);
+// PUT /user/:id - Update user by ID
+router.put("/:id", protect, updateUser);
+// PUT /user/:id/password - Change password by ID
+router.put("/:id/password", protect, changePassword);
 
 module.exports = router;

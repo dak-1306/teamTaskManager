@@ -22,8 +22,10 @@ function EditProject({ isOpen, onClose, project }) {
 
   return (
     <Modal isOpen={isOpen} onClose={handleOnClose}>
-      <h1 className="text-3xl font-bold">Edit Project</h1>
-      <form className="w-full max-w-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h1 className="text-3xl font-bold text-gray-800 text-center">
+        Edit Project
+      </h1>
+      <form className="w-full max-w-sm bg-white shadow-md rounded p-6 mt-4 space-y-4">
         <Input
           id="projectName"
           label="Project Name"
@@ -39,8 +41,8 @@ function EditProject({ isOpen, onClose, project }) {
           ref={descriptionRef}
         />
         {project && members && (
-          <div className="mb-4">
-            <p className="text-gray-700 text-base">
+          <div className=" space-y-2">
+            <p className="text-gray-700 text-sm font-semibold">
               Members ({members.length}):
             </p>
             <ul className="list-disc list-inside">
@@ -65,7 +67,7 @@ function EditProject({ isOpen, onClose, project }) {
             </ul>
           </div>
         )}
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 justify-center">
           <Button
             type="submit"
             variant="primary"
@@ -75,14 +77,7 @@ function EditProject({ isOpen, onClose, project }) {
               const name = nameRef.current.value || project.name;
               const description =
                 descriptionRef.current.value || project.description;
-              console.log(
-                "Updating project with name:",
-                name,
-                "and description:",
-                description,
-                "and members:",
-                members,
-              );
+
               updateProject(project._id, { name, description, members });
               onClose();
             }}

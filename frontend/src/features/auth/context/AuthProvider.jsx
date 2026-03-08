@@ -1,7 +1,13 @@
 import { AuthContext } from "./AuthContext";
 import { useState, useEffect } from "react";
 
-import { registerUser, loginUser, getUserCurrent } from "../api/authAPI";
+import {
+  registerUser,
+  loginUser,
+  getUserCurrent,
+  updateUser,
+  changePassword,
+} from "../api/authAPI";
 
 export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState(false);
@@ -51,6 +57,27 @@ export function AuthProvider({ children }) {
     setUserProfile(null);
   };
 
+  const updateInfoUser = (userId, updatedData) => {
+    updateUser(userId, updatedData)
+      .then((updatedUser) => {
+        console.log("User profile updated:", updatedUser);
+        setUserProfile(updatedUser);
+      })
+      .catch((error) => {
+        console.error("Error updating user profile:", error);
+      });
+  };
+
+  const changePasswordUser = (userId, { currentPassword, newPassword }) => {
+    changePassword(userId, { currentPassword, newPassword })
+      .then((response) => {
+        console.log("Password changed successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+      });
+  };
+
   const value = {
     isLogin,
     checkLoginStatus,
@@ -58,6 +85,8 @@ export function AuthProvider({ children }) {
     register,
     login,
     logout,
+    updateInfoUser,
+    changePasswordUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

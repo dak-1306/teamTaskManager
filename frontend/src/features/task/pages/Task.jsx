@@ -7,7 +7,7 @@ import Button from "../../../shared/ui/Button";
 
 import useTaskStore from "../stores/taskStore";
 
-function Task({ projectId, variant }) {
+function Task({ projectId, variant, projectName }) {
   const { tasks, fetchTasksByProjectId } = useTaskStore();
   useEffect(() => {
     fetchTasksByProjectId(projectId);
@@ -15,62 +15,69 @@ function Task({ projectId, variant }) {
 
   console.log("Tasks for project", projectId, tasks);
 
+  const statusColors = {
+    done: "text-green-500",
+    doing: "text-yellow-500",
+    todo: "text-red-500",
+  };
+
+  const priorityColors = {
+    high: "text-red-500",
+    medium: "text-yellow-500",
+    low: "text-green-500",
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
-        Task of Project {projectId}
+        Task of Project {projectName}
       </h1>
       {tasks && tasks.length > 0 ? (
-        tasks.map((t) => (
-          <Card key={t._id} className="bg-white p-4 rounded shadow mb-4">
-            <h2 className="text-xl font-semibold">{t.title}</h2>
-            <p className="text-gray-600">{t.description}</p>
-            <p className="text-gray-500">Due Date: {t.dueDate}</p>
-            <p className="text-gray-500">
-              Status:{" "}
-              <span
-                className={
-                  t.status === "done"
-                    ? "text-green-500"
-                    : t.status === "doing"
-                      ? "text-yellow-500"
-                      : "text-red-500"
-                }
-              >
-                {t.status}
-              </span>
-            </p>
-            <p>
-              Priority:{" "}
-              <span
-                className={
-                  t.priority === "high"
-                    ? "text-red-500"
-                    : t.priority === "medium"
-                      ? "text-yellow-500"
-                      : "text-green-500"
-                }
-              >
-                {t.priority}
-              </span>
-            </p>
-            <div className="mt-2">
-              <h3 className="font-semibold">Assignees:</h3>
-              <ul className="list-disc list-inside">
-                {t.assignedTo.map((assignee) => (
-                  <li key={assignee._id}>
-                    {assignee.username} ({assignee.email})
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
-              <Button variant="link" className="ml-4">
-                View Details
-              </Button>
-            </Link>
-          </Card>
-        ))
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {tasks.map((t) => (
+            <Card key={t._id} className="mb-4 space-y-2">
+              <h2 className="text-xl font-semibold text-center">{t.title}</h2>
+              <p className="text-gray-600">{t.description}</p>
+              <p className="text-gray-600">
+                Due Date: {t.dueDate ? formatDate(t.dueDate) : "No due date"}
+              </p>
+              <p className="text-gray-600">
+                Status:{" "}
+                <span className={statusColors[t.status] || "text-gray-600"}>
+                  {t.status}
+                </span>
+              </p>
+              <p className="text-gray-600">
+                Priority:{" "}
+                <span className={priorityColors[t.priority] || "text-gray-600"}>
+                  {t.priority}
+                </span>
+              </p>
+              <div className="space-y-1">
+                <h3 className="font-semibold">Assignees:</h3>
+                <ul className="list-none">
+                  {t.assignedTo.map((assignee) => (
+                    <li key={assignee._id}>
+                      <p className="text-gray-600">
+                        {assignee.username} ({assignee.email})
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
+                <Button variant="link" size="small">
+                  View Details
+                </Button>
+              </Link>
+            </Card>
+          ))}
+        </div>
       ) : (
         <p className="text-gray-600 text-center">
           No tasks found for this project.

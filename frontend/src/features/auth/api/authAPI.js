@@ -43,5 +43,37 @@ const getAllUser = async () => {
     );
   }
 };
+const updateUser = async (userId, updatedData) => {
+  try {
+    const response = await axiosClient.put(`/users/${userId}`, updatedData);
+    console.log("Update User API response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to update user profile",
+    );
+  }
+};
+const changePassword = async (userId, { currentPassword, newPassword }) => {
+  try {
+    const response = await axiosClient.put(`/users/${userId}/password`, {
+      currentPassword,
+      newPassword,
+    });
+    console.log("Change Password API response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to change password",
+    );
+  }
+};
 
-export { registerUser, loginUser, getAllUser, getUserCurrent };
+export {
+  registerUser,
+  loginUser,
+  getAllUser,
+  getUserCurrent,
+  updateUser,
+  changePassword,
+};

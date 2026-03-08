@@ -22,7 +22,7 @@ function ProjectList() {
 
   return (
     <MainLayout>
-      <div className="space-y-4 p-8">
+      <div className="space-y-4 mt-4 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-4 text-center">Project List</h1>
 
         {loading && (
@@ -48,7 +48,7 @@ function ProjectList() {
           </div>
         )}
         {projects.length > 0 && (
-          <div>
+          <div className="space-y-4">
             <Button
               variant="primary"
               size="medium"
@@ -59,21 +59,19 @@ function ProjectList() {
               Create New Project
             </Button>
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold">My Projects</h2>
-              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <h2 className="text-xl font-semibold text-center">My Projects</h2>
+              <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {projects.map((project) => (
                   <li key={project._id} className="mb-4">
                     <Card
                       title={project.name}
                       description={project.description}
                     >
-                      <div className="flex space-x-2">
-                        <Link to={`/projects/${project._id}/owner`}>
-                          <Button variant="secondary" size="small">
-                            View Details
-                          </Button>
-                        </Link>
-                      </div>
+                      <Link to={`/projects/${project._id}/owner`}>
+                        <Button variant="secondary" size="small">
+                          View Details
+                        </Button>
+                      </Link>
                     </Card>
                   </li>
                 ))}
@@ -89,17 +87,15 @@ function ProjectList() {
         {memberProject.length === 0 ? (
           <p className="text-center text-gray-500">No member projects found.</p>
         ) : (
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {memberProject.map((project) => (
               <li key={project._id} className="mb-4">
                 <Card title={project.name} description={project.description}>
-                  <div className="flex space-x-2">
-                    <Link to={`/projects/${project._id}/member`}>
-                      <Button variant="secondary" size="small">
-                        View Details
-                      </Button>
-                    </Link>
-                  </div>
+                  <Link to={`/projects/${project._id}/member`}>
+                    <Button variant="secondary" size="small">
+                      View Details
+                    </Button>
+                  </Link>
                 </Card>
               </li>
             ))}

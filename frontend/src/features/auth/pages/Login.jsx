@@ -12,12 +12,12 @@ function Login() {
   const passwordRef = useRef(null);
 
   // Xử lý Đăng nhập
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     console.log("Login attempt with:", { email, password });
-    login({ email, password });
+    await login({ email, password });
     navigate("/dashboard");
   };
 
