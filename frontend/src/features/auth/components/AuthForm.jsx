@@ -6,7 +6,7 @@ import { Eye, EyeOff, House } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
-function AuthForm({ onSubmit, field, title }) {
+function AuthForm({ onSubmit, field, title, error, errorField }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -45,13 +45,18 @@ function AuthForm({ onSubmit, field, title }) {
                   {showPassword ? <EyeOff /> : <Eye />}
                 </button>
               )}
+              
             </Input>
+            {errorField === input.id && (
+                <p className="text-red-500 text-sm">This field is required</p>
+              )}
           </div>
         ))}
         <div className="flex flex-col items-center justify-between space-y-4">
           <Button type="submit" variant="primary" size="medium">
             {title}
           </Button>
+          {error && <p className="text-red-500">{error}</p>}
           {title === "Login" && (
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}

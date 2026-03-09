@@ -13,6 +13,7 @@ import {
 export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [error, setError] = useState(null);
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
@@ -23,8 +24,10 @@ export function AuthProvider({ children }) {
     try {
       const newUser = await registerUser(userData);
       console.log("User registered:", newUser);
+      setError(null);
     } catch (error) {
-      console.error("Error registering user:", error);
+      console.error("Error registering user:", error.message);
+      setError(error.message);
     }
   };
 
@@ -36,7 +39,8 @@ export function AuthProvider({ children }) {
           setUserProfile(user);
         })
         .catch((error) => {
-          console.error("Error fetching current user:", error);
+          console.error("Error fetching current user:", error.message);
+          setError(error.message);
         });
     }
   }, []);
@@ -44,12 +48,18 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     try {
       const response = await loginUser(credentials);
-      console.log("Login successful:", response);
-      localStorage.setItem("token", response.token);
-      setUserProfile(response.user);
-      setIsLogin(true);
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        setIsLogin(true);
+        setUserProfile(response.user);
+        setError(null);
+      } else {
+        throw new Error("Login failed: No token received");
+      }
     } catch (error) {
-      console.error("Error logging in user:", error);
+      console.error("Error logging in user:", error.message);
+      setError(error.message);
+      throw error; // Rethrow error để component gọi có thể xử lý
     }
   };
   const logout = () => {
@@ -63,9 +73,11 @@ export function AuthProvider({ children }) {
       .then((updatedUser) => {
         console.log("User profile updated:", updatedUser);
         setUserProfile(updatedUser);
+        setError(null);
       })
       .catch((error) => {
-        console.error("Error updating user profile:", error);
+        console.error("Error updating user profile:", error.message);
+        setError(error.message);
       });
   };
 
@@ -73,9 +85,11 @@ export function AuthProvider({ children }) {
     changePassword(userId, { currentPassword, newPassword })
       .then((response) => {
         console.log("Password changed successfully:", response);
+        setError(null);
       })
       .catch((error) => {
-        console.error("Error changing password:", error);
+        console.error("Error changing password:", error.message);
+        setError(error.message);
       });
   };
 
@@ -83,10 +97,12 @@ export function AuthProvider({ children }) {
     deleteUser(userId)
       .then((response) => {
         console.log("Account deleted successfully:", response);
+        setError(null);
         logout();
       })
       .catch((error) => {
-        console.error("Error deleting account:", error);
+        console.error("Error deleting account:", error.message);
+        setError(error.message);
       });
   };
 
@@ -100,6 +116,7 @@ export function AuthProvider({ children }) {
     updateInfoUser,
     changePasswordUser,
     deleteUserProvider,
+    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

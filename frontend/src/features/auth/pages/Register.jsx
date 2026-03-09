@@ -1,12 +1,13 @@
 import AuthForm from "../components/AuthForm";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { useAuth } from "../hooks/useAuth";
 function Register() {
   const navigate = useNavigate();
+  const [errorField, setErrorField] = useState(null);
 
-  const { register } = useAuth();
+  const { register, error } = useAuth();
 
   // Refs cho các trường nhập liệu
   const usernameRef = useRef(null);
@@ -18,6 +19,20 @@ function Register() {
     const username = usernameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    setErrorField(null);
+    if (!username) {
+      setErrorField("username");
+      return;
+    }
+    if (!email) {
+      setErrorField("email");
+      return;
+    }
+    if (!password) {
+      setErrorField("password");
+      return;
+    }
+
     console.log("Register attempt with:", { username, email, password });
     register({ username, email, password });
     navigate("/login");
@@ -50,7 +65,13 @@ function Register() {
 
   return (
     <div className="bg-gray-100">
-      <AuthForm onSubmit={handleSubmit} field={field} title="Register" />
+      <AuthForm
+        onSubmit={handleSubmit}
+        field={field}
+        title="Register"
+        error={error}
+        errorField={errorField}
+      />
     </div>
   );
 }

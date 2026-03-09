@@ -11,15 +11,13 @@ function Landing() {
   }
   return (
     <MainLayout>
-      <div className="text-center mt-20">
-        <h1 className="text-4xl font-bold mb-4">
-          Welcome to Team Task Manager
-        </h1>
-        <p className="text-lg mb-8">
+      <div className="text-center mt-20 space-y-6">
+        <h1 className="text-4xl font-bold ">Welcome to Team Task Manager</h1>
+        <p className="text-lg">
           Organize your team's tasks efficiently and effectively.
         </p>
         <Link to="/login">
-          <Button variant="primary" size="medium">
+          <Button variant="primary" size="large">
             Get Started
           </Button>
         </Link>

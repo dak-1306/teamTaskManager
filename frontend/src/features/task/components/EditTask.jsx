@@ -14,24 +14,44 @@ function EditTask({ open, onClose, taskDetail }) {
   const statusRef = useRef();
   const priorityRef = useRef();
   const [assignedEmailEdit, setAssignedEmailEdit] = useState([]);
+  const [errorField, setErrorField] = useState(null);
 
   useEffect(() => {
     const emails = taskDetail?.assignedTo?.map((u) => u.email) ?? [];
     setAssignedEmailEdit(emails);
   }, [taskDetail]);
   console.log("Assigned Emails for Edit:", assignedEmailEdit);
+  console.log("Task Detail in EditTask:", taskDetail);
 
   const handleSave = (e) => {
     e.preventDefault();
+    const origDue = taskDetail?.dueDate ? taskDetail.dueDate.split("T")[0] : "";
+    const newDueInput = dueDateRef.current?.value ?? origDue;
+    const newDueISO =
+      newDueInput === origDue
+        ? taskDetail.dueDate
+        : new Date(newDueInput).toISOString();
+
     const updatedTask = {
-      ...taskDetail,
-      title: titleRef.current.value,
-      description: descriptionRef.current.value,
-      dueDate: dueDateRef.current.value,
-      status: statusRef.current.value,
-      priority: priorityRef.current.value,
+      title: titleRef.current.value || taskDetail.title,
+      description: descriptionRef.current.value || taskDetail.description,
+      dueDate: newDueISO,
+      status: statusRef.current.value || taskDetail.status,
+      priority: priorityRef.current.value || taskDetail.priority,
       assignedTo: assignedEmailEdit,
     };
+
+    if (
+      updatedTask.title === taskDetail.title &&
+      updatedTask.description === taskDetail.description &&
+      updatedTask.dueDate === taskDetail.dueDate &&
+      updatedTask.status === taskDetail.status &&
+      updatedTask.priority === taskDetail.priority &&
+      assignedEmailEdit.length === taskDetail.assignedTo.length
+    ) {
+      setErrorField("noChanges");
+      return;
+    }
 
     updateTask(taskDetail._id, updatedTask);
     onClose();
@@ -113,7 +133,9 @@ function EditTask({ open, onClose, taskDetail }) {
               </Input>
             ))
           : null}
-
+        {errorField === "noChanges" && (
+          <p className="text-red-500 text-sm">No changes to update.</p>
+        )}
         <div className="flex justify-end space-x-2">
           <Button variant="secondary" onClick={handleCancel}>
             Cancel

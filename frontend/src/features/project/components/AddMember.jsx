@@ -2,17 +2,22 @@ import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import useProjectStore from "../stores/projectStore";
 
 function AddMember({ isOpen, onClose, projectId }) {
   const memberEmailRef = useRef();
+  const [error, setError] = useState(null);
   const { addMemberProject } = useProjectStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const memberEmail = memberEmailRef.current.value;
+    if (!memberEmail) {
+      setError("Email is required");
+      return;
+    }
     if (memberEmail) {
       addMemberProject(projectId, memberEmail);
       onClose();
@@ -33,6 +38,7 @@ function AddMember({ isOpen, onClose, projectId }) {
           placeHolder="Enter member email"
           ref={memberEmailRef}
         />
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         <div className="flex space-x-4 justify-center ">
           <Button type="submit" variant="primary" size="medium">
             Add Member

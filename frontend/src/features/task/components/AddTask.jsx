@@ -1,7 +1,7 @@
 import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 import useTaskStore from "../stores/taskStore";
 import useProjectStore from "../../project/stores/projectStore";
@@ -23,6 +23,8 @@ function AddTask({ open, onClose, projectId }) {
 
   const emailAssignToRef = useRef();
 
+  const [errorField, setErrorField] = useState(null);
+
   const handleAddTask = () => {
     const taskData = {
       title: titleRef.current.value,
@@ -33,25 +35,63 @@ function AddTask({ open, onClose, projectId }) {
       projectId: projectId,
       emailAssignTo: emailAssignToRef.current.value,
     };
+    if (!taskData.title) {
+      setErrorField("title");
+      return;
+    }
+    if (!taskData.description) {
+      setErrorField("description");
+      return;
+    }
+    if (!taskData.dueDate) {
+      setErrorField("dueDate");
+      return;
+    }
+
     console.log("Creating task with data:", taskData);
     createTask(taskData);
     onClose();
   };
+  const field = [
+    {
+      id: "title",
+      label: "Task Title",
+      placeHolder: "Enter task title",
+      ref: titleRef,
+    },
+    {
+      id: "description",
+      label: "Description",
+      placeHolder: "Enter task description",
+      ref: descriptionRef,
+    },
+    {
+      id: "dueDate",
+      label: "Due Date",
+      type: "date",
+      ref: dueDateRef,
+    },
+  ];
 
   return (
     <Modal isOpen={open} onClose={onClose} title="Add New Task">
       <div className="space-y-4">
-        <Input
-          label="Task Title"
-          placeHolder="Enter task title"
-          ref={titleRef}
-        />
-        <Input
-          label="Description"
-          placeHolder="Enter task description"
-          ref={descriptionRef}
-        />
-        <Input label="Due Date" type="date" ref={dueDateRef} />
+        {field.map((input) => (
+          <div>
+            <Input
+              key={input.id}
+              id={input.id}
+              label={input.label}
+              placeHolder={input.placeHolder}
+              type={input.type}
+              ref={input.ref}
+            />
+            {errorField === input.id && (
+              <p className="text-red-500 text-sm">This field is required</p>
+            )}
+          </div>
+        ))}
+
         <select
           id="taskStatus"
           name="status"
