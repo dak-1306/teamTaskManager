@@ -5,6 +5,8 @@ const useProjectStore = create((set) => ({
   projects: [],
   memberProject: [],
   projectDetail: null,
+  projectSearch: [],
+  projectMemberSearch: [],
   loading: false,
   error: null,
 
@@ -112,6 +114,21 @@ const useProjectStore = create((set) => ({
 
         loading: false,
       }));
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  // Search projects by name
+  searchProjects: async (query) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.get(`/projects/search?query=${query}`);
+      set({
+        projectSearch: response.data.ownedProjects,
+        projectMemberSearch: response.data.memberProjects,
+        loading: false,
+      });
     } catch (error) {
       set({ error: error.message, loading: false });
     }

@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../auth/hooks/useAuth";
 function Landing() {
-  const { isLogin } = useAuth();
+  const { isLogin, checkLoginStatus } = useAuth();
+  checkLoginStatus();
   const navigate = useNavigate();
   if (isLogin) {
     navigate("/dashboard");

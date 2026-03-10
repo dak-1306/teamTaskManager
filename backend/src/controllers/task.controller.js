@@ -37,10 +37,13 @@ const createTask = async (req, res) => {
     if (project.owner.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized to create task" });
     }
-    const userToAssign = await User.findOne({ email: emailAssignTo });
-    console.log("Fetched user to assign for task creation:", userToAssign);
-    if (!userToAssign) {
-      return res.status(404).json({ message: "User to assign not found" });
+    let userToAssign = null;
+    if (emailAssignTo) {
+      userToAssign = await User.findOne({ email: emailAssignTo });
+      console.log("Fetched user to assign for task creation:", userToAssign);
+      if (!userToAssign) {
+        return res.status(404).json({ message: "User to assign not found" });
+      }
     }
 
     const newTask = new Task({
@@ -233,6 +236,26 @@ const addAssignees = async (req, res) => {
   }
 };
 
+// GET /tasks/search - Search tasks by query
+const searchTasks = async (req, res) => {
+  try {
+    const { query, projectId } = req.query;
+    console.log("Search query:", query, "Project ID:", projectId);
+    const tasks = await Task.find({
+      title: { $regex: query, $options: "i" },
+      project: projectId,
+    })
+      .populate("project", "name")
+      .populate("assignedTo", "username email");
+    console.log("Search results for tasks:", tasks);
+    res.status(200).json(tasks);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to search tasks", error: error.message });
+  }
+};
+
 module.exports = {
   getAllTasks,
   createTask,
@@ -242,4 +265,5 @@ module.exports = {
   updateTask,
   deleteTask,
   addAssignees,
+  searchTasks,
 };

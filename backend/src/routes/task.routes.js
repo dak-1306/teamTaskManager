@@ -3,6 +3,7 @@ const protect = require("../middleware/auth.middleware");
 const router = express.Router();
 const {
   getAllTasks,
+  searchTasks,
   createTask,
   getTaskMe,
   getTaskById,
@@ -16,6 +17,8 @@ const {
 router.get("/", getAllTasks);
 // POST /tasks - Create a new task
 router.post("/create", protect, createTask);
+// GET /tasks/search - Search tasks by query
+router.get("/search", protect, searchTasks);
 // GET /tasks/me - Get tasks for the current user
 router.get("/me", protect, getTaskMe);
 // GET /tasks/:id - Get a task by ID

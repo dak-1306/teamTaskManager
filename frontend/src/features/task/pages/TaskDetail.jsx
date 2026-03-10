@@ -53,56 +53,62 @@ function TaskDetail() {
     <MainLayout>
       <div className="space-y-4 mt-4 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 text-center">
-          Task Detail: {taskDetail?.title || "Loading..."}
+          {taskDetail?.title || "Loading..."}
         </h1>
-        <div className="flex space-x-2">
-          <Button
-            className="mr-6"
-            variant="secondary"
-            size="medium"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowBigLeft />
-          </Button>
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => setOpenAddAssignees(true)}
-          >
-            <UserRoundPlus />
-          </Button>
-          <Button
-            variant="primary"
-            size="medium"
-            onClick={() => setOpenEditTask(true)}
-          >
-            <Pencil />
-          </Button>
-          <Button
-            variant="danger"
-            size="medium"
-            onClick={() => setOpenDeleteTask(true)}
-          >
-            <Trash2 />
-          </Button>
-        </div>
+        <Card>
+          <div className="flex items-center justify-start space-x-2">
+            <Button
+              className="mr-6"
+              variant="secondary"
+              size="medium"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBigLeft />
+            </Button>
+            <Button
+              variant="primary"
+              size="medium"
+              icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
+              onClick={() => setOpenAddAssignees(true)}
+            >
+              Add Assignees
+            </Button>
+            <Button
+              variant="primary"
+              size="medium"
+              icon={<Pencil className="w-4 h-4 mr-2" />}
+              onClick={() => setOpenEditTask(true)}
+            >
+              Edit Task
+            </Button>
+            <Button
+              variant="danger"
+              size="medium"
+              icon={<Trash2 className="w-4 h-4 mr-2" />}
+              onClick={() => setOpenDeleteTask(true)}
+            >
+              Delete Task
+            </Button>
+          </div>
+        </Card>
         {taskDetail ? (
           <Card className="bg-white p-4 rounded shadow mb-4">
-            <h2 className="text-xl font-semibold">{taskDetail?.title}</h2>
-            <p className="text-gray-600">{taskDetail?.description}</p>
-            <p className="text-gray-500">
-              Due Date: {formatDate(taskDetail?.dueDate)}
+            <p>
+              <strong>Description:</strong> {taskDetail?.description}
             </p>
-            <p className="text-gray-500">
-              Status:{" "}
+            <p>
+              <strong>Due Date:</strong> {formatDate(taskDetail?.dueDate)}
+            </p>
+            <p className="flex items-center space-x-2">
+              <strong>Status:</strong>
               <span
                 className={statusColor[taskDetail?.status] || "text-gray-500"}
               >
                 {taskDetail?.status}
               </span>
             </p>
-            <p>
-              Priority:{" "}
+            <p className="flex items-center space-x-2">
+              <strong>Priority:</strong>
               <span
                 className={
                   priorityColor[taskDetail?.priority] || "text-gray-500"
@@ -112,12 +118,12 @@ function TaskDetail() {
               </span>
             </p>
             <div className="mt-2">
-              <h3 className="font-semibold">Assignees:</h3>
+              <strong>Assignees:</strong>
               <ul className="list-none">
                 {taskDetail?.assignedTo &&
                   taskDetail.assignedTo.map((assignee) => (
                     <li key={assignee._id}>
-                      <p className="text-gray-600">
+                      <p>
                         {assignee.username} ({assignee.email})
                       </p>
                     </li>

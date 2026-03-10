@@ -41,16 +41,18 @@ function Profile() {
                 <Button
                   variant="primary"
                   size="small"
+                  icon={<Pencil className="w-4 h-4 mr-2" />}
                   onClick={() => setOpenEditProfile(true)}
                 >
-                  <Pencil />
+                  Edit Profile
                 </Button>
                 <Button
                   variant="danger"
                   size="small"
+                  icon={<SquareArrowRightExit className="w-4 h-4 mr-2" />}
                   onClick={() => setOpenLogoutDialog(true)}
                 >
-                  <SquareArrowRightExit />
+                  Logout
                 </Button>
               </div>
             </Card>

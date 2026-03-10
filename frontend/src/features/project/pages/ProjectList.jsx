@@ -1,11 +1,14 @@
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
+import SearchBar from "../../../shared/ui/SearchBar";
+import Filter from "../../../shared/ui/Filter";
+
 import { FolderPlus } from "lucide-react";
 
 import CreateProject from "../components/CreateProject";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 
@@ -13,7 +16,9 @@ import { useEffect } from "react";
 import useProjectStore from "../stores/projectStore";
 
 function ProjectList() {
+  const navigate = useNavigate();
   const [openCreateProject, setOpenCreateProject] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { projects, memberProject, fetchProjectMe, loading } =
     useProjectStore();
@@ -22,6 +27,29 @@ function ProjectList() {
     fetchProjectMe();
   }, [fetchProjectMe]);
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  const handleSubmitSearch = (e) => {
+    e.preventDefault();
+    navigate(`/projects/search?query=${encodeURIComponent(searchTerm)}`);
+    console.log("Search term:", searchTerm);
+  };
+
+  const filterName = [
+    { value: "nameAsc", label: "Name (A-Z)" },
+    { value: "nameDesc", label: "Name (Z-A)" },
+  ];
+
+  const filterStatus = [
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  const filterDate = [
+    { value: "createdAtAsc", label: "Created At (Asc)" },
+    { value: "createdAtDesc", label: "Created At (Desc)" },
+  ];
   return (
     <MainLayout>
       <div className="space-y-4 mt-4 max-w-7xl mx-auto">
@@ -48,18 +76,45 @@ function ProjectList() {
           </div>
         )}
         {projects.length > 0 && (
-          <div className="relative space-y-6">
-            <Button
-              variant="primary"
-              className="absolute top-0 left-0"
-              size="large"
-              onClick={() => {
-                setOpenCreateProject(true);
-              }}
-            >
-              <FolderPlus />
-            </Button>
+          <div className="space-y-6">
             <h2 className="text-xl font-semibold text-center">My Projects</h2>
+            <Card>
+              <div className="flex items-center space-x-2">
+                <SearchBar
+                  placeholder="Search projects..."
+                  onChange={handleSearch}
+                  value={searchTerm}
+                  onSubmit={handleSubmitSearch}
+                />
+                <Filter
+                  name="name"
+                  options={filterName}
+                  onFilterChange={() => {}}
+                />
+                <Filter
+                  name="status"
+                  options={filterStatus}
+                  onFilterChange={() => {}}
+                />
+                <Filter
+                  name="date"
+                  options={filterDate}
+                  onFilterChange={() => {}}
+                />
+
+                <Button
+                  variant="primary"
+                  size="large"
+                  icon={<FolderPlus className="w-4 h-4 mr-2" />}
+                  onClick={() => {
+                    setOpenCreateProject(true);
+                  }}
+                >
+                  Create Project
+                </Button>
+              </div>
+            </Card>
+
             <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {projects.map((project) => (
                 <li key={project._id} className="mb-4">

@@ -3,6 +3,7 @@ import { create } from "zustand";
 
 const useTaskStore = create((set) => ({
   tasks: [],
+  taskSearchResults: [],
   taskDetail: null,
   loading: false,
   error: null,
@@ -94,6 +95,19 @@ const useTaskStore = create((set) => ({
           state.taskDetail?._id === taskId ? response.data : state.taskDetail,
         loading: false,
       }));
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  // Search tasks by query
+  searchTasks: async (query, projectId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.get("/tasks/search", {
+        params: { query, projectId },
+      });
+      set({ taskSearchResults: response.data, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
     }

@@ -1,22 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { FilePlus } from "lucide-react";
 
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
+import SearchBar from "../../../shared/ui/SearchBar";
+import Filter from "../../../shared/ui/Filter";
+
+import AddTask from "../components/AddTask";
 
 import useTaskStore from "../stores/taskStore";
 
 import formatDate from "../../../shared/utils/formatDate";
 
 function Task({ projectId, variant, projectName }) {
+  const navigate = useNavigate();
+  const [openAddTask, setOpenAddTask] = useState(false);
+  const [taskSearch, setTaskSearch] = useState("");
   const { tasks, fetchTasksByProjectId } = useTaskStore();
   useEffect(() => {
     fetchTasksByProjectId(projectId);
   }, [fetchTasksByProjectId, projectId]);
-
   console.log("Tasks for project", projectId, tasks);
 
+  const handleOnChangeTaskSearch = (e) => {
+    setTaskSearch(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Implement search functionality here
+    navigate(
+      `/projects/${projectId}/${variant}/tasks/search?query=${encodeURIComponent(taskSearch)}`,
+    );
+  };
   const statusColors = {
     done: "text-green-500",
     doing: "text-yellow-500",
@@ -29,11 +48,56 @@ function Task({ projectId, variant, projectName }) {
     low: "text-green-500",
   };
 
+  const filterStatus = [
+    { value: "todo", label: "To Do" },
+    { value: "doing", label: "Doing" },
+    { value: "done", label: "Done" },
+  ];
+  const filterPriority = [
+    { value: "high", label: "High" },
+    { value: "medium", label: "Medium" },
+    { value: "low", label: "Low" },
+  ];
+  const filterTime = [
+    { value: "dueDateAsc", label: "Due Date (Asc)" },
+    { value: "dueDateDesc", label: "Due Date (Desc)" },
+  ];
+
   return (
-    <div>
+    <div className="space-y-4 ">
       <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
         Task of Project {projectName}
       </h1>
+      <Card>
+        <div className="flex items-center justify-start space-x-2">
+          <SearchBar
+            placeholder="Search tasks..."
+            value={taskSearch}
+            onSubmit={handleSubmit}
+            onChange={handleOnChangeTaskSearch}
+          />
+          <Filter
+            name="status"
+            options={filterStatus}
+            onFilterChange={() => {}}
+          />
+          <Filter
+            name="priority"
+            options={filterPriority}
+            onFilterChange={() => {}}
+          />
+          <Filter name="time" options={filterTime} onFilterChange={() => {}} />
+          <Button
+            variant="primary"
+            size="medium"
+            icon={<FilePlus className="w-4 h-4 mr-2" />}
+            onClick={() => setOpenAddTask(true)}
+          >
+            Add Task
+          </Button>
+        </div>
+      </Card>
+
       {tasks && tasks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tasks.map((t) => (
@@ -79,6 +143,14 @@ function Task({ projectId, variant, projectName }) {
         <p className="text-gray-600 text-center">
           No tasks found for this project.
         </p>
+      )}
+      {/* modal add task */}
+      {openAddTask && (
+        <AddTask
+          open={openAddTask}
+          onClose={() => setOpenAddTask(false)}
+          projectId={projectId}
+        />
       )}
     </div>
   );

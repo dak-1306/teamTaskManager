@@ -7,6 +7,8 @@ import TaskDetail from "../features/task/pages/TaskDetail";
 import ProjectList from "../features/project/pages/ProjectList";
 import ProjectDetail from "../features/project/pages/ProjectDetail";
 import Profile from "../features/auth/pages/profile";
+import ProjectSearchPage from "../features/project/pages/ProjectSearchPage";
+import TaskSearchPage from "../features/task/pages/TaskSearchPage";
 
 function Router() {
   return (
@@ -22,6 +24,11 @@ function Router() {
       <Route path="/projects" element={<ProjectList />} />
       <Route path="/projects/:id/:variant" element={<ProjectDetail />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/projects/search" element={<ProjectSearchPage />} />
+      <Route
+        path="/projects/:projectId/:variant/tasks/search"
+        element={<TaskSearchPage />}
+      />
     </Routes>
   );
 }

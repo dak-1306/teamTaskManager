@@ -4,6 +4,7 @@ function Button({
   className,
   variant,
   size,
+  icon,
   type = "button",
 }) {
   const baseClasses = "px-4 py-2 rounded focus:outline-none";
@@ -26,7 +27,12 @@ function Button({
   const combinedClasses = `${baseClasses} ${variantClasses[variant] || variantClasses.primary} ${sizeClasses[size] || sizeClasses.medium} ${className}`;
   return (
     <button onClick={onClick} className={combinedClasses} type={type}>
-      {children}
+      {icon && (
+        <span className="flex items-center">
+          {icon} {children}
+        </span>
+      )}
+      {!icon && children}
     </button>
   );
 }

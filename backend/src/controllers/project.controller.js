@@ -157,6 +157,30 @@ const addMemberProject = async (req, res) => {
   }
 };
 
+// GET /project/search - Search projects by name
+const searchProjects = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const userId = req.user.id;
+
+    // Tìm kiếm trong cả project owned và member
+    const ownedProjects = await Project.find({
+      owner: userId,
+      name: { $regex: query, $options: "i" },
+    }).populate("owner", "username email");
+    const memberProjects = await Project.find({
+      members: userId,
+      name: { $regex: query, $options: "i" },
+    }).populate("owner", "username email");
+
+    res.status(200).json({ ownedProjects, memberProjects });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to search projects", error: error.message });
+  }
+};
+
 module.exports = {
   getAllProjects,
   createProject,
@@ -165,4 +189,5 @@ module.exports = {
   updateProject,
   deleteProject,
   addMemberProject,
+  searchProjects,
 };

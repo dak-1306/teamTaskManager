@@ -5,21 +5,13 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
 
-import {
-  ArrowBigLeft,
-  UserRoundPlus,
-  Pencil,
-  Trash2,
-  FilePlus,
-} from "lucide-react";
+import { ArrowBigLeft, UserRoundPlus, Pencil, Trash2 } from "lucide-react";
 
 import Task from "../../task/pages/Task";
 
 import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
 import DeleteProject from "../components/DeleteProject";
-
-import AddTask from "../../task/components/AddTask";
 
 import useProjectStore from "../stores/projectStore";
 
@@ -29,7 +21,6 @@ function ProjectDetail() {
   const [openAddMember, setOpenAddMember] = useState(false);
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
-  const [openAddTask, setOpenAddTask] = useState(false);
 
   const projectDetail = useProjectStore((state) => state.projectDetail);
   const fetchProjectById = useProjectStore((state) => state.fetchProjectById);
@@ -52,66 +43,66 @@ function ProjectDetail() {
         >
           <ArrowBigLeft />
         </Button>
-
         <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
-          Project Detail
+          {projectDetail?.name || "Project Detail"}
         </h1>
 
-        <Card className="mb-4 flex space-x-2 justify-center">
-          <div className="flex space-x-4">
-            {variant === "owner" && (
-              <div className="space-x-4">
-                <Button
-                  variant="primary"
-                  size="medium"
-                  onClick={() => setOpenAddMember(true)}
-                >
-                  <UserRoundPlus />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="medium"
-                  onClick={() => setOpenEditProject(true)}
-                >
-                  <Pencil />
-                </Button>
-                <Button
-                  variant="danger"
-                  size="medium"
-                  onClick={() => setOpenDialogDelete(true)}
-                >
-                  <Trash2 />
-                </Button>
-              </div>
-            )}
-            <Button
-              variant="primary"
-              size="medium"
-              onClick={() => setOpenAddTask(true)}
-            >
-              <FilePlus />
-            </Button>
-          </div>
-        </Card>
-        <Card
-          title={`Project: ${projectDetail ? projectDetail.name : "Loading..."}`}
-          description={projectDetail ? projectDetail.description : "Loading..."}
-        >
+        <Card>
           {projectDetail && (
-            <div className="space-y-2">
-              <p>
-                <strong>Owner:</strong> {projectDetail.owner.username}
-              </p>
-              <p>
-                <strong>Members:</strong>
-              </p>
-              <ul className="list-disc list-inside">
-                {projectDetail.members.map((member) => (
-                  <li key={member._id}>
-                    {member.username} ({member.email})
-                  </li>
-                ))}
-              </ul>
+            <div className="flex justify-between mt-4 mx-auto max-w-2xl">
+              <div className="space-y-2">
+                <p>
+                  <strong>Created:</strong>{" "}
+                  {projectDetail.createdAt
+                    ? new Date(projectDetail.createdAt).toLocaleDateString()
+                    : "Unknown"}
+                </p>
+                <p>
+                  <strong>Description:</strong> {projectDetail.description}
+                </p>
+                <p>
+                  <strong>Owner:</strong> {projectDetail.owner.username}
+                </p>
+                <p>
+                  <strong>Members:</strong>
+                </p>
+                <ul className="list-disc list-inside">
+                  {projectDetail.members.map((member) => (
+                    <li key={member._id}>
+                      {member.username} ({member.email})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {variant === "owner" && (
+                <div className="flex flex-col space-y-2">
+                  <Button
+                    variant="primary"
+                    size="medium"
+                    icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
+                    onClick={() => setOpenAddMember(true)}
+                  >
+                    Add Member
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="medium"
+                    icon={<Pencil className="w-4 h-4 mr-2" />}
+                    onClick={() => setOpenEditProject(true)}
+                  >
+                    Edit Project
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="medium"
+                    icon={<Trash2 className="w-4 h-4 mr-2" />}
+                    onClick={() => setOpenDialogDelete(true)}
+                  >
+                    Delete Project
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </Card>
@@ -146,16 +137,7 @@ function ProjectDetail() {
             isOpen={openDialogDelete}
             onClose={() => setOpenDialogDelete(false)}
             projectId={id}
-            projectName={projectDetail ? projectDetail.name : "this project"}
-          />
-        )}
-
-        {/* modal add task */}
-        {openAddTask && (
-          <AddTask
-            open={openAddTask}
-            onClose={() => setOpenAddTask(false)}
-            projectId={id}
+            projectName={projectDetail ? projectDetail.title : "this project"}
           />
         )}
       </div>
