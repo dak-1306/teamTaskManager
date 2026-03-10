@@ -19,7 +19,17 @@ function Task({ projectId, variant, projectName }) {
   const navigate = useNavigate();
   const [openAddTask, setOpenAddTask] = useState(false);
   const [taskSearch, setTaskSearch] = useState("");
-  const { tasks, fetchTasksByProjectId } = useTaskStore();
+  const [filterTask, setFilterTask] = useState({
+    status: "",
+    priority: "",
+    date: "",
+  });
+
+  const { tasks, fetchTasksByProjectId, filterTasks } = useTaskStore();
+  useEffect(() => {
+    filterTasks({ ...filterTask, projectId });
+  }, [filterTask, filterTasks, projectId]);
+
   useEffect(() => {
     fetchTasksByProjectId(projectId);
   }, [fetchTasksByProjectId, projectId]);
@@ -36,6 +46,11 @@ function Task({ projectId, variant, projectName }) {
       `/projects/${projectId}/${variant}/tasks/search?query=${encodeURIComponent(taskSearch)}`,
     );
   };
+
+  const handleFilterChange = ({ name, value }) => {
+    setFilterTask((prev) => ({ ...prev, [name]: value }));
+  };
+
   const statusColors = {
     done: "text-green-500",
     doing: "text-yellow-500",
@@ -79,14 +94,27 @@ function Task({ projectId, variant, projectName }) {
           <Filter
             name="status"
             options={filterStatus}
-            onFilterChange={() => {}}
+            value={filterTask.status}
+            onFilterChange={(e) =>
+              handleFilterChange({ name: "status", value: e.target.value })
+            }
           />
           <Filter
             name="priority"
             options={filterPriority}
-            onFilterChange={() => {}}
+            value={filterTask.priority}
+            onFilterChange={(e) =>
+              handleFilterChange({ name: "priority", value: e.target.value })
+            }
           />
-          <Filter name="time" options={filterTime} onFilterChange={() => {}} />
+          <Filter
+            name="time"
+            options={filterTime}
+            value={filterTask.date}
+            onFilterChange={(e) =>
+              handleFilterChange({ name: "date", value: e.target.value })
+            }
+          />
           <Button
             variant="primary"
             size="medium"

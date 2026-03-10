@@ -19,14 +19,20 @@ function ProjectList() {
   const navigate = useNavigate();
   const [openCreateProject, setOpenCreateProject] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState({ name: "", date: "" });
 
-  const { projects, memberProject, fetchProjectMe, loading } =
+  const { projects, memberProject, fetchProjectMe, loading, filterProjects } =
     useProjectStore();
 
   useEffect(() => {
     fetchProjectMe();
   }, [fetchProjectMe]);
 
+  useEffect(() => {
+    filterProjects(filter.name, filter.date);
+  }, [filter, filterProjects]);
+
+  // Search and filter handlers
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -36,14 +42,14 @@ function ProjectList() {
     console.log("Search term:", searchTerm);
   };
 
+  const handleFilterChange = ({ name, date }) => {
+    setFilter({ name: name ? name : "", date: date ? date : "" });
+  };
+
+  // Define filter options
   const filterName = [
     { value: "nameAsc", label: "Name (A-Z)" },
     { value: "nameDesc", label: "Name (Z-A)" },
-  ];
-
-  const filterStatus = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
   ];
 
   const filterDate = [
@@ -89,17 +95,19 @@ function ProjectList() {
                 <Filter
                   name="name"
                   options={filterName}
-                  onFilterChange={() => {}}
+                  value={filter.name}
+                  onFilterChange={(e) =>
+                    handleFilterChange({ name: e.target.value })
+                  }
                 />
-                <Filter
-                  name="status"
-                  options={filterStatus}
-                  onFilterChange={() => {}}
-                />
+
                 <Filter
                   name="date"
                   options={filterDate}
-                  onFilterChange={() => {}}
+                  value={filter.date}
+                  onFilterChange={(e) =>
+                    handleFilterChange({ date: e.target.value })
+                  }
                 />
 
                 <Button

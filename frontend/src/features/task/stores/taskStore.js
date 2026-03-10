@@ -112,6 +112,17 @@ const useTaskStore = create((set) => ({
       set({ error: error.message, loading: false });
     }
   },
+
+  // Filter tasks by status, priority, or sort by date
+  filterTasks: async (filters) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.get("/tasks", { params: filters });
+      set({ tasks: response.data, loading: false });
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
 }));
 
 export default useTaskStore;

@@ -133,6 +133,23 @@ const useProjectStore = create((set) => ({
       set({ error: error.message, loading: false });
     }
   },
+
+  // Filter projects by name, status, or date
+  filterProjects: async (name, date) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.get(
+        `/projects?name=${name}&date=${date}`,
+      );
+      set({
+        projects: response.data.ownedProjects,
+        memberProject: response.data.memberProjects,
+        loading: false,
+      });
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
 }));
 
 export default useProjectStore;

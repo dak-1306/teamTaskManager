@@ -181,6 +181,42 @@ const searchProjects = async (req, res) => {
   }
 };
 
+// GET /project - Filter projects by name, status, or date
+const filterProjects = async (req, res) => {
+  try {
+    const { name, date } = req.query;
+    const userId = req.user.id;
+    console.log("Filtering projects for user:", userId, name, date);
+    let sortOptions = {};
+    if (name) {
+      sortOptions.name = name === "nameAsc" ? 1 : -1;
+    }
+    if (date) {
+      sortOptions.createdAt = date === "createdAtAsc" ? 1 : -1;
+    }
+    // Tìm kiếm trong cả project owned và member
+    const ownerProject = await Project.find({
+      owner: userId,
+    })
+      .populate("owner", "username email")
+      .sort(sortOptions);
+    const memberProject = await Project.find({
+      members: userId,
+    })
+      .populate("owner", "username email")
+      .sort(sortOptions);
+    console.log("Filtered owned projects:", ownerProject);
+    console.log("Filtered member projects:", memberProject);
+    res
+      .status(200)
+      .json({ ownedProjects: ownerProject, memberProjects: memberProject });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to filter projects", error: error.message });
+  }
+};
+
 module.exports = {
   getAllProjects,
   createProject,
@@ -190,4 +226,5 @@ module.exports = {
   deleteProject,
   addMemberProject,
   searchProjects,
+  filterProjects,
 };

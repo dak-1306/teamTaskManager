@@ -106,6 +106,7 @@ const getTaskById = async (req, res) => {
 
 // GET /tasks/projects/:id - Get a task by project ID
 const getTaskByProjectId = async (req, res) => {
+  console.log("getTaskByProjectId called");
   try {
     const { id } = req.params;
     // Tìm project
@@ -256,6 +257,48 @@ const searchTasks = async (req, res) => {
   }
 };
 
+// GET /tasks - Filter tasks by status, priority, or sort by date
+const filterTasks = async (req, res) => {
+  console.log("filterTasks called");
+  try {
+    const { status, priority, date } = req.query;
+    const userId = req.user.id;
+    const projectId = req.query.projectId;
+    console.log(
+      "Filtering tasks for user:",
+      userId,
+      status,
+      priority,
+      date,
+      projectId,
+    );
+    let filterOptions = {};
+    if (status) {
+      filterOptions.status = status;
+    }
+    if (priority) {
+      filterOptions.priority = priority;
+    }
+    let sortOptions = {};
+    if (date) {
+      sortOptions.dueDate = date === "dueDateAsc" ? 1 : -1;
+    }
+    const tasks = await Task.find({
+      project: projectId,
+      ...filterOptions,
+    })
+      .populate("project", "name")
+      .populate("assignedTo", "username email")
+      .sort(sortOptions);
+    console.log("Filtered tasks:", tasks);
+    res.status(200).json(tasks);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to filter tasks", error: error.message });
+  }
+};
+
 module.exports = {
   getAllTasks,
   createTask,
@@ -266,4 +309,5 @@ module.exports = {
   deleteTask,
   addAssignees,
   searchTasks,
+  filterTasks,
 };
