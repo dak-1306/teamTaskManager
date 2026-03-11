@@ -2,7 +2,7 @@ import Card from "../../../shared/ui/Card";
 
 function MyTaskCard({ title, description, status }) {
   return (
-    <Card>
+    <Card animation={true} className="mb-4 space-y-2">
       <h3 className="text-lg font-semibold">{title}</h3>
       <p className="text-gray-600">{description}</p>
       <p

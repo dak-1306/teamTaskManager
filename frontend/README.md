@@ -1,102 +1,75 @@
-# Team task manager
+# Frontend
+
+## Giới thiệu
+
+## Công nghệ sử dụng
+
+- React
+- React Router dom
+- Axios
+- Context, Zustand
+- Tailwind
+- Lucide React
+
+## Cài đặt môi trường
+
+```bash
+- cd frontend
+- npm install
+```
+
+## Chạy project
+
+```bash
+- cd frontend
+- npm run dev
+```
+
 ## Cấu trúc thư mục
-**Feature-Based Architecture**
+
 ```
 src/
-│
-├── app/                      # Cấu hình gốc
-│   ├── store.js
-│   ├── router.jsx
-│   └── axios.js
-│
-├── assets/                   # Hình ảnh, icon, svg
-│   ├── images/
-│   └── icons/
-│
-├── components/               # Component dùng chung
-│   │
-│   ├── ui/                   # Component thuần UI
-│   │   ├── Button.jsx
-│   │   ├── Input.jsx
-│   │   ├── Modal.jsx
-│   │   ├── Select.jsx
-│   │   ├── Spinner.jsx
-│   │   └── Badge.jsx
-│   │
-│   ├── layout/               # Layout tổng thể
-│   │   ├── MainLayout.jsx
-│   │   ├── AuthLayout.jsx
-│   │   ├── Sidebar.jsx
-│   │   ├── Header.jsx
-│   │   └── Footer.jsx
-│   │
-│   ├── common/               # Component tái sử dụng logic
-│   │   ├── ProtectedRoute.jsx
-│   │   ├── Pagination.jsx
-│   │   └── ConfirmDialog.jsx
-│   │
-│   └── task/                 # Component riêng cho task
-│       ├── TaskCard.jsx
-│       ├── TaskForm.jsx
-│       ├── TaskFilter.jsx
-│       └── TaskDetailModal.jsx
-│
-├── features/                 # Tách theo domain (quan trọng)
-│   │
-│   ├── auth/
+├── app/                         # Cấu hình core của web
+│   ├── axios.js                 # Cấu hình axios instance (baseURL, interceptors)
+│   ├── providers.jsx            # Các global providers (Context, Theme...)
+│   └── router.jsx               # Cấu hình routing của web
+
+├── assets/                      # Tài nguyên tĩnh
+│   ├── images/                  # Hình ảnh
+│   └── icon/                    # Icon
+
+├── features/                    # Các module chức năng (feature-based structure)
+
+│   ├── auth/                    # Chức năng xác thực
+│   │   ├── api/                 # Gọi API liên quan đến auth
+│   │   ├── components/          # Components dùng riêng cho auth
+│   │   ├── context/             # Auth context / provider
+│   │   ├── hooks/               # Custom hooks cho auth
+│   │   └── pages/               # Login, Register...
+
+│   ├── dashboard/               # Trang dashboard
+│   │   ├── components/
+│   │   └── pages/
+
+│   ├── landing/                 # Trang landing page
+
+│   ├── project/                 # Quản lý project
+│   │   ├── components/
 │   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   └── Register.jsx
-│   │   ├── authSlice.js      # nếu dùng Redux
-│   │   ├── authAPI.js
-│   │   └── useAuth.js
-│   │
-│   ├── project/
-│   │   ├── pages/
-│   │   │   ├── ProjectList.jsx
-│   │   │   └── ProjectDetail.jsx
-│   │   ├── ProjectCard.jsx
-│   │   ├── projectAPI.js
-│   │   └── useProject.js
-│   │
-│   ├── task/
-│   │   ├── pages/
-│   │   │   └── Board.jsx
-│   │   ├── KanbanColumn.jsx
-│   │   ├── taskAPI.js
-│   │   └── useTask.js
-│   │
-│   └── dashboard/
-│       ├── Dashboard.jsx
-│       └── StatsCard.jsx
-│
-├── context/                  # Global context
-│   ├── AuthContext.jsx
-│   ├── ThemeContext.jsx
-│   └── ProjectContext.jsx
-│
-├── hooks/                    # Custom hooks
-│   ├── useDebounce.js
-│   ├── useLocalStorage.js
-│   ├── usePagination.js
-│   └── useToggle.js
-│
-├── services/                 # Gọi API tập trung
-│   ├── authService.js
-│   ├── projectService.js
-│   └── taskService.js
-│
-├── utils/                    # Hàm tiện ích
-│   ├── constants.js
-│   ├── formatDate.js
-│   ├── validate.js
-│   └── role.js
-│
-├── styles/
-│   ├── index.css
-│   └── tailwind.css
-│
-├── App.jsx
-├── main.jsx
-└── index.css
+│   │   └── stores/              # State management (Zustand)
+
+│   └── task/                    # Quản lý task
+│       ├── components/
+│       ├── pages/
+│       └── stores/              # State management (Zustand)
+
+├── shared/                      # Thành phần dùng chung toàn app
+│   ├── layout/                  # Layout components (Header, Footer, MainLayout)
+│   ├── ui/                      # UI components dùng lại (Button, Modal...)
+│   └── utils/                   # Helper functions
+
+├── styles/                      # Global styles Css/Tailwind config
+
+├── App.jsx                      # Root component
+└── main.jsx                     # Entry point (render React app)
 ```

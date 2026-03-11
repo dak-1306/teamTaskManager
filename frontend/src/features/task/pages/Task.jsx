@@ -129,7 +129,7 @@ function Task({ projectId, variant, projectName }) {
       {tasks && tasks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tasks.map((t) => (
-            <Card key={t._id} className="mb-4 space-y-2">
+            <Card key={t._id} animation={true} className="space-y-2 mb-4">
               <h2 className="text-xl font-semibold text-center">{t.title}</h2>
               <p className="text-gray-600">{t.description}</p>
               <p className="text-gray-600">

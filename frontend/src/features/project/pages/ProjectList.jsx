@@ -126,7 +126,11 @@ function ProjectList() {
             <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {projects.map((project) => (
                 <li key={project._id} className="mb-4">
-                  <Card title={project.name} description={project.description}>
+                  <Card
+                    title={project.name}
+                    description={project.description}
+                    animation={true}
+                  >
                     <Link to={`/projects/${project._id}/owner`}>
                       <Button variant="outline" size="small">
                         View Details
@@ -149,7 +153,11 @@ function ProjectList() {
           <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {memberProject.map((project) => (
               <li key={project._id} className="mb-4">
-                <Card title={project.name} description={project.description}>
+                <Card
+                  title={project.name}
+                  description={project.description}
+                  animation={true}
+                >
                   <Link to={`/projects/${project._id}/member`}>
                     <Button variant="outline" size="small">
                       View Details

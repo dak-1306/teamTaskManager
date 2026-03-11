@@ -1,11 +1,15 @@
 import MainLayout from "../../shared/layout/MainLayout";
 import Button from "../../shared/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import { useAuth } from "../auth/hooks/useAuth";
 function Landing() {
   const { isLogin, checkLoginStatus } = useAuth();
-  checkLoginStatus();
+  useEffect(() => {
+    checkLoginStatus();
+  }, [checkLoginStatus]);
+
   const navigate = useNavigate();
   if (isLogin) {
     navigate("/dashboard");

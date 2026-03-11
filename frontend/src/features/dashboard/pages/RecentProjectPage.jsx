@@ -20,6 +20,7 @@ function RecentProjectPage() {
               title={project.name}
               description={project.description}
               time={project.updatedAt}
+              projectId={project._id}
             />
           </li>
         ))
