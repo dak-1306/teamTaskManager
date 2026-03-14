@@ -24,6 +24,10 @@ function Profile() {
 
   const navigate = useNavigate();
 
+  const handleLogout=() => {
+    logout();
+    navigate("/login");
+  };
   console.log("User Profile:", userProfile);
 
   return (
@@ -107,7 +111,7 @@ function Profile() {
           onClose={() => setOpenLogoutDialog(false)}
           title="Logout"
           message="Are you sure you want to logout?"
-          onConfirm={logout}
+          onConfirm={handleLogout}
         />
       )}
 

@@ -37,6 +37,8 @@ export const AuthProvider = ({ children }) => {
       getUserCurrent()
         .then((user) => {
           setUserProfile(user);
+          setIsLogin(true);
+          setError(null);
         })
         .catch((error) => {
           console.error("Error fetching current user:", error.message);

@@ -33,7 +33,7 @@ function ProjectDetail() {
   console.log("Project Detail:", projectDetail);
   return (
     <MainLayout isLogin={true}>
-      <div className="space-y-4 mt-4 max-w-7xl mx-auto relative">
+      <div className="relative">
         <Button
           className="absolute top-0 left-0"
           variant="secondary"

@@ -2,26 +2,19 @@ import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 
 import useTaskStore from "../stores/taskStore";
 
-function EditTask({ open, onClose, taskDetail }) {
+function EditTask({ open, onClose, taskDetail, assignedEmailEdit, setAssignedEmailEdit }) {
   const { updateTask } = useTaskStore();
   const titleRef = useRef();
   const descriptionRef = useRef();
   const dueDateRef = useRef();
   const statusRef = useRef();
   const priorityRef = useRef();
-  const [assignedEmailEdit, setAssignedEmailEdit] = useState([]);
-  const [errorField, setErrorField] = useState(null);
 
-  useEffect(() => {
-    const emails = taskDetail?.assignedTo?.map((u) => u.email) ?? [];
-    setAssignedEmailEdit(emails);
-  }, [taskDetail]);
-  console.log("Assigned Emails for Edit:", assignedEmailEdit);
-  console.log("Task Detail in EditTask:", taskDetail);
+  const [errorField, setErrorField] = useState(null);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -58,10 +51,13 @@ function EditTask({ open, onClose, taskDetail }) {
   };
 
   const handleCancel = () => {
-    const initial = taskDetail?.assignedTo?.map((u) => u.email) ?? [];
-    setAssignedEmailEdit(initial);
+    setAssignedEmailEdit(taskDetail?.assignedTo?.map((u) => u.email) ?? []);
     onClose();
   };
+
+  console.log("edit task opened");
+  console.log("Assigned Emails for Edit:", assignedEmailEdit);
+  console.log("Task Detail in EditTask:", taskDetail);
 
   return (
     <Modal isOpen={open} onClose={handleCancel} title="Edit Task">

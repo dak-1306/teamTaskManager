@@ -20,22 +20,18 @@ function TaskDetail() {
   const navigate = useNavigate();
   const taskDetail = useTaskStore((state) => state.taskDetail);
   const fetchTaskById = useTaskStore((state) => state.fetchTaskById);
-  console.log("taskDetail:", taskDetail);
-  console.log("fetchTaskById:", fetchTaskById);
-  console.log("taskId:", taskId);
 
+  const [assignedEmailEdit, setAssignedEmailEdit] = useState([]);
+  const [taskDetailForEdit, setTaskDetailForEdit] = useState(null);
   const [openEditTask, setOpenEditTask] = useState(false);
   const [openDeleteTask, setOpenDeleteTask] = useState(false);
   const [openAddAssignees, setOpenAddAssignees] = useState(false);
 
   useEffect(() => {
-    console.log("useEffect triggered");
-
     if (taskId) {
-      console.log("calling fetchTaskById", taskId);
       fetchTaskById(taskId);
     }
-  }, [taskId]);
+  }, [taskId, fetchTaskById]);
 
   const statusColor = {
     done: "text-green-500",
@@ -51,108 +47,118 @@ function TaskDetail() {
 
   return (
     <MainLayout isLogin={true}>
-      <div className="space-y-4 mt-4 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 text-center">
-          {taskDetail?.title || "Loading..."}
-        </h1>
-        <Card>
-          <div className="flex items-center justify-start space-x-2">
-            <Button
-              className="mr-6"
-              variant="secondary"
-              size="medium"
-              onClick={() => navigate(-1)}
+      <h1 className="text-2xl font-bold text-gray-800 text-center">
+        {taskDetail?.title || "Loading..."}
+      </h1>
+      <Card>
+        <div className="flex items-center justify-start space-x-2">
+          <Button
+            className="mr-6"
+            variant="secondary"
+            size="medium"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowBigLeft />
+          </Button>
+          <Button
+            variant="primary"
+            size="medium"
+            icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
+            onClick={() => setOpenAddAssignees(true)}
+          >
+            Add Assignees
+          </Button>
+          <Button
+            variant="primary"
+            size="medium"
+            icon={<Pencil className="w-4 h-4 mr-2" />}
+            onClick={() => {
+              setTaskDetailForEdit(taskDetail);
+              setAssignedEmailEdit(
+                taskDetail?.assignedTo?.map((u) => u.email) ?? [],
+              );
+              setOpenEditTask(true);
+            }}
+          >
+            Edit Task
+          </Button>
+          <Button
+            variant="danger"
+            size="medium"
+            icon={<Trash2 className="w-4 h-4 mr-2" />}
+            onClick={() => setOpenDeleteTask(true)}
+          >
+            Delete Task
+          </Button>
+        </div>
+      </Card>
+      {taskDetail ? (
+        <Card className="bg-white p-4 rounded shadow mb-4">
+          <p>
+            <strong>Description:</strong> {taskDetail?.description}
+          </p>
+          <p>
+            <strong>Due Date:</strong> {formatDate(taskDetail?.dueDate)}
+          </p>
+          <p className="flex items-center space-x-2">
+            <strong>Status:</strong>
+            <span
+              className={statusColor[taskDetail?.status] || "text-gray-500"}
             >
-              <ArrowBigLeft />
-            </Button>
-            <Button
-              variant="primary"
-              size="medium"
-              icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
-              onClick={() => setOpenAddAssignees(true)}
+              {taskDetail?.status}
+            </span>
+          </p>
+          <p className="flex items-center space-x-2">
+            <strong>Priority:</strong>
+            <span
+              className={priorityColor[taskDetail?.priority] || "text-gray-500"}
             >
-              Add Assignees
-            </Button>
-            <Button
-              variant="primary"
-              size="medium"
-              icon={<Pencil className="w-4 h-4 mr-2" />}
-              onClick={() => setOpenEditTask(true)}
-            >
-              Edit Task
-            </Button>
-            <Button
-              variant="danger"
-              size="medium"
-              icon={<Trash2 className="w-4 h-4 mr-2" />}
-              onClick={() => setOpenDeleteTask(true)}
-            >
-              Delete Task
-            </Button>
+              {taskDetail?.priority}
+            </span>
+          </p>
+          <div className="mt-2">
+            <strong>Assignees:</strong>
+            <ul className="list-none">
+              {taskDetail?.assignedTo &&
+                taskDetail.assignedTo.map((assignee) => (
+                  <li key={assignee._id}>
+                    <p>
+                      {assignee.username} ({assignee.email})
+                    </p>
+                  </li>
+                ))}
+            </ul>
           </div>
         </Card>
-        {taskDetail ? (
-          <Card className="bg-white p-4 rounded shadow mb-4">
-            <p>
-              <strong>Description:</strong> {taskDetail?.description}
-            </p>
-            <p>
-              <strong>Due Date:</strong> {formatDate(taskDetail?.dueDate)}
-            </p>
-            <p className="flex items-center space-x-2">
-              <strong>Status:</strong>
-              <span
-                className={statusColor[taskDetail?.status] || "text-gray-500"}
-              >
-                {taskDetail?.status}
-              </span>
-            </p>
-            <p className="flex items-center space-x-2">
-              <strong>Priority:</strong>
-              <span
-                className={
-                  priorityColor[taskDetail?.priority] || "text-gray-500"
-                }
-              >
-                {taskDetail?.priority}
-              </span>
-            </p>
-            <div className="mt-2">
-              <strong>Assignees:</strong>
-              <ul className="list-none">
-                {taskDetail?.assignedTo &&
-                  taskDetail.assignedTo.map((assignee) => (
-                    <li key={assignee._id}>
-                      <p>
-                        {assignee.username} ({assignee.email})
-                      </p>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </Card>
-        ) : (
-          <p className="text-gray-500">Task not found.</p>
-        )}
+      ) : (
+        <p className="text-gray-500">Task not found.</p>
+      )}
 
-        {/* modals */}
+      {/* modals */}
+      {openAddAssignees && (
         <AddAssignees
           isOpen={openAddAssignees}
           onClose={() => setOpenAddAssignees(false)}
           taskId={taskId}
           projectId={taskDetail ? taskDetail.project._id : null}
         />
+      )}
+      {openEditTask && (
         <EditTask
           open={openEditTask}
           onClose={() => setOpenEditTask(false)}
-          taskDetail={taskDetail}
+          taskDetail={taskDetailForEdit}
+          assignedEmailEdit={assignedEmailEdit}
+          setAssignedEmailEdit={setAssignedEmailEdit}
         />
+      )}
+      {openDeleteTask && (
         <DeleteTask
           open={openDeleteTask}
           onClose={() => setOpenDeleteTask(false)}
           taskId={taskId}
         />
-      </div>
+      )}
     </MainLayout>
   );
 }

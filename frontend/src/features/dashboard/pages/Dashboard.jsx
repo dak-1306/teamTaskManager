@@ -7,7 +7,7 @@ import RecentProjectPage from "./RecentProjectPage";
 function Dashboard() {
   return (
     <MainLayout isLogin={true}>
-      <div className="space-y-6 mt-4">
+      <div>
         <h1 className="text-2xl font-bold text-foreground text-center">
           Dashboard
         </h1>

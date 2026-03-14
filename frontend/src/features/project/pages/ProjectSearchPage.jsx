@@ -27,59 +27,57 @@ function ProjectSearchPage() {
   console.log("Search Results:", projectSearch);
   return (
     <MainLayout isLogin={true}>
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Project Search Projects</h1>
-        {q && (
-          <p className="mb-4">
-            Search results for: <strong>{q}</strong>
-          </p>
-        )}
-        <Link to="/projects">
-          <Button variant="outline" size="small">
-            Back to Projects
-          </Button>
-        </Link>
-        <h2>Project Owner</h2>
-        {projectSearch.length > 0 ? (
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
-            {projectSearch.map((project) => (
-              <Card>
-                <li key={project.id} className="space-y-2">
-                  <h2 className="text-xl font-semibold">{project.name}</h2>
-                  <p>{project.description}</p>
-                  <Link to={`/projects/${project._id}/owner`}>
-                    <Button variant="outline" size="small">
-                      View Details
-                    </Button>
-                  </Link>
-                </li>
-              </Card>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No projects found.</p>
-        )}
-        <h2>Project Member</h2>
-        {projectMemberSearch.length > 0 ? (
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
-            {projectMemberSearch.map((project) => (
-              <Card>
-                <li key={project.id} className="space-y-2">
-                  <h2 className="text-xl font-semibold">{project.name}</h2>
-                  <p>{project.description}</p>
-                  <Link to={`/projects/${project._id}/member`}>
-                    <Button variant="outline" size="small">
-                      View Details
-                    </Button>
-                  </Link>
-                </li>
-              </Card>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No projects found.</p>
-        )}
-      </div>
+      <h1 className="text-2xl font-bold">Project Search Projects</h1>
+      {q && (
+        <p className="mb-4">
+          Search results for: <strong>{q}</strong>
+        </p>
+      )}
+      <Link to="/projects">
+        <Button variant="outline" size="small">
+          Back to Projects
+        </Button>
+      </Link>
+      <h2>Project Owner</h2>
+      {projectSearch.length > 0 ? (
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          {projectSearch.map((project) => (
+            <Card>
+              <li key={project.id} className="space-y-2">
+                <h2 className="text-xl font-semibold">{project.name}</h2>
+                <p>{project.description}</p>
+                <Link to={`/projects/${project._id}/owner`}>
+                  <Button variant="outline" size="small">
+                    View Details
+                  </Button>
+                </Link>
+              </li>
+            </Card>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">No projects found.</p>
+      )}
+      <h2>Project Member</h2>
+      {projectMemberSearch.length > 0 ? (
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          {projectMemberSearch.map((project) => (
+            <Card>
+              <li key={project.id} className="space-y-2">
+                <h2 className="text-xl font-semibold">{project.name}</h2>
+                <p>{project.description}</p>
+                <Link to={`/projects/${project._id}/member`}>
+                  <Button variant="outline" size="small">
+                    View Details
+                  </Button>
+                </Link>
+              </li>
+            </Card>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">No projects found.</p>
+      )}
     </MainLayout>
   );
 }

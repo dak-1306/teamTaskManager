@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 import MainLayout from "../../shared/layout/MainLayout";
 import Button from "../../shared/ui/Button";
@@ -7,11 +6,7 @@ import Button from "../../shared/ui/Button";
 import { useAuth } from "../auth/context/useAuth";
 function Landing() {
   const navigate = useNavigate();
-  const { isLogin, checkLoginStatus } = useAuth();
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, [checkLoginStatus]);
+  const { isLogin } = useAuth();
 
   if (isLogin) {
     navigate("/dashboard");

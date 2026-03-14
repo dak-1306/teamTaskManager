@@ -55,7 +55,7 @@ function Login() {
   ];
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gradient-to-r from-blue-400 to-purple-400 flex flex-col items-center justify-center h-screen">
       <AuthForm
         onSubmit={handleSubmit}
         field={field}

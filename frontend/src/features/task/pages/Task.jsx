@@ -17,6 +17,7 @@ import formatDate from "../../../shared/utils/formatDate";
 
 function Task({ projectId, variant, projectName }) {
   const navigate = useNavigate();
+
   const [openAddTask, setOpenAddTask] = useState(false);
   const [taskSearch, setTaskSearch] = useState("");
   const [filterTask, setFilterTask] = useState({
@@ -25,7 +26,8 @@ function Task({ projectId, variant, projectName }) {
     date: "",
   });
 
-  const { tasks, fetchTasksByProjectId, filterTasks } = useTaskStore();
+  const { tasks, fetchTasksByProjectId, filterTasks, loading } = useTaskStore();
+
   useEffect(() => {
     filterTasks({ ...filterTask, projectId });
   }, [filterTask, filterTasks, projectId]);
@@ -33,7 +35,6 @@ function Task({ projectId, variant, projectName }) {
   useEffect(() => {
     fetchTasksByProjectId(projectId);
   }, [fetchTasksByProjectId, projectId]);
-  console.log("Tasks for project", projectId, tasks);
 
   const handleOnChangeTaskSearch = (e) => {
     setTaskSearch(e.target.value);
@@ -78,8 +79,11 @@ function Task({ projectId, variant, projectName }) {
     { value: "dueDateDesc", label: "Due Date (Desc)" },
   ];
 
+  console.log("loading:", loading);
+  console.log("Tasks for project", projectId, tasks);
+
   return (
-    <div className="space-y-4 ">
+    <div className="space-y-4">
       <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">
         Task of Project {projectName}
       </h1>
@@ -131,19 +135,30 @@ function Task({ projectId, variant, projectName }) {
           {tasks.map((t) => (
             <Card key={t._id} animation={true} className="space-y-2 mb-4">
               <h2 className="text-xl font-semibold text-center">{t.title}</h2>
-              <p className="text-gray-600 dark:text-gray-300">{t.description}</p>
+              <p className="text-gray-600 dark:text-gray-300">
+                {t.description}
+              </p>
               <p className="text-gray-600 dark:text-gray-300">
                 Due Date: {t.dueDate ? formatDate(t.dueDate) : "No due date"}
               </p>
               <p className="text-gray-600 dark:text-gray-300">
                 Status:{" "}
-                <span className={statusColors[t.status] || "text-gray-600 dark:text-gray-300"}>
+                <span
+                  className={
+                    statusColors[t.status] || "text-gray-600 dark:text-gray-300"
+                  }
+                >
                   {t.status}
                 </span>
               </p>
               <p className="text-gray-600 dark:text-gray-300">
                 Priority:{" "}
-                <span className={priorityColors[t.priority] || "text-gray-600 dark:text-gray-300"}>
+                <span
+                  className={
+                    priorityColors[t.priority] ||
+                    "text-gray-600 dark:text-gray-300"
+                  }
+                >
                   {t.priority}
                 </span>
               </p>
