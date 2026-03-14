@@ -1,8 +1,8 @@
+import { useRef, useState } from "react";
+
 import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
-
-import { useRef, useState } from "react";
 
 import useProjectStore from "../stores/projectStore";
 
@@ -11,9 +11,11 @@ function EditProject({ isOpen, onClose, project }) {
 
   const nameRef = useRef();
   const descriptionRef = useRef();
+
   const [errorField, setErrorField] = useState(null);
   const [members, setMembers] = useState(project.members || []);
 
+  // Handle form submission to update the project
   const handleUpdateProject = (e) => {
     e.preventDefault();
     const name = nameRef.current.value || project.name;
@@ -31,10 +33,13 @@ function EditProject({ isOpen, onClose, project }) {
     onClose();
   };
 
+  // Handle modal close to reset members state
   const handleOnClose = () => {
     setMembers(project.members || []);
     onClose();
   };
+
+  // Define form fields with refs and error handling
   const Field = [
     {
       id: "projectName",
@@ -55,11 +60,8 @@ function EditProject({ isOpen, onClose, project }) {
   console.log("EditProject component received project:", project);
 
   return (
-    <Modal isOpen={isOpen} onClose={handleOnClose}>
-      <h1 className="text-3xl font-bold text-gray-800 text-center">
-        Edit Project
-      </h1>
-      <form className="w-full max-w-sm bg-white shadow-md rounded p-6 mt-4 space-y-4">
+    <Modal isOpen={isOpen} onClose={handleOnClose} title="Edit Project">
+      <form className="w-full max-w-sm bg-white dark:bg-gray-700 dark:shadow-md rounded p-6 mt-4 space-y-4">
         {/* Input Fields */}
         {Field.map((input) => (
           <Input
@@ -78,7 +80,7 @@ function EditProject({ isOpen, onClose, project }) {
         {/* Members List */}
         {project && members && (
           <div className=" space-y-2">
-            <p className="text-gray-700 text-sm font-semibold">
+            <p className="text-gray-700 dark:text-white text-sm font-semibold">
               Members ({members.length}):
             </p>
             <ul className="list-disc list-inside">

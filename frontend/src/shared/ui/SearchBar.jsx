@@ -9,7 +9,7 @@ function SearchBar({ placeholder, onChange, onSubmit, value }) {
         type="search"
         placeholder={placeholder}
         value={value}
-        className=" px-4 py-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
+        className=" px-4 py-2 w-full border dark:border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         onChange={onChange}
       />
     </form>

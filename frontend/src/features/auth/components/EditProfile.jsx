@@ -1,10 +1,10 @@
+import { useRef, useState } from "react";
+
 import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 
-import { useRef, useState } from "react";
-
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 
 function EditProfile({ user, isOpen, onClose }) {
   const [updateError, setUpdateError] = useState(null);
@@ -18,12 +18,15 @@ function EditProfile({ user, isOpen, onClose }) {
       username: usernameRef.current.value,
       email: emailRef.current.value,
     };
-    if(updatedData.username === user.username && updatedData.email === user.email) {
+    if (
+      updatedData.username === user.username &&
+      updatedData.email === user.email
+    ) {
       setUpdateError("No changes to update.");
       return;
     }
     console.log("Updating user with data:", updatedData);
-    updateInfoUser(user._id,updatedData);
+    updateInfoUser(user._id, updatedData);
     onClose();
   };
 

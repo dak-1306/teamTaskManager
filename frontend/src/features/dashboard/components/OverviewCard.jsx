@@ -7,7 +7,9 @@ function OverviewCard({ title, value, icon }) {
   const defaultTitle = "Overview";
   return (
     <Card animation={true} className="flex items-center space-x-4">
-      <div className="p-3 rounded-full bg-blue-100">{icon || defaultIcon}</div>
+      <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+        {icon || defaultIcon}
+      </div>
       <div>
         <p className="text-sm font-medium text-muted-foreground">
           {title || defaultTitle}

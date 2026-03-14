@@ -3,9 +3,8 @@ import Button from "./Button";
 
 function ConfirmDialog({ isOpen, onClose, onConfirm, title, message }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <h1 className="text-2xl font-bold mb-4">{title}</h1>
-      <p className="mb-6">{message}</p>
+    <Modal isOpen={isOpen} onClose={onClose} title={title}>
+      <p className="mb-6 dark:text-gray-300">{message}</p>
       <div className="flex justify-end space-x-4">
         <Button variant="secondary" size="medium" onClick={onClose}>
           Cancel

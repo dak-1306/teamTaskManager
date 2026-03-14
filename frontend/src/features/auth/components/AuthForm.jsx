@@ -1,11 +1,11 @@
-import Button from "../../../shared/ui/Button";
-import Input from "../../../shared/ui/Input";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 import { Eye, EyeOff, House } from "lucide-react";
 
-import { Link } from "react-router-dom";
+import Button from "../../../shared/ui/Button";
+import Input from "../../../shared/ui/Input";
 
-import { useState } from "react";
 function AuthForm({ onSubmit, field, title, error, errorField }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -45,11 +45,11 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
                   {showPassword ? <EyeOff /> : <Eye />}
                 </button>
               )}
-              
             </Input>
+
             {errorField === input.id && (
-                <p className="text-red-500 text-sm">This field is required</p>
-              )}
+              <p className="text-red-500 text-sm">This field is required</p>
+            )}
           </div>
         ))}
         <div className="flex flex-col items-center justify-between space-y-4">

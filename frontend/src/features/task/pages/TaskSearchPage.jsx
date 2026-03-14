@@ -27,7 +27,7 @@ function TaskSearchPage() {
   }, [searchParams, projectId, searchTasks]);
 
   return (
-    <MainLayout>
+    <MainLayout isLogin={true}>
       <div className="space-y-4">
         <h1>Task Search</h1>
         {/* Add your search functionality here */}

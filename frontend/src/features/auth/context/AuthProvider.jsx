@@ -1,5 +1,5 @@
-import { AuthContext } from "./AuthContext";
 import { useState, useEffect } from "react";
+import { AuthContext } from "./AuthContext";
 
 import {
   registerUser,
@@ -10,7 +10,7 @@ import {
   deleteUser,
 } from "../api/authAPI";
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [error, setError] = useState(null);
@@ -120,4 +120,4 @@ export function AuthProvider({ children }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};

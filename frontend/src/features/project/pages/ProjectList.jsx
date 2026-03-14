@@ -1,28 +1,28 @@
+import { Link, useNavigate } from "react-router-dom";
+
+import { useState, useEffect } from "react";
+
+import { FolderPlus } from "lucide-react";
+
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import SearchBar from "../../../shared/ui/SearchBar";
 import Filter from "../../../shared/ui/Filter";
 
-import { FolderPlus } from "lucide-react";
-
 import CreateProject from "../components/CreateProject";
 
-import { Link, useNavigate } from "react-router-dom";
-
-import { useState } from "react";
-
-import { useEffect } from "react";
 import useProjectStore from "../stores/projectStore";
 
 function ProjectList() {
   const navigate = useNavigate();
-  const [openCreateProject, setOpenCreateProject] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState({ name: "", date: "" });
 
   const { projects, memberProject, fetchProjectMe, loading, filterProjects } =
     useProjectStore();
+
+  const [openCreateProject, setOpenCreateProject] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState({ name: "", date: "" });
 
   useEffect(() => {
     fetchProjectMe();
@@ -56,16 +56,19 @@ function ProjectList() {
     { value: "createdAtAsc", label: "Created At (Asc)" },
     { value: "createdAtDesc", label: "Created At (Desc)" },
   ];
+
+  const hasProjects = projects.length > 0;
+  const hasMemberProjects = memberProject.length > 0;
   return (
-    <MainLayout>
+    <MainLayout isLogin={true}>
       <div className="space-y-4 mt-4 max-w-7xl mx-auto">
         {loading && (
-          <p className="text-center text-gray-500">Loading projects...</p>
+          <p className="text-center">Loading projects...</p>
         )}
-        {projects.length === 0 && memberProject.length === 0 && (
+        {!loading && !hasProjects && !hasMemberProjects && (
           <div className="space-y-2">
-            <p className="text-center text-gray-500">No projects found.</p>
-            <p className="text-center text-gray-500">
+            <p className="text-center">No projects found.</p>
+            <p className="text-center">
               Let's create a new project!
             </p>
             <div className="flex justify-center">
@@ -81,7 +84,7 @@ function ProjectList() {
             </div>
           </div>
         )}
-        {projects.length > 0 && (
+        {hasProjects ? (
           <div className="space-y-6">
             <h2 className="text-xl font-semibold text-center">My Projects</h2>
             <Card>
@@ -141,15 +144,19 @@ function ProjectList() {
               ))}
             </ul>
           </div>
+        ) : (
+          !loading && (
+            <p className="text-center">
+              You have not created any projects.
+            </p>
+          )
         )}
 
         <hr className="my-8" />
         <h2 className="text-xl font-semibold mt-8 text-center">
           Projects I'm a Member Of
         </h2>
-        {memberProject.length === 0 ? (
-          <p className="text-center text-gray-500">No member projects found.</p>
-        ) : (
+        {hasMemberProjects ? (
           <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {memberProject.map((project) => (
               <li key={project._id} className="mb-4">
@@ -167,6 +174,12 @@ function ProjectList() {
               </li>
             ))}
           </ul>
+        ) : (
+          !loading && (
+            <p className="text-center text-gray-500">
+              You are not a member of any projects.
+            </p>
+          )
         )}
       </div>
 

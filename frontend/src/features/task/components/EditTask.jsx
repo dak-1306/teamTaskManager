@@ -91,7 +91,7 @@ function EditTask({ open, onClose, taskDetail }) {
         />
         <select
           id="taskStatus"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
           ref={statusRef}
           defaultValue={taskDetail ? taskDetail.status : ""}
         >
@@ -102,7 +102,7 @@ function EditTask({ open, onClose, taskDetail }) {
         </select>
         <select
           id="taskPriority"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
           ref={priorityRef}
           defaultValue={taskDetail ? taskDetail.priority : ""}
         >
@@ -111,7 +111,9 @@ function EditTask({ open, onClose, taskDetail }) {
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
-        <p className="font-semibold ">Assigned Users:</p>
+        <p className="font-semibold text-gray-700 dark:text-white">
+          Assigned Users:
+        </p>
         {assignedEmailEdit.length > 0
           ? assignedEmailEdit.map((email) => (
               <Input

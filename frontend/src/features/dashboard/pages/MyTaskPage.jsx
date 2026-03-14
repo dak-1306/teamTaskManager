@@ -1,6 +1,6 @@
-import MyTaskCard from "../components/MyTaskCard";
-
 import { useEffect } from "react";
+
+import MyTaskCard from "../components/MyTaskCard";
 
 import useTaskStore from "../../task/stores/taskStore";
 
@@ -11,6 +11,7 @@ function MyTaskPage() {
   }, [fetchTasks]);
 
   console.log("Tasks in MyTaskPage:", tasks);
+  
   return (
     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto max-w-7xl list-none">
       {tasks ? (

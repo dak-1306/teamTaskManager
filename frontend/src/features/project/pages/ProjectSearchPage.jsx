@@ -9,6 +9,8 @@ import useProjectStore from "../stores/projectStore";
 
 function ProjectSearchPage() {
   const [searchParams] = useSearchParams();
+  const q = searchParams.get("query");
+
   const searchProjects = useProjectStore((state) => state.searchProjects);
   const projectSearch = useProjectStore((state) => state.projectSearch);
   const projectMemberSearch = useProjectStore(
@@ -23,10 +25,8 @@ function ProjectSearchPage() {
   }, [searchParams, searchProjects]);
 
   console.log("Search Results:", projectSearch);
-
-  const q = searchParams.get("query");
   return (
-    <MainLayout>
+    <MainLayout isLogin={true}>
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Project Search Projects</h1>
         {q && (

@@ -95,7 +95,7 @@ function AddTask({ open, onClose, projectId }) {
         <select
           id="taskStatus"
           name="status"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
           ref={statusRef}
         >
           <option value="">-- Select Status --</option>
@@ -106,7 +106,7 @@ function AddTask({ open, onClose, projectId }) {
         <select
           name="priority"
           id="priority"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
           ref={priorityRef}
         >
           <option value="">-- Select Priority --</option>
@@ -117,14 +117,14 @@ function AddTask({ open, onClose, projectId }) {
         {projectDetail && projectDetail.members && (
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="memberEmail"
             >
               Project Members:
             </label>
             <select
               id="memberEmail"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:text-white dark:bg-gray-700 dark:border-gray-500"
               ref={emailAssignToRef}
             >
               <option value="">Select a member</option>

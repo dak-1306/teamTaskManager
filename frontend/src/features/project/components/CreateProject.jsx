@@ -1,17 +1,17 @@
+import { useRef, useState } from "react";
+
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
 import Modal from "../../../shared/ui/Modal";
 
-import { useRef, useState } from "react";
-
 import useProjectStore from "../stores/projectStore";
 
 function CreateProject({ isOpen, onClose }) {
+  const { createProject, error } = useProjectStore();
+
   const projectNameRef = useRef(null);
   const projectDescriptionRef = useRef(null);
   const [errorField, setErrorField] = useState(null);
-
-  const { createProject, error } = useProjectStore();
 
   const handleCreateProject = (e) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ function CreateProject({ isOpen, onClose }) {
     console.log("Project created:", newProject);
     onClose();
   };
+  // Define form fields with refs and error handling
   const field = [
     {
       id: "projectName",
@@ -49,12 +50,9 @@ function CreateProject({ isOpen, onClose }) {
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <h1 className="text-3xl font-bold text-gray-800 text-center">
-        Create Project Page
-      </h1>
+    <Modal isOpen={isOpen} onClose={onClose} title="Create New Project">
       <form
-        className="w-full max-w-sm bg-white shadow-md rounded p-6 mt-4"
+        className="w-full max-w-sm bg-white dark:bg-gray-700 shadow-lg rounded p-6 mt-4"
         onSubmit={handleCreateProject}
       >
         {field.map((input) => (

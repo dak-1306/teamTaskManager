@@ -1,11 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import { ArrowBigLeft, UserRoundPlus, Pencil, Trash2 } from "lucide-react";
+
 import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
-
-import { ArrowBigLeft, UserRoundPlus, Pencil, Trash2 } from "lucide-react";
 
 import Task from "../../task/pages/Task";
 
@@ -17,23 +17,22 @@ import useProjectStore from "../stores/projectStore";
 
 function ProjectDetail() {
   const { id, variant } = useParams();
+  const navigate = useNavigate();
+
+  const projectDetail = useProjectStore((state) => state.projectDetail);
+  const fetchProjectById = useProjectStore((state) => state.fetchProjectById);
 
   const [openAddMember, setOpenAddMember] = useState(false);
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
-
-  const projectDetail = useProjectStore((state) => state.projectDetail);
-  const fetchProjectById = useProjectStore((state) => state.fetchProjectById);
 
   useEffect(() => {
     fetchProjectById(id);
   }, [fetchProjectById, id]);
 
   console.log("Project Detail:", projectDetail);
-
-  const navigate = useNavigate();
   return (
-    <MainLayout>
+    <MainLayout isLogin={true}>
       <div className="space-y-4 mt-4 max-w-7xl mx-auto relative">
         <Button
           className="absolute top-0 left-0"
@@ -43,12 +42,12 @@ function ProjectDetail() {
         >
           <ArrowBigLeft />
         </Button>
-        <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">
           {projectDetail?.name || "Project Detail"}
         </h1>
 
         <Card>
-          {projectDetail && (
+          {projectDetail ? (
             <div className="flex justify-between mt-4 mx-auto max-w-2xl">
               <div className="space-y-2">
                 <p>
@@ -104,9 +103,11 @@ function ProjectDetail() {
                 </div>
               )}
             </div>
+          ) : (
+            <p className="text-center">Project not found.</p>
           )}
         </Card>
-        <hr className="my-4 border-gray-300" />
+        <hr className="my-4 border-gray-300 dark:border-gray-600" />
 
         <Task
           projectId={id}
@@ -114,7 +115,6 @@ function ProjectDetail() {
           projectName={projectDetail ? projectDetail.name : "Loading..."}
         />
 
-        {/* modal */}
         {/* modal add member */}
         {openAddMember && (
           <AddMember

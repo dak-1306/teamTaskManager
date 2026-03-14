@@ -1,21 +1,23 @@
+import { useRef, useState } from "react";
+
 import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 import Input from "../../../shared/ui/Input";
-
-import { useRef, useState } from "react";
 
 import useProjectStore from "../stores/projectStore";
 
 function AddMember({ isOpen, onClose, projectId }) {
   const memberEmailRef = useRef();
-  const [error, setError] = useState(null);
+
   const { addMemberProject } = useProjectStore();
+
+  const [errorField, setErrorField] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const memberEmail = memberEmailRef.current.value;
     if (!memberEmail) {
-      setError("Email is required");
+      setErrorField("Email is required");
       return;
     }
     if (memberEmail) {
@@ -24,12 +26,9 @@ function AddMember({ isOpen, onClose, projectId }) {
     }
   };
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <h1 className="text-3xl font-bold text-gray-800 text-center">
-        Add Member
-      </h1>
+    <Modal isOpen={isOpen} onClose={onClose} title="Add Member to Project">
       <form
-        className="w-full max-w-sm bg-white shadow-md rounded p-6 mt-4"
+        className="w-full max-w-sm bg-white dark:bg-gray-700 dark:shadow-md rounded p-6 mt-4"
         onSubmit={handleSubmit}
       >
         <Input
@@ -38,7 +37,7 @@ function AddMember({ isOpen, onClose, projectId }) {
           placeHolder="Enter member email"
           ref={memberEmailRef}
         />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {errorField && <p className="text-red-500 text-sm">{errorField}</p>}
         <div className="flex space-x-4 justify-center ">
           <Button type="submit" variant="primary" size="medium">
             Add Member

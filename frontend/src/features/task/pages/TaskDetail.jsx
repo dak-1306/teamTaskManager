@@ -50,7 +50,7 @@ function TaskDetail() {
   };
 
   return (
-    <MainLayout>
+    <MainLayout isLogin={true}>
       <div className="space-y-4 mt-4 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 text-center">
           {taskDetail?.title || "Loading..."}

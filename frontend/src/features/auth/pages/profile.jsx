@@ -11,10 +11,12 @@ import ChangePassword from "../components/ChangePassword";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
+import { useTheme } from "../../../shared/context/useTheme";
 
 function Profile() {
   const { userProfile, deleteUserProvider, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
   const [openEditProfile, setOpenEditProfile] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
@@ -25,7 +27,7 @@ function Profile() {
   console.log("User Profile:", userProfile);
 
   return (
-    <MainLayout>
+    <MainLayout isLogin={userProfile ? true : false}>
       <div className="max-w-2xl mx-auto mt-10">
         {userProfile ? (
           <div className="space-y-6">
@@ -71,6 +73,22 @@ function Profile() {
               >
                 Delete Account
               </Button>
+            </Card>
+            <Card className="flex items-center space-x-4">
+              <p>Theme:</p>
+              <label className="flex items-center space-x-2 w-10 h-6 bg-gray-100 p-1 rounded-full border border-gray-300 cursor-pointer">
+                <input
+                  className="hidden"
+                  type="checkbox"
+                  checked={theme === "dark"}
+                  onChange={toggleTheme}
+                />
+                {theme === "dark" ? (
+                  <span className="w-4 h-4 bg-gray-800 rounded-full transform translate-x-4"></span>
+                ) : (
+                  <span className="w-4 h-4 bg-blue-500 rounded-full "></span>
+                )}
+              </label>
             </Card>
           </div>
         ) : (

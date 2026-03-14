@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-function Modal({ isOpen, onClose, children }) {
+function Modal({ isOpen, onClose, children, title }) {
   if (!isOpen) {
     return null;
   }
@@ -12,7 +12,12 @@ function Modal({ isOpen, onClose, children }) {
       />
 
       {/* Content */}
-      <div className="relative bg-white rounded-xl p-6 shadow-xl w-[400px]">
+      <div className="relative bg-white dark:bg-gray-700 rounded-xl p-6 shadow-xl w-[400px]">
+        {title && (
+          <h2 className="text-xl text-center font-semibold text-gray-800 dark:text-white mb-4">
+            {title}
+          </h2>
+        )}
         {children}
       </div>
     </div>,

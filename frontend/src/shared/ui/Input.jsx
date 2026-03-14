@@ -12,7 +12,7 @@ function Input({
     <div className={`mb-4`}>
       {label && (
         <label
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-gray-700 dark:text-white text-sm font-bold mb-2"
           htmlFor={id}
         >
           {label}
@@ -23,7 +23,7 @@ function Input({
           className={`flex justify-between items-center space-x-2 ${classNameInput}`}
         >
           <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:shadow-outline `}
             id={id}
             type={type}
             placeholder={placeHolder}
@@ -34,7 +34,7 @@ function Input({
         </div>
       ) : (
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:shadow-outline"
           id={id}
           type={type}
           placeholder={placeHolder}

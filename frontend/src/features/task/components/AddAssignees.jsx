@@ -32,23 +32,22 @@ function AddAssignees({ isOpen, onClose, taskId, projectId }) {
     }
   };
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <h1 className="text-3xl font-bold">Add Assignees</h1>
+    <Modal isOpen={isOpen} onClose={onClose} title="Add Assignees">
       <form
-        className="w-full max-w-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="w-full max-w-sm bg-white dark:bg-gray-700 dark:shadow-md rounded px-8 pt-6 pb-8 mb-4"
         onSubmit={handleSubmit}
       >
         {projectDetail && projectDetail.members && (
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-white text-sm font-bold mb-2"
               htmlFor="memberEmail"
             >
               Project Members:
             </label>
             <select
               id="memberEmail"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
               ref={memberEmailRef}
             >
               <option value="">Select a member</option>

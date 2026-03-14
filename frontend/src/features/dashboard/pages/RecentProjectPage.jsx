@@ -1,6 +1,6 @@
-import RecentProjectCard from "../components/RecentProjectCard";
-
 import { useEffect } from "react";
+
+import RecentProjectCard from "../components/RecentProjectCard";
 
 import useProjectStore from "../../project/stores/projectStore";
 
@@ -11,6 +11,7 @@ function RecentProjectPage() {
   }, [fetchProjectMe]);
 
   console.log("Projects in RecentProjectPage:", projects);
+
   return (
     <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-7xl list-none">
       {projects ? (

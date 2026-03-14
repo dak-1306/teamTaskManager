@@ -2,7 +2,7 @@ import AuthForm from "../components/AuthForm";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 function Register() {
   const navigate = useNavigate();
   const [errorField, setErrorField] = useState(null);

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function Header({ isLogin }) {
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 bg-gray-800 text-white h-16 px-8 flex justify-between items-center z-60">
+      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-600 text-gray-800 dark:text-white h-16 px-8 flex justify-between items-center z-60">
         <Link to={`${isLogin ? "/dashboard" : "/"}`}>
           <h1 className="text-2xl font-bold">Team Task Manager</h1>
         </Link>
