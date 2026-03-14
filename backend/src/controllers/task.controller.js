@@ -2,17 +2,35 @@ const Task = require("../models/task.model");
 const Project = require("../models/project.model");
 const User = require("../models/user.model");
 
-// GET /tasks - Get all tasks
-const getAllTasks = async (req, res) => {
+// GET /tasks/overview - Get task overview for dashboard
+const getOverviewTasks = async (req, res) => {
   try {
-    const tasks = await Task.find()
+    const userId = req.user.id;
+    const tasks = await Task.find({
+      assignedTo: userId,
+    })
       .populate("project", "name")
       .populate("assignedTo", "username email");
-    res.status(200).json(tasks);
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(
+      (task) => task.status === "done",
+    ).length;
+    const inProgressTasks = tasks.filter(
+      (task) => task.status === "doing",
+    ).length;
+
+    res.status(200).json({
+      totalTasks,
+      completedTasks,
+      inProgressTasks,
+    });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Failed to retrieve tasks", error: error.message });
+      .json({
+        message: "Failed to retrieve task overview",
+        error: error.message,
+      });
   }
 };
 
@@ -70,12 +88,26 @@ const createTask = async (req, res) => {
 // GET /tasks/me - Get tasks for the current user
 const getTaskMe = async (req, res) => {
   try {
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 10;
+    const taskAll = await Task.find({
+      assignedTo: req.user.id,
+    });
     const tasks = await Task.find({
       assignedTo: req.user.id,
     })
       .populate("project", "name")
-      .populate("assignedTo", "username email");
-    res.status(200).json(tasks);
+      .populate("assignedTo", "username email")
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
+
+    res.status(200).json({
+      tasks,
+      total: taskAll.length,
+      page: pageNumber,
+      limit: limitNumber,
+    });
   } catch (error) {
     res
       .status(500)
@@ -109,6 +141,9 @@ const getTaskByProjectId = async (req, res) => {
   console.log("getTaskByProjectId called");
   try {
     const { id } = req.params;
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 10;
     // Tìm project
     const project = await Project.findById(id);
     console.log("Fetched project for getTaskByProjectId:", project);
@@ -126,16 +161,25 @@ const getTaskByProjectId = async (req, res) => {
     if (!isOwner && !isMember) {
       return res.status(403).json({ message: "Forbidden" });
     }
+    const taskAll = await Task.find({ project: id });
+
     const tasks = await Task.find({ project: id })
       .populate("project", "name owner ")
-      .populate("assignedTo", "username email");
+      .populate("assignedTo", "username email")
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
     console.log("Received request to get task by project ID:", id);
     console.log("Fetched task by project ID:", tasks);
     if (!tasks || tasks.length === 0) {
       return res.status(404).json({ message: "Tasks not found" });
     }
 
-    res.status(200).json(tasks);
+    res.status(200).json({
+      tasks,
+      total: taskAll.length,
+      page: pageNumber,
+      limit: limitNumber,
+    });
   } catch (error) {
     res
       .status(500)
@@ -240,16 +284,29 @@ const addAssignees = async (req, res) => {
 // GET /tasks/search - Search tasks by query
 const searchTasks = async (req, res) => {
   try {
-    const { query, projectId } = req.query;
+    const { query, projectId, page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 10;
     console.log("Search query:", query, "Project ID:", projectId);
+    const taskAll = await Task.find({
+      title: { $regex: query, $options: "i" },
+      project: projectId,
+    });
     const tasks = await Task.find({
       title: { $regex: query, $options: "i" },
       project: projectId,
     })
       .populate("project", "name")
-      .populate("assignedTo", "username email");
+      .populate("assignedTo", "username email")
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
     console.log("Search results for tasks:", tasks);
-    res.status(200).json(tasks);
+    res.status(200).json({
+      tasks,
+      total: taskAll.length,
+      page: pageNumber,
+      limit: limitNumber,
+    });
   } catch (error) {
     res
       .status(500)
@@ -261,9 +318,11 @@ const searchTasks = async (req, res) => {
 const filterTasks = async (req, res) => {
   console.log("filterTasks called");
   try {
-    const { status, priority, date } = req.query;
+    const { status, priority, date, page, limit } = req.query;
     const userId = req.user.id;
     const projectId = req.query.projectId;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 10;
     console.log(
       "Filtering tasks for user:",
       userId,
@@ -283,15 +342,29 @@ const filterTasks = async (req, res) => {
     if (date) {
       sortOptions.dueDate = date === "dueDateAsc" ? 1 : -1;
     }
+    const taskAll = await Task.find({
+      project: projectId,
+      ...filterOptions,
+    })
+      .populate("project", "name")
+      .populate("assignedTo", "username email");
+
     const tasks = await Task.find({
       project: projectId,
       ...filterOptions,
     })
       .populate("project", "name")
       .populate("assignedTo", "username email")
-      .sort(sortOptions);
+      .sort(sortOptions)
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
     console.log("Filtered tasks:", tasks);
-    res.status(200).json(tasks);
+    res.status(200).json({
+      tasks,
+      total: taskAll.length,
+      page: pageNumber,
+      limit: limitNumber,
+    });
   } catch (error) {
     res
       .status(500)
@@ -300,7 +373,7 @@ const filterTasks = async (req, res) => {
 };
 
 module.exports = {
-  getAllTasks,
+  getOverviewTasks,
   createTask,
   getTaskMe,
   getTaskById,

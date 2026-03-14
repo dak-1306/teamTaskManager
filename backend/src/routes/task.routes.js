@@ -2,7 +2,7 @@ const express = require("express");
 const protect = require("../middleware/auth.middleware");
 const router = express.Router();
 const {
-  getAllTasks,
+  getOverviewTasks,
   searchTasks,
   createTask,
   getTaskMe,
@@ -16,6 +16,8 @@ const {
 
 // GET /tasks - Filter tasks by status, priority, or sort by date
 router.get("/", protect, filterTasks);
+// GET /tasks/overview - Get task overview for dashboard
+router.get("/overview", protect, getOverviewTasks);
 // POST /tasks - Create a new task
 router.post("/create", protect, createTask);
 // GET /tasks/search - Search tasks by query
@@ -32,7 +34,5 @@ router.put("/:id", protect, updateTask);
 router.delete("/:id", protect, deleteTask);
 // POST /tasks/:id/assignees - Add assignees to a task
 router.post("/:id/assignees", protect, addAssignees);
-// GET /tasks - Get all tasks
-router.get("/", getAllTasks);
 
 module.exports = router;

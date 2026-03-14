@@ -50,6 +50,7 @@ function AddTask({ open, onClose, projectId }) {
 
     console.log("Creating task with data:", taskData);
     createTask(taskData);
+
     onClose();
   };
   const field = [

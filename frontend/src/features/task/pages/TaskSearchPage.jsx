@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
+import Pagination from "../../../shared/ui/Pagination";
 
 import useTaskStore from "../stores/taskStore";
 
@@ -23,8 +24,19 @@ function TaskSearchPage() {
 
   useEffect(() => {
     const query = searchParams.get("query") || "";
-    searchTasks(query, projectId);
-  }, [searchParams, projectId, searchTasks]);
+    searchTasks(
+      query,
+      projectId,
+      taskSearchResults.page,
+      taskSearchResults.limit,
+    );
+  }, [
+    searchParams,
+    projectId,
+    taskSearchResults.page,
+    taskSearchResults.limit,
+    searchTasks,
+  ]);
 
   return (
     <MainLayout isLogin={true}>
@@ -34,14 +46,17 @@ function TaskSearchPage() {
       <Button variant="outline" size="small" onClick={() => navigate(-1)}>
         Back to Projects Detail
       </Button>
-      <div className="space-y-2">
-        {loading ? (
-          <p>Loading tasks...</p>
-        ) : taskSearchResults.length === 0 ? (
-          <p>No tasks found.</p>
-        ) : (
-          taskSearchResults.map((task) => (
-            <Card>
+      {loading ? (
+        <p>Loading tasks...</p>
+      ) : (
+        taskSearchResults.total === 0 && <p>No tasks found.</p>
+      )}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+        {!loading &&
+          taskSearchResults.tasks &&
+          taskSearchResults.tasks.length > 0 &&
+          taskSearchResults.tasks.map((task) => (
+            <Card key={task._id} animation={true}>
               <h2 className="text-xl font-semibold">{task.title}</h2>
               <p className="text-gray-600">{task.description}</p>
               <p className="text-gray-600">
@@ -74,9 +89,18 @@ function TaskSearchPage() {
                 </Button>
               </Link>
             </Card>
-          ))
-        )}
+          ))}
       </div>
+      <Pagination
+        totalPages={Math.ceil(
+          taskSearchResults.total / taskSearchResults.limit,
+        )}
+        currentPage={taskSearchResults.page}
+        onPageChange={(page) => {
+          const query = searchParams.get("query") || "";
+          searchTasks(query, projectId, page, taskSearchResults.limit);
+        }}
+      />
     </MainLayout>
   );
 }

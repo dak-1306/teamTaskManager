@@ -9,25 +9,23 @@ import useTaskStore from "../../task/stores/taskStore";
 
 function OverviewPage() {
   const { projects, fetchProjectMe } = useProjectStore();
-  const { tasks, fetchTasks } = useTaskStore();
+  const { taskOverview, fetchTaskOverview } = useTaskStore();
 
   useEffect(() => {
     fetchProjectMe();
   }, [fetchProjectMe]);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    fetchTaskOverview();
+  }, [fetchTaskOverview]);
 
   const totalProjects = projects.length;
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((task) => task.status === "done").length;
-  const inProgressTasks = tasks.filter(
-    (task) => task.status === "doing",
-  ).length;
+  const totalTasks = taskOverview.totalTasks;
+  const completedTasks = taskOverview.completedTasks;
+  const inProgressTasks = taskOverview.inProgressTasks;
 
   console.log("Projects in OverviewPage:", projects);
-  console.log("Tasks in OverviewPage:", tasks);
+  console.log("Tasks in OverviewPage:", taskOverview);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-7xl">

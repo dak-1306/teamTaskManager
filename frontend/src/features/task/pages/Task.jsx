@@ -8,6 +8,7 @@ import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import SearchBar from "../../../shared/ui/SearchBar";
 import Filter from "../../../shared/ui/Filter";
+import Pagination from "../../../shared/ui/Pagination";
 
 import AddTask from "../components/AddTask";
 
@@ -33,8 +34,8 @@ function Task({ projectId, variant, projectName }) {
   }, [filterTask, filterTasks, projectId]);
 
   useEffect(() => {
-    fetchTasksByProjectId(projectId);
-  }, [fetchTasksByProjectId, projectId]);
+    fetchTasksByProjectId(projectId, tasks.page, tasks.limit); // Fetch first 100 tasks for the project
+  }, [fetchTasksByProjectId, projectId, tasks.page, tasks.limit]);
 
   const handleOnChangeTaskSearch = (e) => {
     setTaskSearch(e.target.value);
@@ -44,7 +45,7 @@ function Task({ projectId, variant, projectName }) {
     e.preventDefault();
     // Implement search functionality here
     navigate(
-      `/projects/${projectId}/${variant}/tasks/search?query=${encodeURIComponent(taskSearch)}`,
+      `/projects/${projectId}/${variant}/tasks/search?query=${encodeURIComponent(taskSearch)}&page=${tasks.page}&limit=${tasks.limit}`,
     );
   };
 
@@ -79,7 +80,6 @@ function Task({ projectId, variant, projectName }) {
     { value: "dueDateDesc", label: "Due Date (Desc)" },
   ];
 
-  console.log("loading:", loading);
   console.log("Tasks for project", projectId, tasks);
 
   return (
@@ -129,58 +129,68 @@ function Task({ projectId, variant, projectName }) {
           </Button>
         </div>
       </Card>
-
-      {tasks && tasks.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tasks.map((t) => (
-            <Card key={t._id} animation={true} className="space-y-2 mb-4">
-              <h2 className="text-xl font-semibold text-center">{t.title}</h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t.description}
-              </p>
-              <p className="text-gray-600 dark:text-gray-300">
-                Due Date: {t.dueDate ? formatDate(t.dueDate) : "No due date"}
-              </p>
-              <p className="text-gray-600 dark:text-gray-300">
-                Status:{" "}
-                <span
-                  className={
-                    statusColors[t.status] || "text-gray-600 dark:text-gray-300"
-                  }
-                >
-                  {t.status}
-                </span>
-              </p>
-              <p className="text-gray-600 dark:text-gray-300">
-                Priority:{" "}
-                <span
-                  className={
-                    priorityColors[t.priority] ||
-                    "text-gray-600 dark:text-gray-300"
-                  }
-                >
-                  {t.priority}
-                </span>
-              </p>
-              <div className="space-y-1">
-                <h3 className="font-semibold">Assignees:</h3>
-                <ul className="list-none">
-                  {t.assignedTo.map((assignee) => (
-                    <li key={assignee._id}>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {assignee.username} ({assignee.email})
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
-                <Button variant="outline" size="small">
-                  View Details
-                </Button>
-              </Link>
-            </Card>
-          ))}
+      {loading && <p className="text-gray-600 text-center">Loading tasks...</p>}
+      {!loading && tasks.tasks && tasks.tasks.length > 0 ? (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {tasks.tasks.map((t) => (
+              <Card key={t._id} animation={true} className="space-y-2 mb-4">
+                <h2 className="text-xl font-semibold text-center">{t.title}</h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {t.description}
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Due Date: {t.dueDate ? formatDate(t.dueDate) : "No due date"}
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Status:{" "}
+                  <span
+                    className={
+                      statusColors[t.status] ||
+                      "text-gray-600 dark:text-gray-300"
+                    }
+                  >
+                    {t.status}
+                  </span>
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Priority:{" "}
+                  <span
+                    className={
+                      priorityColors[t.priority] ||
+                      "text-gray-600 dark:text-gray-300"
+                    }
+                  >
+                    {t.priority}
+                  </span>
+                </p>
+                <div className="space-y-1">
+                  <h3 className="font-semibold">Assignees:</h3>
+                  <ul className="list-none">
+                    {t.assignedTo.map((assignee) => (
+                      <li key={assignee._id}>
+                        <p className="text-gray-600 dark:text-gray-300">
+                          {assignee.username} ({assignee.email})
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
+                  <Button variant="outline" size="small">
+                    View Details
+                  </Button>
+                </Link>
+              </Card>
+            ))}
+          </div>
+          <Pagination
+            currentPage={tasks.page}
+            totalPages={Math.ceil(tasks.total / tasks.limit)}
+            onPageChange={(page) =>
+              fetchTasksByProjectId(projectId, page, tasks.limit)
+            }
+          />
         </div>
       ) : (
         <p className="text-gray-600 text-center">
