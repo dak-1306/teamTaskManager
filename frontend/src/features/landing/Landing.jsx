@@ -2,11 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 import MainLayout from "../../shared/layout/MainLayout";
 import Button from "../../shared/ui/Button";
+import RunningClockCanvas from "./RunningClockCanvas";
 
 import { useAuth } from "../auth/context/useAuth";
+import { useTheme } from "../../shared/context/useTheme";
 function Landing() {
   const navigate = useNavigate();
   const { isLogin } = useAuth();
+  const { theme } = useTheme();
 
   if (isLogin) {
     navigate("/dashboard");
@@ -18,6 +21,8 @@ function Landing() {
         <p className="text-lg">
           Organize your team's tasks efficiently and effectively.
         </p>
+
+        <RunningClockCanvas theme={theme} />
         <Link to="/login">
           <Button variant="primary" size="large">
             Get Started

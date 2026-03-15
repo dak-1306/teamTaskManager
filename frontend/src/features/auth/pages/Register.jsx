@@ -1,4 +1,5 @@
 import AuthForm from "../components/AuthForm";
+import AuthBackground from "../components/AuthBackground";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 
@@ -64,7 +65,7 @@ function Register() {
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-400 to-purple-400 flex flex-col items-center justify-center h-screen">
+    <AuthBackground>
       <AuthForm
         onSubmit={handleSubmit}
         field={field}
@@ -72,7 +73,7 @@ function Register() {
         title="Register"
         errorField={errorField}
       />
-    </div>
+    </AuthBackground>
   );
 }
 export default Register;

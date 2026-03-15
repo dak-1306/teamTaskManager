@@ -1,4 +1,5 @@
 import AuthForm from "../components/AuthForm";
+import AuthBackground from "../components/AuthBackground";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { useRef, useState } from "react";
@@ -55,7 +56,7 @@ function Login() {
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-400 to-purple-400 flex flex-col items-center justify-center h-screen">
+    <AuthBackground>
       <AuthForm
         onSubmit={handleSubmit}
         field={field}
@@ -63,7 +64,7 @@ function Login() {
         error={error}
         errorField={errorField}
       />
-    </div>
+    </AuthBackground>
   );
 }
 export default Login;

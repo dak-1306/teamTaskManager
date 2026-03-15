@@ -21,7 +21,7 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
             type={
               showPassword && input.type === "password" ? "text" : input.type
             }
-            className="shadow appearance-none border border-gray-300 rounded bg-white/40 w-full py-2 px-3 text-gray-800 focus:outline-none focus:shadow-outline "
+            className="shadow appearance-none border border-gray-300 rounded bg-white/50 w-full py-2 px-3 text-slate-900 focus:outline-none focus:shadow-outline "
             placeholder={input.placeHolder}
             label={input.label}
             ref={input.ref}
@@ -29,7 +29,7 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
           {input.type === "password" && (
             <button
               type="button"
-              className="absolute right-0 top-0  mt-2 mr-3 text-gray-600 focus:outline-none"
+              className="absolute right-0 top-0  mt-2 mr-3 text-slate-900 focus:outline-none"
               onClick={() => {
                 setShowPassword(!showPassword);
                 const inputField = input.ref.current;
@@ -45,7 +45,7 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
           )}
 
           {errorField === input.id && (
-            <p className="text-red-500 text-sm">This field is required</p>
+            <p className="text-red-600 text-sm mt-1">This field is required</p>
           )}
         </div>
       ))}
@@ -53,9 +53,9 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
         <Button type="submit" variant="primary" className="w-full" size="large">
           {title}
         </Button>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-300">{error}</p>}
         {title === "Login" && (
-          <p className="text-m text-gray-300">
+          <p className="text-m text-gray-100">
             Don't have an account?{" "}
             <Link to="/register" className="text-blue-600 hover:underline">
               Register
@@ -63,14 +63,14 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
           </p>
         )}
         {title === "Register" && (
-          <p className="text-m text-gray-300">
+          <p className="text-m text-gray-100">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-600 hover:underline">
               Login
             </Link>
           </p>
         )}
-        <Link to="/" className="text-sm text-gray-300 hover:underline">
+        <Link to="/" className="text-sm text-gray-100 hover:underline">
           <House className="inline-block" />
         </Link>
       </div>

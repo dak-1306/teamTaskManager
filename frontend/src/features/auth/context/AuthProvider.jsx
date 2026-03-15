@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }) => {
         })
         .catch((error) => {
           console.error("Error fetching current user:", error.message);
-          setError(error.message);
         });
     }
   }, []);
