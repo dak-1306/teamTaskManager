@@ -80,7 +80,7 @@ function ProjectList() {
           </div>
         </div>
       )}
-      {hasProjects ? (
+      {!loading && hasProjects ? (
         <div className="space-y-4">
           <Card>
             <div className="flex items-center space-x-2">
@@ -149,7 +149,7 @@ function ProjectList() {
       <h2 className="text-xl font-semibold mt-8 text-center">
         Projects I'm a Member Of
       </h2>
-      {hasMemberProjects ? (
+      {!loading && hasMemberProjects ? (
         <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {memberProject.map((project) => (
             <li key={project._id} className="mb-4">

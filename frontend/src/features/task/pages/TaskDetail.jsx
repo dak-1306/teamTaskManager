@@ -20,6 +20,7 @@ function TaskDetail() {
   const navigate = useNavigate();
   const taskDetail = useTaskStore((state) => state.taskDetail);
   const fetchTaskById = useTaskStore((state) => state.fetchTaskById);
+  const loading = useTaskStore((state) => state.loading);
 
   const [assignedEmailEdit, setAssignedEmailEdit] = useState([]);
   const [taskDetailForEdit, setTaskDetailForEdit] = useState(null);
@@ -47,7 +48,7 @@ function TaskDetail() {
 
   return (
     <MainLayout isLogin={true}>
-      <h1 className="text-2xl font-bold text-gray-800 text-center">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         {taskDetail?.title || "Loading..."}
       </h1>
       <Card>
@@ -92,7 +93,9 @@ function TaskDetail() {
           </Button>
         </div>
       </Card>
-      {taskDetail ? (
+      {loading ? (
+        <p className="text-center">Loading task details...</p>
+      ) : taskDetail ? (
         <Card className="bg-white p-4 rounded shadow mb-4">
           <p>
             <strong>Description:</strong> {taskDetail?.description}

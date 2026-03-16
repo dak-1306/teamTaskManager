@@ -21,6 +21,7 @@ function ProjectDetail() {
 
   const projectDetail = useProjectStore((state) => state.projectDetail);
   const fetchProjectById = useProjectStore((state) => state.fetchProjectById);
+  const loading = useProjectStore((state) => state.loading);
 
   const [openAddMember, setOpenAddMember] = useState(false);
   const [openEditProject, setOpenEditProject] = useState(false);
@@ -47,7 +48,9 @@ function ProjectDetail() {
         </h1>
 
         <Card>
-          {projectDetail ? (
+          {loading ? (
+            <p className="text-center">Loading project details...</p>
+          ) : projectDetail ? (
             <div className="flex justify-between mt-4 mx-auto max-w-2xl">
               <div className="space-y-2">
                 <p>

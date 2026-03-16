@@ -13,6 +13,7 @@ function ProjectSearchPage() {
 
   const searchProjects = useProjectStore((state) => state.searchProjects);
   const projectSearch = useProjectStore((state) => state.projectSearch);
+  const loading = useProjectStore((state) => state.loading);
   const projectMemberSearch = useProjectStore(
     (state) => state.projectMemberSearch,
   );
@@ -39,7 +40,9 @@ function ProjectSearchPage() {
         </Button>
       </Link>
       <h2>Project Owner</h2>
-      {projectSearch.length > 0 ? (
+      {loading ? (
+        <p className="text-center">Loading search results...</p>
+      ) : projectSearch.length > 0 ? (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {projectSearch.map((project) => (
             <Card>
@@ -59,7 +62,9 @@ function ProjectSearchPage() {
         <p className="text-gray-500">No projects found.</p>
       )}
       <h2>Project Member</h2>
-      {projectMemberSearch.length > 0 ? (
+      {loading ? (
+        <p className="text-center">Loading search results...</p>
+      ) : projectMemberSearch.length > 0 ? (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {projectMemberSearch.map((project) => (
             <Card>
