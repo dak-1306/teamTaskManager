@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { FilePlus } from "lucide-react";
+import { motion as Motion } from "motion/react";
 
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import SearchBar from "../../../shared/ui/SearchBar";
 import Filter from "../../../shared/ui/Filter";
 import Pagination from "../../../shared/ui/Pagination";
+import SkeletonTask from "./SkeletonTask";
 
 import AddTask from "../components/AddTask";
 
@@ -81,14 +83,21 @@ function Task({ projectId, variant, projectName }) {
   ];
 
   console.log("Tasks for project", projectId, tasks);
-
+  if (loading) {
+    return <SkeletonTask />;
+  }
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">
         Task of Project {projectName}
       </h1>
       <Card>
-        <div className="flex items-center justify-start space-x-2">
+        <Motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center justify-start space-x-2"
+        >
           <SearchBar
             placeholder="Search tasks..."
             value={taskSearch}
@@ -127,11 +136,14 @@ function Task({ projectId, variant, projectName }) {
           >
             Add Task
           </Button>
-        </div>
+        </Motion.div>
       </Card>
-      {loading && <p className="text-gray-600 text-center">Loading tasks...</p>}
       {!loading && tasks.tasks && tasks.tasks.length > 0 ? (
-        <div className="space-y-4">
+        <Motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {tasks.tasks.map((t) => (
               <Card key={t._id} animation={true} className="space-y-2 mb-4">
@@ -191,7 +203,7 @@ function Task({ projectId, variant, projectName }) {
               fetchTasksByProjectId(projectId, page, tasks.limit)
             }
           />
-        </div>
+        </Motion.div>
       ) : (
         <p className="text-gray-600 text-center">
           No tasks found for this project.

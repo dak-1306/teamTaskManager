@@ -2,10 +2,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { ArrowBigLeft, UserRoundPlus, Pencil, Trash2 } from "lucide-react";
+import { motion as Motion } from "motion/react";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
+import SkeletonProjectDetail from "./SkeletonProjectDetail";
 
 import Task from "../../task/pages/Task";
 
@@ -32,6 +34,15 @@ function ProjectDetail() {
   }, [fetchProjectById, id]);
 
   console.log("Project Detail:", projectDetail);
+
+  if (loading) {
+    return (
+      <MainLayout isLogin={true}>
+        <SkeletonProjectDetail />
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout isLogin={true}>
       <div className="relative">
@@ -48,11 +59,19 @@ function ProjectDetail() {
         </h1>
 
         <Card>
-          {loading ? (
-            <p className="text-center">Loading project details...</p>
-          ) : projectDetail ? (
-            <div className="flex justify-between mt-4 mx-auto max-w-2xl">
-              <div className="space-y-2">
+          {!loading && projectDetail ? (
+            <Motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex justify-between mt-4 mx-auto max-w-2xl"
+            >
+              <Motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-2"
+              >
                 <p>
                   <strong>Created:</strong>{" "}
                   {projectDetail.createdAt
@@ -75,10 +94,15 @@ function ProjectDetail() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </Motion.div>
 
               {variant === "owner" && (
-                <div className="flex flex-col space-y-2">
+                <Motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col space-y-2"
+                >
                   <Button
                     variant="primary"
                     size="medium"
@@ -103,13 +127,14 @@ function ProjectDetail() {
                   >
                     Delete Project
                   </Button>
-                </div>
+                </Motion.div>
               )}
-            </div>
+            </Motion.div>
           ) : (
             <p className="text-center">Project not found.</p>
           )}
         </Card>
+
         <hr className="my-4 border-gray-300 dark:border-gray-600" />
 
         <Task

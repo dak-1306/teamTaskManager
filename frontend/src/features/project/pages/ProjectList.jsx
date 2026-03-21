@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { FolderPlus } from "lucide-react";
+import { motion as Motion } from "motion/react";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import SearchBar from "../../../shared/ui/SearchBar";
 import Filter from "../../../shared/ui/Filter";
+import SkeletonProjectList from "./SkeletonProjectList";
 
 import CreateProject from "../components/CreateProject";
 
@@ -59,10 +61,19 @@ function ProjectList() {
 
   const hasProjects = projects.length > 0;
   const hasMemberProjects = memberProject.length > 0;
+
+  if (loading) {
+    return (
+      <MainLayout isLogin={true}>
+        <SkeletonProjectList />
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout isLogin={true}>
       <h1 className="text-2xl font-semibold text-center">My Projects</h1>
-      {loading && <p className="text-center">Loading projects...</p>}
+
       {!loading && !hasProjects && !hasMemberProjects && (
         <div className="space-y-2">
           <p className="text-center">No projects found.</p>
@@ -82,48 +93,59 @@ function ProjectList() {
       )}
       {!loading && hasProjects ? (
         <div className="space-y-4">
-          <Card>
-            <div className="flex items-center space-x-2">
-              <SearchBar
-                placeholder="Search projects..."
-                onChange={handleSearch}
-                value={searchTerm}
-                onSubmit={handleSubmitSearch}
-              />
-              <Filter
-                name="name"
-                options={filterName}
-                value={filter.name}
-                onFilterChange={(e) =>
-                  handleFilterChange({ name: e.target.value })
-                }
-              />
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card>
+              <div className="flex items-center space-x-2">
+                <SearchBar
+                  placeholder="Search projects..."
+                  onChange={handleSearch}
+                  value={searchTerm}
+                  onSubmit={handleSubmitSearch}
+                />
+                <Filter
+                  name="name"
+                  options={filterName}
+                  value={filter.name}
+                  onFilterChange={(e) =>
+                    handleFilterChange({ name: e.target.value })
+                  }
+                />
 
-              <Filter
-                name="date"
-                options={filterDate}
-                value={filter.date}
-                onFilterChange={(e) =>
-                  handleFilterChange({ date: e.target.value })
-                }
-              />
+                <Filter
+                  name="date"
+                  options={filterDate}
+                  value={filter.date}
+                  onFilterChange={(e) =>
+                    handleFilterChange({ date: e.target.value })
+                  }
+                />
 
-              <Button
-                variant="primary"
-                size="large"
-                icon={<FolderPlus className="w-4 h-4 mr-2" />}
-                onClick={() => {
-                  setOpenCreateProject(true);
-                }}
-              >
-                Create Project
-              </Button>
-            </div>
-          </Card>
+                <Button
+                  variant="primary"
+                  size="large"
+                  icon={<FolderPlus className="w-4 h-4 mr-2" />}
+                  onClick={() => {
+                    setOpenCreateProject(true);
+                  }}
+                >
+                  Create Project
+                </Button>
+              </div>
+            </Card>
+          </Motion.div>
 
           <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {projects.map((project) => (
-              <li key={project._id} className="mb-4">
+              <Motion.li
+                key={project._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
                 <Card
                   title={project.name}
                   description={project.description}
@@ -135,7 +157,7 @@ function ProjectList() {
                     </Button>
                   </Link>
                 </Card>
-              </li>
+              </Motion.li>
             ))}
           </ul>
         </div>
@@ -152,7 +174,12 @@ function ProjectList() {
       {!loading && hasMemberProjects ? (
         <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {memberProject.map((project) => (
-            <li key={project._id} className="mb-4">
+            <Motion.li
+              key={project._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               <Card
                 title={project.name}
                 description={project.description}
@@ -164,7 +191,7 @@ function ProjectList() {
                   </Button>
                 </Link>
               </Card>
-            </li>
+            </Motion.li>
           ))}
         </ul>
       ) : (

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Card from "../../../shared/ui/Card";
 import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
+import SkeletonSearch from "./SkeletonSearch";
 
 import useProjectStore from "../stores/projectStore";
 
@@ -26,6 +27,13 @@ function ProjectSearchPage() {
   }, [searchParams, searchProjects]);
 
   console.log("Search Results:", projectSearch);
+  if (loading) {
+    return (
+      <MainLayout isLogin={true}>
+        <SkeletonSearch />
+      </MainLayout>
+    );
+  }
   return (
     <MainLayout isLogin={true}>
       <h1 className="text-2xl font-bold">Project Search Projects</h1>
@@ -40,9 +48,7 @@ function ProjectSearchPage() {
         </Button>
       </Link>
       <h2>Project Owner</h2>
-      {loading ? (
-        <p className="text-center">Loading search results...</p>
-      ) : projectSearch.length > 0 ? (
+      {!loading && projectSearch.length > 0 ? (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {projectSearch.map((project) => (
             <Card>
@@ -63,7 +69,7 @@ function ProjectSearchPage() {
       )}
       <h2>Project Member</h2>
       {loading ? (
-        <p className="text-center">Loading search results...</p>
+        <SkeletonSearch />
       ) : projectMemberSearch.length > 0 ? (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {projectMemberSearch.map((project) => (

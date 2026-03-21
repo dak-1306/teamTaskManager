@@ -13,6 +13,7 @@ import {
 export const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const checkLoginStatus = () => {
@@ -33,6 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    setLoading(true);
     if (token) {
       getUserCurrent()
         .then((user) => {
@@ -42,6 +44,10 @@ export const AuthProvider = ({ children }) => {
         })
         .catch((error) => {
           console.error("Error fetching current user:", error.message);
+          setError(error.message);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   }, []);
@@ -109,6 +115,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     isLogin,
+    loading,
     checkLoginStatus,
     userProfile,
     register,

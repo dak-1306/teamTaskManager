@@ -3,10 +3,12 @@ import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 
 import { User, Mail, Pencil, SquareArrowRightExit } from "lucide-react";
+import { motion as Motion } from "motion/react";
 
 import AuthDialog from "../components/AuthDialog";
 import EditProfile from "../components/EditProfile";
 import ChangePassword from "../components/ChangePassword";
+import SkeletonProfile from "./SkeletonProfile";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +17,7 @@ import { useAuth } from "../context/useAuth";
 import { useTheme } from "../../../shared/context/useTheme";
 
 function Profile() {
-  const { userProfile, deleteUserProvider, logout } = useAuth();
+  const { userProfile, deleteUserProvider, loading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
   const [openEditProfile, setOpenEditProfile] = useState(false);
@@ -24,17 +26,29 @@ function Profile() {
 
   const navigate = useNavigate();
 
-  const handleLogout=() => {
+  const handleLogout = () => {
     logout();
     navigate("/login");
   };
   console.log("User Profile:", userProfile);
 
+  if (loading) {
+    return (
+      <MainLayout isLogin={true}>
+        <SkeletonProfile />
+      </MainLayout>
+    );
+  }
   return (
     <MainLayout isLogin={userProfile ? true : false}>
       <div className="max-w-2xl mx-auto mt-10">
-        {userProfile ? (
-          <div className="space-y-6">
+        {!loading && userProfile && (
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
             <Card className="space-y-4">
               <h2 className="text-2xl font-bold mb-4">User Profile</h2>
               <p>
@@ -94,15 +108,7 @@ function Profile() {
                 )}
               </label>
             </Card>
-          </div>
-        ) : (
-          <Card>
-            <h2 className="text-2xl font-bold mb-4">No User Profile Found</h2>
-            <p className="mb-4">Please log in to view your profile.</p>
-            <Button variant="primary" onClick={() => navigate("/login")}>
-              Go to Login
-            </Button>
-          </Card>
+          </Motion.div>
         )}
       </div>
       {openLogoutDialog && (

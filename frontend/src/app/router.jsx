@@ -17,6 +17,7 @@ function Router() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard/tasks/:taskId" element={<TaskDetail />} />
       <Route
         path="projects/:projectId/:variant/tasks/:taskId"
         element={<TaskDetail />}

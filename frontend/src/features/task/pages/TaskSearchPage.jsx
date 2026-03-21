@@ -10,6 +10,7 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import Pagination from "../../../shared/ui/Pagination";
+import SkeletonTaskSearch from "./SkeletonTaskSearch";
 
 import useTaskStore from "../stores/taskStore";
 
@@ -38,6 +39,13 @@ function TaskSearchPage() {
     searchTasks,
   ]);
 
+  if (loading) {
+    return (
+      <MainLayout isLogin={true}>
+        <SkeletonTaskSearch />
+      </MainLayout>
+    );
+  }
   return (
     <MainLayout isLogin={true}>
       <h1>Task Search</h1>
@@ -46,11 +54,6 @@ function TaskSearchPage() {
       <Button variant="outline" size="small" onClick={() => navigate(-1)}>
         Back to Projects Detail
       </Button>
-      {loading ? (
-        <p>Loading tasks...</p>
-      ) : (
-        taskSearchResults.total === 0 && <p>No tasks found.</p>
-      )}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {!loading &&
           taskSearchResults.tasks &&
