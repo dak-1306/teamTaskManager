@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { FolderPlus } from "lucide-react";
-import { motion as Motion } from "motion/react";
+import { motion as Motion } from "framer-motion";
+import { inViewOptions, container, item } from "../../../app/motionConfig";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
@@ -93,10 +94,11 @@ function ProjectList() {
       )}
       {!loading && hasProjects ? (
         <div className="space-y-4">
-          <Motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+          <Motion.ul
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={inViewOptions}
           >
             <Card>
               <div className="flex items-center space-x-2">
@@ -136,21 +138,22 @@ function ProjectList() {
                 </Button>
               </div>
             </Card>
-          </Motion.div>
+          </Motion.ul>
 
-          <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <Motion.ul
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={inViewOptions}
+            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 list-none"
+          >
             {projects.map((project) => (
               <Motion.li
                 key={project._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                variants={item}
+                className="list-none"
               >
-                <Card
-                  title={project.name}
-                  description={project.description}
-                  animation={true}
-                >
+                <Card title={project.name} description={project.description}>
                   <Link to={`/projects/${project._id}/owner`}>
                     <Button variant="outline" size="small">
                       View Details
@@ -159,7 +162,7 @@ function ProjectList() {
                 </Card>
               </Motion.li>
             ))}
-          </ul>
+          </Motion.ul>
         </div>
       ) : (
         !loading && (
@@ -172,19 +175,16 @@ function ProjectList() {
         Projects I'm a Member Of
       </h2>
       {!loading && hasMemberProjects ? (
-        <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <Motion.ul
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={inViewOptions}
+          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 list-none"
+        >
           {memberProject.map((project) => (
-            <Motion.li
-              key={project._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card
-                title={project.name}
-                description={project.description}
-                animation={true}
-              >
+            <Motion.li key={project._id} variants={item} className="list-none">
+              <Card title={project.name} description={project.description}>
                 <Link to={`/projects/${project._id}/member`}>
                   <Button variant="outline" size="small">
                     View Details
@@ -193,7 +193,7 @@ function ProjectList() {
               </Card>
             </Motion.li>
           ))}
-        </ul>
+        </Motion.ul>
       ) : (
         !loading && (
           <p className="text-center text-gray-500">

@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 function Login() {
   const navigate = useNavigate();
 
-  const { login, error } = useAuth();
+  const { login, error, loading } = useAuth();
 
   // Refs cho các trường nhập liệu
   const emailRef = useRef(null);
@@ -63,6 +63,7 @@ function Login() {
         title="Login"
         error={error}
         errorField={errorField}
+        loading={loading}
       />
     </AuthBackground>
   );

@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { FilePlus } from "lucide-react";
-import { motion as Motion } from "motion/react";
+import { motion as Motion } from "framer-motion";
+import { container, item, inViewOptions } from "../../../app/motionConfig";
 
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
@@ -93,9 +94,10 @@ function Task({ projectId, variant, projectName }) {
       </h1>
       <Card>
         <Motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          variants={item}
+          initial="hidden"
+          whileInView="show"
+          viewport={inViewOptions}
           className="flex items-center justify-start space-x-2"
         >
           <SearchBar
@@ -140,60 +142,66 @@ function Task({ projectId, variant, projectName }) {
       </Card>
       {!loading && tasks.tasks && tasks.tasks.length > 0 ? (
         <Motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={inViewOptions}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {tasks.tasks.map((t) => (
-              <Card key={t._id} animation={true} className="space-y-2 mb-4">
-                <h2 className="text-xl font-semibold text-center">{t.title}</h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {t.description}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Due Date: {t.dueDate ? formatDate(t.dueDate) : "No due date"}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Status:{" "}
-                  <span
-                    className={
-                      statusColors[t.status] ||
-                      "text-gray-600 dark:text-gray-300"
-                    }
-                  >
-                    {t.status}
-                  </span>
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Priority:{" "}
-                  <span
-                    className={
-                      priorityColors[t.priority] ||
-                      "text-gray-600 dark:text-gray-300"
-                    }
-                  >
-                    {t.priority}
-                  </span>
-                </p>
-                <div className="space-y-1">
-                  <h3 className="font-semibold">Assignees:</h3>
-                  <ul className="list-none">
-                    {t.assignedTo.map((assignee) => (
-                      <li key={assignee._id}>
-                        <p className="text-gray-600 dark:text-gray-300">
-                          {assignee.username} ({assignee.email})
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
-                  <Button variant="outline" size="small">
-                    View Details
-                  </Button>
-                </Link>
-              </Card>
+              <Motion.div key={t._id} variants={item} className="mb-4">
+                <Card animation={true} className="space-y-2">
+                  <h2 className="text-xl font-semibold text-center">
+                    {t.title}
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {t.description}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Due Date:{" "}
+                    {t.dueDate ? formatDate(t.dueDate) : "No due date"}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Status:{" "}
+                    <span
+                      className={
+                        statusColors[t.status] ||
+                        "text-gray-600 dark:text-gray-300"
+                      }
+                    >
+                      {t.status}
+                    </span>
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Priority:{" "}
+                    <span
+                      className={
+                        priorityColors[t.priority] ||
+                        "text-gray-600 dark:text-gray-300"
+                      }
+                    >
+                      {t.priority}
+                    </span>
+                  </p>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold">Assignees:</h3>
+                    <ul className="list-none">
+                      {t.assignedTo.map((assignee) => (
+                        <li key={assignee._id}>
+                          <p className="text-gray-600 dark:text-gray-300">
+                            {assignee.username} ({assignee.email})
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
+                    <Button variant="outline" size="small">
+                      View Details
+                    </Button>
+                  </Link>
+                </Card>
+              </Motion.div>
             ))}
           </div>
           <Pagination

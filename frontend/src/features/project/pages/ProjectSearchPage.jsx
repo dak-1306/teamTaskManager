@@ -1,5 +1,7 @@
 import { useSearchParams, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { motion as Motion } from "motion/react";
+import { inViewOptions, container, item } from "../../../app/motionConfig";
 
 import Card from "../../../shared/ui/Card";
 import MainLayout from "../../../shared/layout/MainLayout";
@@ -48,11 +50,24 @@ function ProjectSearchPage() {
         </Button>
       </Link>
       <h2>Project Owner</h2>
-      {!loading && projectSearch.length > 0 ? (
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+      {!loading && projectSearch.length > 0 && (
+        <Motion.ul
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={inViewOptions}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 "
+        >
           {projectSearch.map((project) => (
-            <Card>
-              <li key={project.id} className="space-y-2">
+            <Motion.li
+              variants={item}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
+              key={project.id}
+              className="space-y-2"
+            >
+              <Card>
                 <h2 className="text-xl font-semibold">{project.name}</h2>
                 <p>{project.description}</p>
                 <Link to={`/projects/${project._id}/owner`}>
@@ -60,21 +75,30 @@ function ProjectSearchPage() {
                     View Details
                   </Button>
                 </Link>
-              </li>
-            </Card>
+              </Card>
+            </Motion.li>
           ))}
-        </ul>
-      ) : (
-        <p className="text-gray-500">No projects found.</p>
+        </Motion.ul>
       )}
       <h2>Project Member</h2>
-      {loading ? (
-        <SkeletonSearch />
-      ) : projectMemberSearch.length > 0 ? (
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+      {!loading && projectMemberSearch.length > 0 && (
+        <Motion.ul
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={inViewOptions}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 "
+        >
           {projectMemberSearch.map((project) => (
-            <Card>
-              <li key={project.id} className="space-y-2">
+            <Motion.li
+              variants={item}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
+              key={project.id}
+              className="space-y-2"
+            >
+              <Card>
                 <h2 className="text-xl font-semibold">{project.name}</h2>
                 <p>{project.description}</p>
                 <Link to={`/projects/${project._id}/member`}>
@@ -82,12 +106,10 @@ function ProjectSearchPage() {
                     View Details
                   </Button>
                 </Link>
-              </li>
-            </Card>
+              </Card>
+            </Motion.li>
           ))}
-        </ul>
-      ) : (
-        <p className="text-gray-500">No projects found.</p>
+        </Motion.ul>
       )}
     </MainLayout>
   );

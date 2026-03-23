@@ -23,12 +23,15 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
+      setLoading(true);
       const newUser = await registerUser(userData);
       console.log("User registered:", newUser);
       setError(null);
     } catch (error) {
       console.error("Error registering user:", error.message);
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,6 +67,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
+      setLoading(true);
       const response = await loginUser(credentials);
       if (response.token) {
         localStorage.setItem("token", response.token);
@@ -77,6 +81,8 @@ export const AuthProvider = ({ children }) => {
       console.error("Error logging in user:", error.message);
       setError(error.message);
       throw error; // Rethrow error để component gọi có thể xử lý
+    } finally {
+      setLoading(false);
     }
   };
   const logout = () => {

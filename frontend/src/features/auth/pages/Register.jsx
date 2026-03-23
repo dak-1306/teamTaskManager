@@ -8,7 +8,7 @@ function Register() {
   const navigate = useNavigate();
   const [errorField, setErrorField] = useState(null);
 
-  const { register, error } = useAuth();
+  const { register, error, loading } = useAuth();
 
   // Refs cho các trường nhập liệu
   const usernameRef = useRef(null);
@@ -72,6 +72,7 @@ function Register() {
         error={error}
         title="Register"
         errorField={errorField}
+        loading={loading}
       />
     </AuthBackground>
   );

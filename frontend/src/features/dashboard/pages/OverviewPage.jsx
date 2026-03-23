@@ -1,9 +1,8 @@
 import { ChartBar, CheckCircle, Clock, FolderOpenDot } from "lucide-react";
-import { motion as Motion } from "motion/react";
+import { motion as Motion } from "framer-motion";
 
 import OverviewCard from "../components/OverviewCard";
-import SkeletonOverview from "./SkeletonOverview";
-import { container, item } from "../../../app/motionConfig";
+import { container, item, inViewOptions } from "../../../app/motionConfig";
 
 function OverviewPage({
   totalProjects,
@@ -12,15 +11,12 @@ function OverviewPage({
   inProgressTasks,
   loading,
 }) {
-  if (loading) {
-    return <SkeletonOverview />;
-  }
-
   return (
     <Motion.div
       variants={container}
-      initial="initial"
-      animate="animate"
+      initial="hidden"
+      whileInView="show"
+      viewport={inViewOptions}
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-7xl"
     >
       {!loading && (

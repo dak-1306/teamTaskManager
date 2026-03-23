@@ -1,5 +1,5 @@
 import MainLayout from "../../../shared/layout/MainLayout";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 
 import OverviewPage from "./OverviewPage";
 import MyTaskPage from "./MyTaskPage";
@@ -7,13 +7,18 @@ import RecentProjectPage from "./RecentProjectPage";
 import PieChartStatus from "../components/PieChartStatus";
 import TaskLineChart from "../components/TaskLineChart";
 import TaskLineChartByDay from "../components/TaskLineChartByDay";
+import SkeletonDashboard from "./SkeletonDashboard";
 
 import useProjectStore from "../../project/stores/projectStore";
 import useTaskStore from "../../task/stores/taskStore";
 
 function Dashboard() {
   const { projects, fetchProjectMe, loading } = useProjectStore();
-  const { taskOverview, fetchTaskOverview } = useTaskStore();
+  const { tasks, fetchTasks, taskOverview, fetchTaskOverview } = useTaskStore();
+
+  useEffect(() => {
+    fetchTasks(tasks.page, tasks.limit);
+  }, [fetchTasks, tasks.page, tasks.limit]);
 
   useEffect(() => {
     fetchProjectMe();
@@ -22,6 +27,14 @@ function Dashboard() {
   useEffect(() => {
     fetchTaskOverview();
   }, [fetchTaskOverview]);
+
+  const tasksForMyTasks = useMemo(() => tasks, [tasks]);
+  const fetchTasksForMyTasks = useCallback(
+    (page, limit) => {
+      fetchTasks(page, limit);
+    },
+    [fetchTasks],
+  );
 
   const totalProjects = useMemo(() => projects.length, [projects]);
   const totalTasks = useMemo(() => taskOverview.totalTasks, [taskOverview]);
@@ -44,8 +57,14 @@ function Dashboard() {
     ],
     [completedTasks, inProgressTasks, todoTasks],
   );
-  console.log("task by day ", tasksByDay);
 
+  if (loading) {
+    return (
+      <MainLayout isLogin={true}>
+        <SkeletonDashboard />
+      </MainLayout>
+    );
+  }
   return (
     <MainLayout isLogin={true}>
       <h1 className="text-2xl font-bold text-foreground text-center">
@@ -71,7 +90,11 @@ function Dashboard() {
       <h2 className="text-xl font-bold text-foreground text-center">
         My Tasks
       </h2>
-      <MyTaskPage />
+      <MyTaskPage
+        tasks={tasksForMyTasks}
+        loading={loading}
+        fetchTasks={fetchTasksForMyTasks}
+      />
       <hr className="border-gray-300" />
       <h2 className="text-xl font-bold text-foreground text-center">
         Recent Projects

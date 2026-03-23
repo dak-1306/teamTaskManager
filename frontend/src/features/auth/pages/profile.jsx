@@ -3,7 +3,8 @@ import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 
 import { User, Mail, Pencil, SquareArrowRightExit } from "lucide-react";
-import { motion as Motion } from "motion/react";
+import { motion as Motion } from "framer-motion";
+import { container, item, inViewOptions } from "../../../app/motionConfig";
 
 import AuthDialog from "../components/AuthDialog";
 import EditProfile from "../components/EditProfile";
@@ -44,70 +45,79 @@ function Profile() {
       <div className="max-w-2xl mx-auto mt-10">
         {!loading && userProfile && (
           <Motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={inViewOptions}
             className="space-y-6"
           >
-            <Card className="space-y-4">
-              <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-              <p>
-                <User className="inline mr-2" /> {userProfile.username}
-              </p>
-              <p>
-                <Mail className="inline mr-2" /> {userProfile.email}
-              </p>
-              <div className="flex space-x-2">
+            <Motion.div variants={item}>
+              <Card className="space-y-4">
+                <h2 className="text-2xl font-bold mb-4">User Profile</h2>
+                <p>
+                  <User className="inline mr-2" /> {userProfile.username}
+                </p>
+                <p>
+                  <Mail className="inline mr-2" /> {userProfile.email}
+                </p>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="primary"
+                    size="small"
+                    icon={<Pencil className="w-4 h-4 mr-2" />}
+                    onClick={() => setOpenEditProfile(true)}
+                  >
+                    Edit Profile
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="small"
+                    icon={<SquareArrowRightExit className="w-4 h-4 mr-2" />}
+                    onClick={() => setOpenLogoutDialog(true)}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              </Card>
+            </Motion.div>
+
+            <Motion.div variants={item}>
+              <Card className="space-x-4">
                 <Button
-                  variant="primary"
+                  variant="secondary"
+                  onClick={() => setOpenChangePassword(true)}
                   size="small"
-                  icon={<Pencil className="w-4 h-4 mr-2" />}
-                  onClick={() => setOpenEditProfile(true)}
                 >
-                  Edit Profile
+                  Change password
                 </Button>
                 <Button
                   variant="danger"
                   size="small"
-                  icon={<SquareArrowRightExit className="w-4 h-4 mr-2" />}
-                  onClick={() => setOpenLogoutDialog(true)}
+                  onClick={() => setOpenDeleteAccountDialog(true)}
                 >
-                  Logout
+                  Delete Account
                 </Button>
-              </div>
-            </Card>
-            <Card className="space-x-4">
-              <Button
-                variant="secondary"
-                onClick={() => setOpenChangePassword(true)}
-                size="small"
-              >
-                Change password
-              </Button>
-              <Button
-                variant="danger"
-                size="small"
-                onClick={() => setOpenDeleteAccountDialog(true)}
-              >
-                Delete Account
-              </Button>
-            </Card>
-            <Card className="flex items-center space-x-4">
-              <p>Theme:</p>
-              <label className="flex items-center space-x-2 w-10 h-6 bg-gray-100 p-1 rounded-full border border-gray-300 cursor-pointer">
-                <input
-                  className="hidden"
-                  type="checkbox"
-                  checked={theme === "dark"}
-                  onChange={toggleTheme}
-                />
-                {theme === "dark" ? (
-                  <span className="w-4 h-4 bg-gray-800 rounded-full transform translate-x-4"></span>
-                ) : (
-                  <span className="w-4 h-4 bg-blue-500 rounded-full "></span>
-                )}
-              </label>
-            </Card>
+              </Card>
+            </Motion.div>
+
+            <Motion.div variants={item}>
+              <Card className="flex items-center space-x-4">
+                <p>Theme:</p>
+                <label className="flex items-center space-x-2 w-10 h-6 bg-gray-100 p-1 rounded-full border border-gray-300 cursor-pointer">
+                  <input
+                    className="hidden"
+                    type="checkbox"
+                    checked={theme === "dark"}
+                    onChange={toggleTheme}
+                  />
+                  {theme === "dark" ? (
+                    <span className="w-4 h-4 bg-gray-800 rounded-full transform translate-x-4"></span>
+                  ) : (
+                    <span className="w-4 h-4 bg-blue-500 rounded-full "></span>
+                  )}
+                </label>
+              </Card>
+            </Motion.div>
           </Motion.div>
         )}
       </div>

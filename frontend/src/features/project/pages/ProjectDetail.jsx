@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 import { ArrowBigLeft, UserRoundPlus, Pencil, Trash2 } from "lucide-react";
 import { motion as Motion } from "motion/react";
+import { container, item, inViewOptions } from "../../../app/motionConfig";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
@@ -61,15 +62,17 @@ function ProjectDetail() {
         <Card>
           {!loading && projectDetail ? (
             <Motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
               className="flex justify-between mt-4 mx-auto max-w-2xl"
             >
               <Motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                variants={item}
+                initial="hidden"
+                whileInView="show"
+                viewport={inViewOptions}
                 className="space-y-2"
               >
                 <p>
@@ -98,9 +101,10 @@ function ProjectDetail() {
 
               {variant === "owner" && (
                 <Motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
+                  variants={item}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={inViewOptions}
                   className="flex flex-col space-y-2"
                 >
                   <Button

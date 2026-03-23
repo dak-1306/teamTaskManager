@@ -2,14 +2,20 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 import { Eye, EyeOff, House } from "lucide-react";
+import { motion as Motion } from "framer-motion";
 
 import Button from "../../../shared/ui/Button";
+import { item, inViewOptions } from "../../../app/motionConfig";
 
-function AuthForm({ onSubmit, field, title, error, errorField }) {
+function AuthForm({ onSubmit, field, title, error, errorField, loading }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <form
+    <Motion.form
+      variants={item}
+      initial="hidden"
+      whileInView="show"
+      viewport={inViewOptions}
       className="w-full max-w-sm bg-white/20 shadow-md shadow-gray-300 rounded px-8 pt-6 pb-8 mb-4"
       onSubmit={onSubmit}
     >
@@ -51,7 +57,7 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
       ))}
       <div className="flex flex-col items-center justify-between space-y-4">
         <Button type="submit" variant="primary" className="w-full" size="large">
-          {title}
+          {loading ? "Loading..." : title}
         </Button>
         {error && <p className="text-red-300">{error}</p>}
         {title === "Login" && (
@@ -74,7 +80,7 @@ function AuthForm({ onSubmit, field, title, error, errorField }) {
           <House className="inline-block" />
         </Link>
       </div>
-    </form>
+    </Motion.form>
   );
 }
 export default AuthForm;

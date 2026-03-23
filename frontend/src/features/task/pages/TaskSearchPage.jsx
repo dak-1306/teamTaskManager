@@ -7,6 +7,8 @@ import {
 import { useEffect } from "react";
 
 import MainLayout from "../../../shared/layout/MainLayout";
+import { motion as Motion } from "framer-motion";
+import { container, item, inViewOptions } from "../../../app/motionConfig";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import Pagination from "../../../shared/ui/Pagination";
@@ -54,46 +56,54 @@ function TaskSearchPage() {
       <Button variant="outline" size="small" onClick={() => navigate(-1)}>
         Back to Projects Detail
       </Button>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+      <Motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={inViewOptions}
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"
+      >
         {!loading &&
           taskSearchResults.tasks &&
           taskSearchResults.tasks.length > 0 &&
           taskSearchResults.tasks.map((task) => (
-            <Card key={task._id} animation={true}>
-              <h2 className="text-xl font-semibold">{task.title}</h2>
-              <p className="text-gray-600">{task.description}</p>
-              <p className="text-gray-600">
-                Due Date:{" "}
-                {task.dueDate
-                  ? new Date(task.dueDate).toLocaleDateString()
-                  : "No due date"}
-              </p>
-              <p className="text-gray-600">Status: {task.status}</p>
-              <p className="text-gray-600">Priority: {task.priority}</p>
-              <div className="space-y-1">
-                <h3 className="font-semibold">Assignees:</h3>
-                <ul className="list-none">
-                  {task.assignedTo && task.assignedTo.length > 0 ? (
-                    task.assignedTo.map((assignee) => (
-                      <li key={assignee._id} className="text-gray-600">
-                        {assignee.name} ({assignee.email})
-                      </li>
-                    ))
-                  ) : (
-                    <li className="text-gray-600">No assignees</li>
-                  )}
-                </ul>
-              </div>
-              <Link
-                to={`/projects/${task.project._id}/${variant}/tasks/${task._id}`}
-              >
-                <Button variant="outline" size="small">
-                  View Details
-                </Button>
-              </Link>
-            </Card>
+            <Motion.div key={task._id} variants={item} className="mb-4">
+              <Card animation={true}>
+                <h2 className="text-xl font-semibold">{task.title}</h2>
+                <p className="text-gray-600">{task.description}</p>
+                <p className="text-gray-600">
+                  Due Date:{" "}
+                  {task.dueDate
+                    ? new Date(task.dueDate).toLocaleDateString()
+                    : "No due date"}
+                </p>
+                <p className="text-gray-600">Status: {task.status}</p>
+                <p className="text-gray-600">Priority: {task.priority}</p>
+                <div className="space-y-1">
+                  <h3 className="font-semibold">Assignees:</h3>
+                  <ul className="list-none">
+                    {task.assignedTo && task.assignedTo.length > 0 ? (
+                      task.assignedTo.map((assignee) => (
+                        <li key={assignee._id} className="text-gray-600">
+                          {assignee.name} ({assignee.email})
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-gray-600">No assignees</li>
+                    )}
+                  </ul>
+                </div>
+                <Link
+                  to={`/projects/${task.project._id}/${variant}/tasks/${task._id}`}
+                >
+                  <Button variant="outline" size="small">
+                    View Details
+                  </Button>
+                </Link>
+              </Card>
+            </Motion.div>
           ))}
-      </div>
+      </Motion.div>
       <Pagination
         totalPages={Math.ceil(
           taskSearchResults.total / taskSearchResults.limit,
