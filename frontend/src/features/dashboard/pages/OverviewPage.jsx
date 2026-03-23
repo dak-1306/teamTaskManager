@@ -1,32 +1,17 @@
-import { useEffect } from "react";
-
 import { ChartBar, CheckCircle, Clock, FolderOpenDot } from "lucide-react";
 import { motion as Motion } from "motion/react";
 
 import OverviewCard from "../components/OverviewCard";
 import SkeletonOverview from "./SkeletonOverview";
-
-import useProjectStore from "../../project/stores/projectStore";
-import useTaskStore from "../../task/stores/taskStore";
 import { container, item } from "../../../app/motionConfig";
 
-function OverviewPage() {
-  const { projects, fetchProjectMe, loading } = useProjectStore();
-  const { taskOverview, fetchTaskOverview } = useTaskStore();
-
-  useEffect(() => {
-    fetchProjectMe();
-  }, [fetchProjectMe]);
-
-  useEffect(() => {
-    fetchTaskOverview();
-  }, [fetchTaskOverview]);
-
-  const totalProjects = projects.length;
-  const totalTasks = taskOverview.totalTasks;
-  const completedTasks = taskOverview.completedTasks;
-  const inProgressTasks = taskOverview.inProgressTasks;
-
+function OverviewPage({
+  totalProjects,
+  totalTasks,
+  completedTasks,
+  inProgressTasks,
+  loading,
+}) {
   if (loading) {
     return <SkeletonOverview />;
   }

@@ -1,21 +1,10 @@
-import { useEffect } from "react";
-
 import { motion as Motion } from "motion/react";
 
 import RecentProjectCard from "../components/RecentProjectCard";
 import SkeletonRecentProject from "./SkeletonRecentProject";
-
-import useProjectStore from "../../project/stores/projectStore";
 import { container, item } from "../../../app/motionConfig";
 
-function RecentProjectPage() {
-  const { projects, fetchProjectMe, loading } = useProjectStore();
-  useEffect(() => {
-    fetchProjectMe();
-  }, [fetchProjectMe]);
-
-  console.log("Projects in RecentProjectPage:", projects);
-
+function RecentProjectPage({ projects, loading }) {
   if (loading) {
     return <SkeletonRecentProject />;
   }

@@ -33,23 +33,33 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setLoading(true);
-    if (token) {
-      getUserCurrent()
-        .then((user) => {
-          setUserProfile(user);
-          setIsLogin(true);
-          setError(null);
-        })
-        .catch((error) => {
-          console.error("Error fetching current user:", error.message);
-          setError(error.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    const init = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token || token === "null" || token === "undefined") {
+        setIsLogin(false);
+        setUserProfile(null);
+        setError(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const user = await getUserCurrent();
+        setUserProfile(user);
+        setIsLogin(true);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching current user:", err.message);
+        setError(err.message);
+        setIsLogin(false);
+        setUserProfile(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
   }, []);
 
   const login = async (credentials) => {

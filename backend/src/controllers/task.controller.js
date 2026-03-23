@@ -2,35 +2,132 @@ const Task = require("../models/task.model");
 const Project = require("../models/project.model");
 const User = require("../models/user.model");
 
-// GET /tasks/overview - Get task overview for dashboard
+// Format YYYY-MM-DD
+function formatDate(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+// GET /tasks/overview
 const getOverviewTasks = async (req, res) => {
   try {
     const userId = req.user.id;
+
     const tasks = await Task.find({
       assignedTo: userId,
-    })
-      .populate("project", "name")
-      .populate("assignedTo", "username email");
+    });
+
+    // ===== Stats =====
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter(
       (task) => task.status === "done",
     ).length;
+
     const inProgressTasks = tasks.filter(
       (task) => task.status === "doing",
     ).length;
 
+    const todoTasks = tasks.filter((task) => task.status === "todo").length;
+
+    // ===== Tasks by month =====
+    const overviewByMonth = {};
+
+    // ===== Tasks by day =====
+    const overviewByDay = {};
+
+    tasks.forEach((task) => {
+      // ===== Created =====
+      if (task.createdAt) {
+        const createdDate = new Date(task.createdAt);
+
+        // Month
+        const yearM = createdDate.getFullYear();
+        const month = createdDate.getMonth() + 1;
+        const keyMonth = `${yearM}-${month}`;
+
+        if (!overviewByMonth[keyMonth]) {
+          overviewByMonth[keyMonth] = {
+            year: yearM,
+            month,
+            created: 0,
+            completed: 0,
+          };
+        }
+
+        overviewByMonth[keyMonth].created += 1;
+
+        // Day
+        const dateKey = formatDate(createdDate);
+
+        if (!overviewByDay[dateKey]) {
+          overviewByDay[dateKey] = {
+            date: dateKey,
+            created: 0,
+            completed: 0,
+          };
+        }
+
+        overviewByDay[dateKey].created += 1;
+      }
+
+      // ===== Completed =====
+      if (task.status === "done" && task.updatedAt) {
+        const completedDate = new Date(task.updatedAt);
+
+        // Month
+        const yearM = completedDate.getFullYear();
+        const month = completedDate.getMonth() + 1;
+        const keyMonth = `${yearM}-${month}`;
+
+        if (!overviewByMonth[keyMonth]) {
+          overviewByMonth[keyMonth] = {
+            year: yearM,
+            month,
+            created: 0,
+            completed: 0,
+          };
+        }
+
+        overviewByMonth[keyMonth].completed += 1;
+
+        // Day
+        const dateKey = formatDate(completedDate);
+
+        if (!overviewByDay[dateKey]) {
+          overviewByDay[dateKey] = {
+            date: dateKey,
+            created: 0,
+            completed: 0,
+          };
+        }
+
+        overviewByDay[dateKey].completed += 1;
+      }
+    });
+
+    // ===== Convert to array + sort =====
+    const tasksByMonth = Object.values(overviewByMonth).sort((a, b) => {
+      if (a.year === b.year) return a.month - b.month;
+      return a.year - b.year;
+    });
+
+    const tasksByDay = Object.values(overviewByDay).sort(
+      (a, b) => new Date(a.date) - new Date(b.date),
+    );
+
+    // ===== Response =====
     res.status(200).json({
       totalTasks,
       completedTasks,
       inProgressTasks,
+      todoTasks,
+      tasksByMonth,
+      tasksByDay,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Failed to retrieve task overview",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Failed to retrieve task overview",
+      error: error.message,
+    });
   }
 };
 
@@ -199,7 +296,17 @@ const updateTask = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
-    if (task.project.owner.toString() !== req.user.id) {
+    const checkAssignedTo = task.assignedTo.map((assignedUser) => {
+      if (assignedUser._id.toString() === req.user.id) {
+        return true;
+      }
+      return false;
+    });
+
+    if (
+      task.project.owner.toString() !== req.user.id &&
+      !checkAssignedTo.includes(true)
+    ) {
       return res.status(403).json({ message: "Unauthorized to update task" });
     }
     let assignedUserIds = task.assignedTo;
@@ -236,7 +343,16 @@ const deleteTask = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
-    if (task.project.owner.toString() !== req.user.id) {
+    const checkAssignedTo = task.assignedTo.map((assignedUser) => {
+      if (assignedUser._id.toString() === req.user.id) {
+        return true;
+      }
+      return false;
+    });
+    if (
+      task.project.owner.toString() !== req.user.id &&
+      !checkAssignedTo.includes(true)
+    ) {
       return res.status(403).json({ message: "Unauthorized to delete task" });
     }
     await Task.findByIdAndDelete(id);

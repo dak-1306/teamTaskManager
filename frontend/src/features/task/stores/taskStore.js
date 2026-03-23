@@ -19,8 +19,9 @@ const useTaskStore = create((set) => ({
       set({ error: error.message, loading: false });
     }
   },
+
   // Fetch tasks for the current user
-  fetchTasks: async ( page, limit ) => {
+  fetchTasks: async (page, limit) => {
     set({ loading: true, error: null });
     try {
       const response = await axiosClient.get("/tasks/me", {
