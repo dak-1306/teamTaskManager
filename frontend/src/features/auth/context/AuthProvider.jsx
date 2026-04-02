@@ -35,35 +35,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const init = async () => {
+  const fetchUserProfile = async () => {
+    try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token || token === "null" || token === "undefined") {
-        setIsLogin(false);
-        setUserProfile(null);
-        setError(null);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const user = await getUserCurrent();
-        setUserProfile(user);
-        setIsLogin(true);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching current user:", err.message);
-        setError(err.message);
-        setIsLogin(false);
-        setUserProfile(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    init();
-  }, []);
+      const user = await getUserCurrent();
+      setUserProfile(user);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching user profile:", error.message);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    checkLoginStatus();
+    if (isLogin) {
+      fetchUserProfile();
+    }
+  }, [isLogin]);
 
   const login = async (credentials) => {
     try {
