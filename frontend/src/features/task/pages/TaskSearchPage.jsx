@@ -43,13 +43,13 @@ function TaskSearchPage() {
 
   if (loading) {
     return (
-      <MainLayout isLogin={true}>
+      <MainLayout>
         <SkeletonTaskSearch />
       </MainLayout>
     );
   }
   return (
-    <MainLayout isLogin={true}>
+    <MainLayout>
       <h1>Task Search</h1>
       {/* Add your search functionality here */}
       <p>Search query: {searchParams.get("query")}</p>

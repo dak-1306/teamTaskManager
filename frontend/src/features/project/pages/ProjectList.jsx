@@ -65,14 +65,14 @@ function ProjectList() {
 
   if (loading) {
     return (
-      <MainLayout isLogin={true}>
+      <MainLayout>
         <SkeletonProjectList />
       </MainLayout>
     );
   }
 
   return (
-    <MainLayout isLogin={true}>
+    <MainLayout>
       <h1 className="text-2xl font-semibold text-center">My Projects</h1>
 
       {!loading && !hasProjects && !hasMemberProjects && (

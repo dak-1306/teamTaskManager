@@ -10,25 +10,87 @@ import Profile from "../features/auth/pages/profile";
 import ProjectSearchPage from "../features/project/pages/ProjectSearchPage";
 import TaskSearchPage from "../features/task/pages/TaskSearchPage";
 
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../features/auth/context/useAuth";
+
+const ProtectedRoute = ({ children }) => {
+  const { isLogin, loading } = useAuth();
+
+  if (loading) return null; // or a spinner component
+  if (!isLogin) return <Navigate to="/login" replace />;
+
+  return children;
+};
+
 function Router() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/dashboard/tasks/:taskId" element={<TaskDetail />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/tasks/:taskId"
+        element={
+          <ProtectedRoute>
+            <TaskDetail />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="projects/:projectId/:variant/tasks/:taskId"
-        element={<TaskDetail />}
+        element={
+          <ProtectedRoute>
+            <TaskDetail />
+          </ProtectedRoute>
+        }
       />
-      <Route path="/projects" element={<ProjectList />} />
-      <Route path="/projects/:id/:variant" element={<ProjectDetail />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/projects/search" element={<ProjectSearchPage />} />
+      <Route
+        path="/projects"
+        element={
+          <ProtectedRoute>
+            <ProjectList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/projects/:id/:variant"
+        element={
+          <ProtectedRoute>
+            <ProjectDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/projects/search"
+        element={
+          <ProtectedRoute>
+            <ProjectSearchPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/projects/:projectId/:variant/tasks/search"
-        element={<TaskSearchPage />}
+        element={
+          <ProtectedRoute>
+            <TaskSearchPage />
+          </ProtectedRoute>
+        }
       />
     </Routes>
   );

@@ -48,12 +48,17 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  // Run once on mount: check token and fetch profile if token exists
   useEffect(() => {
-    checkLoginStatus();
-    if (isLogin) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLogin(true);
       fetchUserProfile();
+    } else {
+      setIsLogin(false);
+      setLoading(false);
     }
-  }, [isLogin]);
+  }, []);
 
   const login = async (credentials) => {
     try {

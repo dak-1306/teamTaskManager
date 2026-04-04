@@ -31,13 +31,13 @@ function ProjectSearchPage() {
   console.log("Search Results:", projectSearch);
   if (loading) {
     return (
-      <MainLayout isLogin={true}>
+      <MainLayout>
         <SkeletonSearch />
       </MainLayout>
     );
   }
   return (
-    <MainLayout isLogin={true}>
+    <MainLayout>
       <h1 className="text-2xl font-bold">Project Search Projects</h1>
       {q && (
         <p className="mb-4">

@@ -50,13 +50,13 @@ function TaskDetail() {
   };
   if (loading) {
     return (
-      <MainLayout isLogin={true}>
+      <MainLayout >
         <SkeletonTaskDetail />
       </MainLayout>
     );
   }
   return (
-    <MainLayout isLogin={true}>
+    <MainLayout >
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         {taskDetail?.title || "Loading..."}
       </h1>

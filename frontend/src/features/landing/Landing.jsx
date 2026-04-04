@@ -1,28 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import MainLayout from "../../shared/layout/MainLayout";
 import Button from "../../shared/ui/Button";
 import RunningClockCanvas from "./RunningClockCanvas";
 
 import { motion as Motion } from "framer-motion";
 import { inViewOptions, item } from "../../app/motionConfig";
-
-import { useAuth } from "../auth/context/useAuth";
 import { useTheme } from "../../shared/context/useTheme";
+
+import { useEffect } from "react";
+import { useAuth } from "../auth/context/useAuth";
+
 function Landing() {
-  const navigate = useNavigate();
-  const { isLogin } = useAuth();
   const { theme } = useTheme();
+  const { isLogin } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     if (isLogin) {
       navigate("/dashboard");
     }
   }, [isLogin, navigate]);
-  if (isLogin) {
-    return null;
-  }
+
   return (
-    <MainLayout isLogin={isLogin}>
+    <MainLayout>
       <div className="text-center mt-20 space-y-6">
         <Motion.h1
           variants={item}

@@ -60,13 +60,13 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <MainLayout isLogin={true}>
+      <MainLayout>
         <SkeletonDashboard />
       </MainLayout>
     );
   }
   return (
-    <MainLayout isLogin={true}>
+    <MainLayout >
       <h1 className="text-2xl font-bold text-foreground text-center">
         Dashboard
       </h1>

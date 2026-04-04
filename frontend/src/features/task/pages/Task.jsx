@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { FilePlus } from "lucide-react";
+import { FilePlus, Funnel } from "lucide-react";
 import { motion as Motion } from "framer-motion";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 
@@ -14,12 +14,13 @@ import Pagination from "../../../shared/ui/Pagination";
 import SkeletonTask from "./SkeletonTask";
 
 import AddTask from "../components/AddTask";
+import FilterModal from "../components/FilterModal";
 
 import useTaskStore from "../stores/taskStore";
 
 import formatDate from "../../../shared/utils/formatDate";
 
-function Task({ projectId, variant, projectName }) {
+function Task({ projectId, variant }) {
   const navigate = useNavigate();
 
   const [openAddTask, setOpenAddTask] = useState(false);
@@ -29,6 +30,7 @@ function Task({ projectId, variant, projectName }) {
     priority: "",
     date: "",
   });
+  const [openFilterModal, setOpenFilterModal] = useState(false);
 
   const { tasks, fetchTasksByProjectId, filterTasks, loading } = useTaskStore();
 
@@ -52,9 +54,9 @@ function Task({ projectId, variant, projectName }) {
     );
   };
 
-  const handleFilterChange = ({ name, value }) => {
-    setFilterTask((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handleFilterChange = ({ name, value }) => {
+  //   setFilterTask((prev) => ({ ...prev, [name]: value }));
+  // };
 
   const statusColors = {
     done: "text-green-500",
@@ -68,20 +70,20 @@ function Task({ projectId, variant, projectName }) {
     low: "text-green-500",
   };
 
-  const filterStatus = [
-    { value: "todo", label: "To Do" },
-    { value: "doing", label: "Doing" },
-    { value: "done", label: "Done" },
-  ];
-  const filterPriority = [
-    { value: "high", label: "High" },
-    { value: "medium", label: "Medium" },
-    { value: "low", label: "Low" },
-  ];
-  const filterTime = [
-    { value: "dueDateAsc", label: "Due Date (Asc)" },
-    { value: "dueDateDesc", label: "Due Date (Desc)" },
-  ];
+  // const filterStatus = [
+  //   { value: "todo", label: "To Do" },
+  //   { value: "doing", label: "Doing" },
+  //   { value: "done", label: "Done" },
+  // ];
+  // const filterPriority = [
+  //   { value: "high", label: "High" },
+  //   { value: "medium", label: "Medium" },
+  //   { value: "low", label: "Low" },
+  // ];
+  // const filterTime = [
+  //   { value: "dueDateAsc", label: "Due Date (Asc)" },
+  //   { value: "dueDateDesc", label: "Due Date (Desc)" },
+  // ];
 
   console.log("Tasks for project", projectId, tasks);
   if (loading) {
@@ -89,9 +91,6 @@ function Task({ projectId, variant, projectName }) {
   }
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">
-        Task of Project {projectName}
-      </h1>
       <Card>
         <Motion.div
           variants={item}
@@ -106,30 +105,15 @@ function Task({ projectId, variant, projectName }) {
             onSubmit={handleSubmit}
             onChange={handleOnChangeTaskSearch}
           />
-          <Filter
-            name="status"
-            options={filterStatus}
-            value={filterTask.status}
-            onFilterChange={(e) =>
-              handleFilterChange({ name: "status", value: e.target.value })
-            }
-          />
-          <Filter
-            name="priority"
-            options={filterPriority}
-            value={filterTask.priority}
-            onFilterChange={(e) =>
-              handleFilterChange({ name: "priority", value: e.target.value })
-            }
-          />
-          <Filter
-            name="time"
-            options={filterTime}
-            value={filterTask.date}
-            onFilterChange={(e) =>
-              handleFilterChange({ name: "date", value: e.target.value })
-            }
-          />
+          {/* Filter button opens modal */}
+          <Button
+            variant="outline"
+            size="medium"
+            icon={<Funnel className="w-4 h-4 mr-2" />}
+            onClick={() => setOpenFilterModal(true)}
+          >
+            Filter
+          </Button>
           <Button
             variant="primary"
             size="medium"
@@ -154,9 +138,7 @@ function Task({ projectId, variant, projectName }) {
                   <h2 className="text-xl font-semibold text-center">
                     {t.title}
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {t.description}
-                  </p>
+
                   <p className="text-gray-600 dark:text-gray-300">
                     Due Date:{" "}
                     {t.dueDate ? formatDate(t.dueDate) : "No due date"}
@@ -183,18 +165,6 @@ function Task({ projectId, variant, projectName }) {
                       {t.priority}
                     </span>
                   </p>
-                  <div className="space-y-1">
-                    <h3 className="font-semibold">Assignees:</h3>
-                    <ul className="list-none">
-                      {t.assignedTo.map((assignee) => (
-                        <li key={assignee._id}>
-                          <p className="text-gray-600 dark:text-gray-300">
-                            {assignee.username} ({assignee.email})
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                   <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
                     <Button variant="outline" size="small">
                       View Details
@@ -223,6 +193,15 @@ function Task({ projectId, variant, projectName }) {
           open={openAddTask}
           onClose={() => setOpenAddTask(false)}
           projectId={projectId}
+        />
+      )}
+      {/* Filter modal */}
+      {openFilterModal && (
+        <FilterModal
+          isOpen={openFilterModal}
+          onClose={() => setOpenFilterModal(false)}
+          initialFilters={filterTask}
+          onApply={(f) => setFilterTask(f)}
         />
       )}
     </div>

@@ -1,6 +1,8 @@
 import Button from "../ui/Button";
 import { Link } from "react-router-dom";
-function Header({ isLogin }) {
+import { useAuth } from "../../features/auth/context/useAuth";
+function Header() {
+  const { isLogin } = useAuth();
   return (
     <>
       <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-600 text-gray-800 dark:text-white h-16 px-8 flex justify-between items-center z-60">

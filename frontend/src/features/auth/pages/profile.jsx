@@ -41,7 +41,7 @@ function Profile() {
     );
   }
   return (
-    <MainLayout isLogin={userProfile ? true : false}>
+    <MainLayout>
       <div className="max-w-2xl mx-auto mt-10">
         {!loading && userProfile && (
           <Motion.div

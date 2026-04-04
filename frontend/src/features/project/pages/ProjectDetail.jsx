@@ -34,86 +34,46 @@ function ProjectDetail() {
     fetchProjectById(id);
   }, [fetchProjectById, id]);
 
-  console.log("Project Detail:", projectDetail);
-
   if (loading) {
     return (
-      <MainLayout isLogin={true}>
+      <MainLayout>
         <SkeletonProjectDetail />
       </MainLayout>
     );
   }
 
   return (
-    <MainLayout isLogin={true}>
-      <div className="relative">
-        <Button
-          className="absolute top-0 left-0"
-          variant="secondary"
-          size="medium"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowBigLeft />
-        </Button>
-        <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">
-          {projectDetail?.name || "Project Detail"}
-        </h1>
+    <MainLayout>
+      {/* Content */}
+      <div className="grid grid-cols-12 gap-4">
+        {/* Project Info Sidebar */}
+        <div className="col-span-12 lg:col-span-4">
+          {/* Header */}
+          <Card>
+            <div className="flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <Button
+                  variant="secondary"
+                  size="medium"
+                  onClick={() => navigate(-1)}
+                >
+                  <ArrowBigLeft />
+                </Button>
 
-        <Card>
-          {!loading && projectDetail ? (
-            <Motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={inViewOptions}
-              className="flex justify-between mt-4 mx-auto max-w-2xl"
-            >
-              <Motion.div
-                variants={item}
-                initial="hidden"
-                whileInView="show"
-                viewport={inViewOptions}
-                className="space-y-2"
-              >
-                <p>
-                  <strong>Created:</strong>{" "}
-                  {projectDetail.createdAt
-                    ? new Date(projectDetail.createdAt).toLocaleDateString()
-                    : "Unknown"}
-                </p>
-                <p>
-                  <strong>Description:</strong> {projectDetail.description}
-                </p>
-                <p>
-                  <strong>Owner:</strong> {projectDetail.owner.username}
-                </p>
-                <p>
-                  <strong>Members:</strong>
-                </p>
-                <ul className="list-disc list-inside">
-                  {projectDetail.members.map((member) => (
-                    <li key={member._id}>
-                      {member.username} ({member.email})
-                    </li>
-                  ))}
-                </ul>
-              </Motion.div>
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                  {projectDetail?.name || "Project Detail"}
+                </h1>
+              </div>
 
               {variant === "owner" && (
-                <Motion.div
-                  variants={item}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={inViewOptions}
-                  className="flex flex-col space-y-2"
-                >
+                <div className="flex space-x-2">
                   <Button
                     variant="primary"
                     size="medium"
                     icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
                     onClick={() => setOpenAddMember(true)}
                   >
-                    Add Member
+                    Add
                   </Button>
                   <Button
                     variant="secondary"
@@ -121,7 +81,7 @@ function ProjectDetail() {
                     icon={<Pencil className="w-4 h-4 mr-2" />}
                     onClick={() => setOpenEditProject(true)}
                   >
-                    Edit Project
+                    Edit
                   </Button>
                   <Button
                     variant="danger"
@@ -129,51 +89,82 @@ function ProjectDetail() {
                     icon={<Trash2 className="w-4 h-4 mr-2" />}
                     onClick={() => setOpenDialogDelete(true)}
                   >
-                    Delete Project
+                    Delete
                   </Button>
-                </Motion.div>
+                </div>
               )}
+            </div>
+          </Card>
+          <Card>
+            <Motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
+              className="space-y-3"
+            >
+              <Motion.p variants={item}>
+                <strong>Owner:</strong> {projectDetail?.owner?.username}
+              </Motion.p>
+
+              <Motion.p variants={item}>
+                <strong>Description:</strong> {projectDetail?.description}
+              </Motion.p>
+
+              <Motion.p variants={item}>
+                <strong>Created:</strong>{" "}
+                {projectDetail?.createdAt
+                  ? new Date(projectDetail.createdAt).toLocaleDateString()
+                  : "Unknown"}
+              </Motion.p>
+
+              <Motion.div variants={item}>
+                <strong>Members:</strong>
+                <ul className="list-disc list-inside">
+                  {projectDetail?.members?.map((member) => (
+                    <li key={member._id}>
+                      {member.username} ({member.email})
+                    </li>
+                  ))}
+                </ul>
+              </Motion.div>
             </Motion.div>
-          ) : (
-            <p className="text-center">Project not found.</p>
-          )}
-        </Card>
+          </Card>
+        </div>
 
-        <hr className="my-4 border-gray-300 dark:border-gray-600" />
-
-        <Task
-          projectId={id}
-          variant={variant}
-          projectName={projectDetail ? projectDetail.name : "Loading..."}
-        />
-
-        {/* modal add member */}
-        {openAddMember && (
-          <AddMember
-            isOpen={openAddMember}
-            onClose={() => setOpenAddMember(false)}
-            projectId={id}
-          />
-        )}
-        {/* modal edit project */}
-        {openEditProject && (
-          <EditProject
-            isOpen={openEditProject}
-            onClose={() => setOpenEditProject(false)}
-            project={projectDetail}
-          />
-        )}
-        {/* modal dialog delete */}
-        {openDialogDelete && (
-          <DeleteProject
-            isOpen={openDialogDelete}
-            onClose={() => setOpenDialogDelete(false)}
-            projectId={id}
-            projectName={projectDetail ? projectDetail.title : "this project"}
-          />
-        )}
+        {/* Task List */}
+        <div className="col-span-12 lg:col-span-8">
+          <Task projectId={id} variant={variant} />
+        </div>
       </div>
+
+      {/* Modals */}
+      {openAddMember && (
+        <AddMember
+          isOpen={openAddMember}
+          onClose={() => setOpenAddMember(false)}
+          projectId={id}
+        />
+      )}
+
+      {openEditProject && (
+        <EditProject
+          isOpen={openEditProject}
+          onClose={() => setOpenEditProject(false)}
+          project={projectDetail}
+        />
+      )}
+
+      {openDialogDelete && (
+        <DeleteProject
+          isOpen={openDialogDelete}
+          onClose={() => setOpenDialogDelete(false)}
+          projectId={id}
+          projectName={projectDetail ? projectDetail.title : "this project"}
+        />
+      )}
     </MainLayout>
   );
 }
+
 export default ProjectDetail;
