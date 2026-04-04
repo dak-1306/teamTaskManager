@@ -60,6 +60,9 @@ export default function TasksLineChart({ tasksByMonth = [] }) {
 
   return (
     <div>
+      <h2 className="text-xl font-bold text-foreground text-center mb-4">
+        Tasks by Month
+      </h2>
       <div
         style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}
       >

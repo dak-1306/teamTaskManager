@@ -6,7 +6,13 @@ import { useRef, useState } from "react";
 
 import useTaskStore from "../stores/taskStore";
 
-function EditTask({ open, onClose, taskDetail, assignedEmailEdit, setAssignedEmailEdit }) {
+function EditTask({
+  open,
+  onClose,
+  taskDetail,
+  assignedEmailEdit,
+  setAssignedEmailEdit,
+}) {
   const { updateTask } = useTaskStore();
   const titleRef = useRef();
   const descriptionRef = useRef();
@@ -108,7 +114,7 @@ function EditTask({ open, onClose, taskDetail, assignedEmailEdit, setAssignedEma
           <option value="high">High</option>
         </select>
         <p className="font-semibold text-gray-700 dark:text-white">
-          Assigned Users:
+          Assigned Users
         </p>
         {assignedEmailEdit.length > 0
           ? assignedEmailEdit.map((email) => (

@@ -26,10 +26,15 @@ export default function PieChartStatus({ data = [], totalData }) {
         dominantBaseline="central"
         fill="#111"
       >
-        <tspan fontSize="20" fontWeight="600">
+        <tspan className="text-2xl font-semibold fill-current text-gray-900 dark:text-gray-100">
           {totalData}
         </tspan>
-        <tspan x="50%" dy="1.4em" fontSize="12" fill="#6b7280">
+        <tspan
+          x="50%"
+          dy="1.4em"
+          fontSize="12"
+          className="text-2xl font-semibold fill-current text-gray-600 dark:text-gray-400"
+        >
           Tasks
         </tspan>
       </text>

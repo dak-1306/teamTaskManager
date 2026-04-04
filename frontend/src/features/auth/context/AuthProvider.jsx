@@ -8,6 +8,7 @@ import {
   updateUser,
   changePassword,
   deleteUser,
+  getUserForAddMemberProject,
 } from "../api/authAPI";
 
 export const AuthProvider = ({ children }) => {
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usersForAddMember, setUsersForAddMember] = useState([]);
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
@@ -124,17 +126,40 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
+  const getUsersForAddMemberProvider = async () => {
+    try {
+      const users = await getUserForAddMemberProject();
+      console.log("Users for add member project:", users);
+      setUsersForAddMember(users);
+      return users;
+    } catch (error) {
+      console.error(
+        "Error fetching users for add member project:",
+        error.message,
+      );
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    if (isLogin) {
+      getUsersForAddMemberProvider();
+    }
+  }, [isLogin]);
+
   const value = {
     isLogin,
     loading,
     checkLoginStatus,
     userProfile,
+    usersForAddMember,
     register,
     login,
     logout,
     updateInfoUser,
     changePasswordUser,
     deleteUserProvider,
+    getUsersForAddMemberProvider,
     error,
   };
 

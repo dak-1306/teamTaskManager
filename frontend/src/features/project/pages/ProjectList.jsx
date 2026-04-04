@@ -2,9 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 
-import { FolderPlus } from "lucide-react";
+import { FolderPlus, Calendar } from "lucide-react";
 import { motion as Motion } from "framer-motion";
 import { inViewOptions, container, item } from "../../../app/motionConfig";
+
+import formatDate from "../../../shared/utils/formatDate";
 
 import MainLayout from "../../../shared/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
@@ -92,8 +94,9 @@ function ProjectList() {
           </div>
         </div>
       )}
-      {!loading && hasProjects ? (
-        <div className="space-y-4">
+
+      <div className="space-y-4">
+        {!loading && (
           <Motion.ul
             variants={container}
             initial="hidden"
@@ -139,7 +142,9 @@ function ProjectList() {
               </div>
             </Card>
           </Motion.ul>
+        )}
 
+        {!loading && hasProjects ? (
           <Motion.ul
             variants={container}
             initial="hidden"
@@ -153,22 +158,40 @@ function ProjectList() {
                 variants={item}
                 className="list-none"
               >
-                <Card title={project.name} description={project.description}>
-                  <Link to={`/projects/${project._id}/owner`}>
-                    <Button variant="outline" size="small">
-                      View Details
-                    </Button>
-                  </Link>
-                </Card>
+                <Link to={`/projects/${project._id}/owner`}>
+                  <Card
+                    className="hover:shadow-lg transition-shadow"
+                    title={project.name}
+                    description={project.description}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {project.description?.length > 120
+                          ? project.description.slice(0, 120) + "..."
+                          : project.description}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>
+                          {project.createdAt
+                            ? formatDate(project.createdAt)
+                            : ""}
+                        </span>
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
               </Motion.li>
             ))}
           </Motion.ul>
-        </div>
-      ) : (
-        !loading && (
-          <p className="text-center">You have not created any projects.</p>
-        )
-      )}
+        ) : (
+          !loading && (
+            <p className="text-center text-gray-500">
+              You have not created any projects.
+            </p>
+          )
+        )}
+      </div>
 
       <hr className="my-8" />
       <h2 className="text-xl font-semibold mt-8 text-center">
@@ -184,13 +207,18 @@ function ProjectList() {
         >
           {memberProject.map((project) => (
             <Motion.li key={project._id} variants={item} className="list-none">
-              <Card title={project.name} description={project.description}>
-                <Link to={`/projects/${project._id}/member`}>
-                  <Button variant="outline" size="small">
-                    View Details
-                  </Button>
-                </Link>
-              </Card>
+              <Link to={`/projects/${project._id}/member`}>
+                <Card animation={true}>
+                  <h2 className="text-lg font-semibold">{project.name}</h2>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {project.description}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {project.createdAt &&
+                      `Created: ${formatDate(project.createdAt)}`}
+                  </p>
+                </Card>
+              </Link>
             </Motion.li>
           ))}
         </Motion.ul>

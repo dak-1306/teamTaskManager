@@ -26,6 +26,7 @@ function OverviewPage({
               title="Total Projects"
               value={totalProjects}
               icon={<FolderOpenDot size={24} />}
+              color="totalProject"
             />
           </Motion.div>
           <Motion.div variants={item}>
@@ -33,6 +34,7 @@ function OverviewPage({
               title="Total Tasks"
               value={totalTasks}
               icon={<ChartBar size={24} />}
+              color="totalTask"
             />
           </Motion.div>
           <Motion.div variants={item}>
@@ -40,6 +42,7 @@ function OverviewPage({
               title="Completed Tasks"
               value={completedTasks}
               icon={<CheckCircle size={24} />}
+              color="completedTask"
             />
           </Motion.div>
           <Motion.div variants={item}>
@@ -47,6 +50,7 @@ function OverviewPage({
               title="In Progress Tasks"
               value={inProgressTasks}
               icon={<Clock size={24} />}
+              color="progressTask"
             />
           </Motion.div>
         </>

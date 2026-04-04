@@ -1,7 +1,15 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import { ArrowBigLeft, UserRoundPlus, Pencil, Trash2 } from "lucide-react";
+import {
+  ArrowBigLeft,
+  UserRoundPlus,
+  Pencil,
+  Trash2,
+  Users,
+  Calendar,
+  FileText,
+} from "lucide-react";
 import { motion as Motion } from "motion/react";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 
@@ -29,6 +37,7 @@ function ProjectDetail() {
   const [openAddMember, setOpenAddMember] = useState(false);
   const [openEditProject, setOpenEditProject] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [membersOpen, setMembersOpen] = useState(true);
 
   useEffect(() => {
     fetchProjectById(id);
@@ -50,23 +59,29 @@ function ProjectDetail() {
         <div className="col-span-12 lg:col-span-4">
           {/* Header */}
           <Card>
-            <div className="flex flex-col">
-              <div className="flex items-center justify-between mb-4">
+            <header className="flex items-start justify-between mb-4 gap-4">
+              <div className="flex items-center gap-3">
                 <Button
                   variant="secondary"
                   size="medium"
                   onClick={() => navigate(-1)}
+                  aria-label="Back"
                 >
                   <ArrowBigLeft />
                 </Button>
 
-                <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-                  {projectDetail?.name || "Project Detail"}
-                </h1>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                    {projectDetail?.name || "Project Detail"}
+                  </h1>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    {projectDetail?.description || "No description provided."}
+                  </p>
+                </div>
               </div>
 
               {variant === "owner" && (
-                <div className="flex space-x-2">
+                <div className="flex items-center space-x-2">
                   <Button
                     variant="primary"
                     size="medium"
@@ -93,9 +108,10 @@ function ProjectDetail() {
                   </Button>
                 </div>
               )}
-            </div>
-          </Card>
-          <Card>
+            </header>
+
+            <hr className="border-gray-200 dark:border-gray-700 my-4" />
+
             <Motion.div
               variants={container}
               initial="hidden"
@@ -103,30 +119,82 @@ function ProjectDetail() {
               viewport={inViewOptions}
               className="space-y-3"
             >
-              <Motion.p variants={item}>
-                <strong>Owner:</strong> {projectDetail?.owner?.username}
-              </Motion.p>
+              <Motion.div variants={item}>
+                <dl className="grid gap-3">
+                  <div className="flex items-center gap-3">
+                    <Users className="w-5 h-5 text-gray-400 dark:text-gray-300" />
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">
+                      Owner
+                    </dt>
+                    <dd className="ml-auto text-sm text-gray-800 dark:text-gray-100">
+                      {projectDetail?.owner?.username || "Unknown"}
+                    </dd>
+                  </div>
 
-              <Motion.p variants={item}>
-                <strong>Description:</strong> {projectDetail?.description}
-              </Motion.p>
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-5 h-5 text-gray-400 dark:text-gray-300" />
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">
+                      Description
+                    </dt>
+                    <dd className="ml-auto text-sm text-gray-700 dark:text-gray-200 break-words max-w-[18rem]">
+                      {projectDetail?.description || "-"}
+                    </dd>
+                  </div>
 
-              <Motion.p variants={item}>
-                <strong>Created:</strong>{" "}
-                {projectDetail?.createdAt
-                  ? new Date(projectDetail.createdAt).toLocaleDateString()
-                  : "Unknown"}
-              </Motion.p>
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-gray-400 dark:text-gray-300" />
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">
+                      Created
+                    </dt>
+                    <dd className="ml-auto text-sm text-gray-800 dark:text-gray-100">
+                      {projectDetail?.createdAt
+                        ? new Date(projectDetail.createdAt).toLocaleDateString()
+                        : "Unknown"}
+                    </dd>
+                  </div>
+                </dl>
+              </Motion.div>
 
               <Motion.div variants={item}>
-                <strong>Members:</strong>
-                <ul className="list-disc list-inside">
-                  {projectDetail?.members?.map((member) => (
-                    <li key={member._id}>
-                      {member.username} ({member.email})
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <strong className="text-sm text-gray-700 dark:text-gray-200">
+                      Members
+                    </strong>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {projectDetail?.members?.length || 0}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setMembersOpen((s) => !s)}
+                    className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+                    aria-expanded={membersOpen}
+                  >
+                    {membersOpen ? "Hide" : "Show"}
+                  </button>
+                </div>
+
+                {membersOpen && (
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {projectDetail?.members?.map((member) => (
+                      <li key={member._id} className="flex items-center gap-2">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-medium">
+                          {member.username
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .slice(0, 2)
+                            .join("")}
+                        </span>
+                        <div className="text-sm text-gray-700 dark:text-gray-200">
+                          <div>{member.username}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {member.email}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </Motion.div>
             </Motion.div>
           </Card>

@@ -2,6 +2,7 @@ import { motion as Motion } from "framer-motion";
 
 import RecentProjectCard from "../components/RecentProjectCard";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
+import formatDate from "../../../shared/utils/formatDate";
 
 function RecentProjectPage({ projects, loading }) {
   return (
@@ -19,7 +20,7 @@ function RecentProjectPage({ projects, loading }) {
             <RecentProjectCard
               title={project.name}
               description={project.description}
-              time={project.updatedAt}
+              time={formatDate(project.updatedAt)}
               projectId={project._id}
             />
           </Motion.li>

@@ -81,10 +81,27 @@ const deleteUser = async (userId) => {
   }
 };
 
+const getUserForAddMemberProject = async () => {
+  try {
+    const response = await axiosClient.get("/users/add-member");
+    console.log(
+      "Get Users for Add Member Project API response:",
+      response.data,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message ||
+        "Failed to retrieve users for add member project",
+    );
+  }
+};
+
 export {
   registerUser,
   loginUser,
   getAllUser,
+  getUserForAddMemberProject,
   getUserCurrent,
   updateUser,
   changePassword,

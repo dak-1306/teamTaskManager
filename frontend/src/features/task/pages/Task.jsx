@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { FilePlus, Funnel } from "lucide-react";
+import { FilePlus, Funnel, Calendar, Tag } from "lucide-react";
 import { motion as Motion } from "framer-motion";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 
@@ -54,36 +54,19 @@ function Task({ projectId, variant }) {
     );
   };
 
-  // const handleFilterChange = ({ name, value }) => {
-  //   setFilterTask((prev) => ({ ...prev, [name]: value }));
-  // };
-
-  const statusColors = {
-    done: "text-green-500",
-    doing: "text-yellow-500",
-    todo: "text-red-500",
+  const statusBadge = {
+    done: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    doing:
+      "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    todo: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
   };
 
-  const priorityColors = {
-    high: "text-red-500",
-    medium: "text-yellow-500",
-    low: "text-green-500",
+  const priorityBadge = {
+    high: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 dark:bg-red-900 dark:text-red-200",
+    medium:
+      "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200",
+    low: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-200",
   };
-
-  // const filterStatus = [
-  //   { value: "todo", label: "To Do" },
-  //   { value: "doing", label: "Doing" },
-  //   { value: "done", label: "Done" },
-  // ];
-  // const filterPriority = [
-  //   { value: "high", label: "High" },
-  //   { value: "medium", label: "Medium" },
-  //   { value: "low", label: "Low" },
-  // ];
-  // const filterTime = [
-  //   { value: "dueDateAsc", label: "Due Date (Asc)" },
-  //   { value: "dueDateDesc", label: "Due Date (Desc)" },
-  // ];
 
   console.log("Tasks for project", projectId, tasks);
   if (loading) {
@@ -97,31 +80,36 @@ function Task({ projectId, variant }) {
           initial="hidden"
           whileInView="show"
           viewport={inViewOptions}
-          className="flex items-center justify-start space-x-2"
+          className="flex flex-wrap items-center justify-start gap-2"
         >
-          <SearchBar
-            placeholder="Search tasks..."
-            value={taskSearch}
-            onSubmit={handleSubmit}
-            onChange={handleOnChangeTaskSearch}
-          />
-          {/* Filter button opens modal */}
-          <Button
-            variant="outline"
-            size="medium"
-            icon={<Funnel className="w-4 h-4 mr-2" />}
-            onClick={() => setOpenFilterModal(true)}
-          >
-            Filter
-          </Button>
-          <Button
-            variant="primary"
-            size="medium"
-            icon={<FilePlus className="w-4 h-4 mr-2" />}
-            onClick={() => setOpenAddTask(true)}
-          >
-            Add Task
-          </Button>
+          <div className="flex-1 min-w-[220px]">
+            <SearchBar
+              placeholder="Search tasks..."
+              value={taskSearch}
+              onSubmit={handleSubmit}
+              onChange={handleOnChangeTaskSearch}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="medium"
+              icon={<Funnel className="w-4 h-4 mr-2" />}
+              onClick={() => setOpenFilterModal(true)}
+              aria-label="Open filters"
+            >
+              Filter
+            </Button>
+            <Button
+              variant="primary"
+              size="medium"
+              icon={<FilePlus className="w-4 h-4 mr-2" />}
+              onClick={() => setOpenAddTask(true)}
+              aria-label="Add task"
+            >
+              Add Task
+            </Button>
+          </div>
         </Motion.div>
       </Card>
       {!loading && tasks.tasks && tasks.tasks.length > 0 ? (
@@ -134,42 +122,46 @@ function Task({ projectId, variant }) {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {tasks.tasks.map((t) => (
               <Motion.div key={t._id} variants={item} className="mb-4">
-                <Card animation={true} className="space-y-2">
-                  <h2 className="text-xl font-semibold text-center">
-                    {t.title}
-                  </h2>
+                <Card animation={true} className="space-y-3 p-4">
+                  <div className="flex items-start justify-between">
+                    <h2 className="text-lg font-semibold truncate">
+                      {t.title}
+                    </h2>
+                    <div className="flex flex-col items-end gap-1">
+                      <span
+                        className={statusBadge[t.status] || statusBadge.todo}
+                      >
+                        {t.status}
+                      </span>
+                      <span
+                        className={
+                          priorityBadge[t.priority] || priorityBadge.low
+                        }
+                      >
+                        {t.priority}
+                      </span>
+                    </div>
+                  </div>
 
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Due Date:{" "}
-                    {t.dueDate ? formatDate(t.dueDate) : "No due date"}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Status:{" "}
-                    <span
-                      className={
-                        statusColors[t.status] ||
-                        "text-gray-600 dark:text-gray-300"
-                      }
+                  <div className="mt-2 flex flex-col justify-start space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
+                      <span>
+                        {t.dueDate ? formatDate(t.dueDate) : "No due date"}
+                      </span>
+                    </div>
+                    <Link
+                      to={`/projects/${projectId}/${variant}/tasks/${t._id}`}
                     >
-                      {t.status}
-                    </span>
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Priority:{" "}
-                    <span
-                      className={
-                        priorityColors[t.priority] ||
-                        "text-gray-600 dark:text-gray-300"
-                      }
-                    >
-                      {t.priority}
-                    </span>
-                  </p>
-                  <Link to={`/projects/${projectId}/${variant}/tasks/${t._id}`}>
-                    <Button variant="outline" size="small">
-                      View Details
-                    </Button>
-                  </Link>
+                      <Button
+                        variant="outline"
+                        size="small"
+                        aria-label={`View ${t.title}`}
+                      >
+                        View
+                      </Button>
+                    </Link>
+                  </div>
                 </Card>
               </Motion.div>
             ))}

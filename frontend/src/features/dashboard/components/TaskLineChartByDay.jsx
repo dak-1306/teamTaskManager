@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
+import Button from "../../../shared/ui/Button";
 
 // ===== Get ISO week number =====
 function getWeekNumber(date) {
@@ -91,17 +92,23 @@ export default function TasksLineChartByWeek({ tasksByDay = [] }) {
           alignItems: "center",
         }}
       >
-        <button onClick={() => setWeek((w) => Math.max(1, w - 1))}>
+        <Button
+          variant="outline"
+          onClick={() => setWeek((w) => Math.max(1, w - 1))}
+        >
           Prev Week
-        </button>
+        </Button>
 
         <span style={{ fontWeight: "bold" }}>
           Week {week} ({weekInfo.month}/{weekInfo.year})
         </span>
 
-        <button onClick={() => setWeek((w) => Math.min(52, w + 1))}>
+        <Button
+          variant="outline"
+          onClick={() => setWeek((w) => Math.min(52, w + 1))}
+        >
           Next Week
-        </button>
+        </Button>
       </div>
 
       {/* Chart */}

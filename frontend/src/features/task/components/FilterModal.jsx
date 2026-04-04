@@ -2,6 +2,24 @@ import { useState } from "react";
 import Modal from "../../../shared/ui/Modal";
 import Button from "../../../shared/ui/Button";
 
+  const filterStatus = [
+    { value: "", label: "Any" },
+    { value: "todo", label: "To Do" },
+    { value: "doing", label: "Doing" },
+    { value: "done", label: "Done" },
+  ];
+  const filterPriority = [
+    { value: "", label: "Any" },
+    { value: "high", label: "High" },
+    { value: "medium", label: "Medium" },
+    { value: "low", label: "Low" },
+  ];
+  const filterTime = [
+    { value: "", label: "Default" },
+    { value: "dueDateAsc", label: "Due Date (Asc)" },
+    { value: "dueDateDesc", label: "Due Date (Desc)" },
+  ];
+
 export default function FilterModal({
   isOpen,
   onClose,
@@ -38,10 +56,11 @@ export default function FilterModal({
             onChange={handleChange}
             className="w-full rounded-md border p-2"
           >
-            <option value="">Any</option>
-            <option value="todo">To Do</option>
-            <option value="doing">Doing</option>
-            <option value="done">Done</option>
+            {filterStatus.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -55,10 +74,11 @@ export default function FilterModal({
             onChange={handleChange}
             className="w-full rounded-md border p-2"
           >
-            <option value="">Any</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
+            {filterPriority.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -72,9 +92,11 @@ export default function FilterModal({
             onChange={handleChange}
             className="w-full rounded-md border p-2"
           >
-            <option value="">Default</option>
-            <option value="dueDateAsc">Due Date (Asc)</option>
-            <option value="dueDateDesc">Due Date (Desc)</option>
+            {filterTime.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 

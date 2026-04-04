@@ -4,6 +4,7 @@ import { motion as Motion } from "framer-motion";
 import MyTaskCard from "../components/MyTaskCard";
 import Pagination from "../../../shared/ui/Pagination";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
+import formatDate from "../../../shared/utils/formatDate";
 
 function MyTaskPage({ tasks, loading, fetchTasks }) {
   return (
@@ -22,7 +23,7 @@ function MyTaskPage({ tasks, loading, fetchTasks }) {
               <Link to={`tasks/${task._id}`}>
                 <MyTaskCard
                   title={task.title}
-                  description={task.description}
+                  dueDate={formatDate(task.dueDate)}
                   status={task.status}
                 />
               </Link>

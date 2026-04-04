@@ -4,7 +4,14 @@ import EditTask from "../components/EditTask";
 import DeleteTask from "../components/DeleteTask";
 import AddAssignees from "../components/AddAssignees";
 
-import { ArrowBigLeft, Trash2, Pencil, UserRoundPlus } from "lucide-react";
+import {
+  ArrowBigLeft,
+  Trash2,
+  Pencil,
+  UserRoundPlus,
+  Calendar,
+  Users,
+} from "lucide-react";
 import { motion as Motion } from "framer-motion";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 
@@ -48,15 +55,29 @@ function TaskDetail() {
     medium: "text-yellow-500",
     low: "text-green-500",
   };
+
+  const statusBadge = {
+    done: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    doing:
+      "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    todo: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+  };
+
+  const priorityBadge = {
+    high: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 dark:bg-red-900 dark:text-red-200",
+    medium:
+      "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200",
+    low: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-200",
+  };
   if (loading) {
     return (
-      <MainLayout >
+      <MainLayout>
         <SkeletonTaskDetail />
       </MainLayout>
     );
   }
   return (
-    <MainLayout >
+    <MainLayout>
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         {taskDetail?.title || "Loading..."}
       </h1>
@@ -118,43 +139,99 @@ function TaskDetail() {
           viewport={inViewOptions}
         >
           <Motion.div variants={item}>
-            <Card className="bg-white p-4 rounded shadow mb-4">
-              <p>
-                <strong>Description:</strong> {taskDetail?.description}
-              </p>
-              <p>
-                <strong>Due Date:</strong> {formatDate(taskDetail?.dueDate)}
-              </p>
-              <p className="flex items-center space-x-2">
-                <strong>Status:</strong>
-                <span
-                  className={statusColor[taskDetail?.status] || "text-gray-500"}
-                >
-                  {taskDetail?.status}
-                </span>
-              </p>
-              <p className="flex items-center space-x-2">
-                <strong>Priority:</strong>
-                <span
-                  className={
-                    priorityColor[taskDetail?.priority] || "text-gray-500"
-                  }
-                >
-                  {taskDetail?.priority}
-                </span>
-              </p>
-              <div className="mt-2">
-                <strong>Assignees:</strong>
-                <ul className="list-none">
-                  {taskDetail?.assignedTo &&
-                    taskDetail.assignedTo.map((assignee) => (
-                      <li key={assignee._id}>
-                        <p>
-                          {assignee.username} ({assignee.email})
-                        </p>
-                      </li>
-                    ))}
-                </ul>
+            <Card className="p-4 rounded shadow mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <p className="mb-3 text-gray-800 dark:text-gray-100">
+                    <strong className="mr-2">Description:</strong>
+                    {taskDetail?.description || "-"}
+                  </p>
+
+                  <div className="flex flex-wrap gap-3 items-center">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 gap-2">
+                      <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
+                      <span>
+                        {taskDetail?.dueDate
+                          ? formatDate(taskDetail?.dueDate)
+                          : "No due date"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        Status:
+                      </span>
+                      <span
+                        className={
+                          statusBadge[taskDetail?.status] || statusBadge.todo
+                        }
+                      >
+                        {taskDetail?.status}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        Priority:
+                      </span>
+                      <span
+                        className={
+                          priorityBadge[taskDetail?.priority] ||
+                          priorityBadge.low
+                        }
+                      >
+                        {taskDetail?.priority}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="md:col-span-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                      <strong className="text-sm text-gray-700 dark:text-gray-200">
+                        Assignees
+                      </strong>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        ({taskDetail?.assignedTo?.length || 0})
+                      </span>
+                    </div>
+                    <Button
+                      variant="link"
+                      size="small"
+                      onClick={() => setOpenAddAssignees(true)}
+                    >
+                      Add
+                    </Button>
+                  </div>
+
+                  <ul className="space-y-2">
+                    {taskDetail?.assignedTo &&
+                      taskDetail.assignedTo.map((assignee) => (
+                        <li
+                          key={assignee._id}
+                          className="flex items-center gap-3"
+                        >
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-medium">
+                            {assignee.username
+                              ?.split(" ")
+                              .map((n) => n[0])
+                              .slice(0, 2)
+                              .join("")}
+                          </span>
+                          <div className="text-sm">
+                            <div className="text-gray-800 dark:text-gray-100">
+                              {assignee.username}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              {assignee.email}
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               </div>
             </Card>
           </Motion.div>

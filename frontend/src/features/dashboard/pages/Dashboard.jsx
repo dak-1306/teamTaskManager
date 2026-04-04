@@ -66,7 +66,7 @@ function Dashboard() {
     );
   }
   return (
-    <MainLayout >
+    <MainLayout>
       <h1 className="text-2xl font-bold text-foreground text-center">
         Dashboard
       </h1>
@@ -78,18 +78,18 @@ function Dashboard() {
         loading={loading}
       />
       <hr className="border-gray-300" />
-      <h2 className="text-xl font-bold text-foreground text-center">
-        Task Overview
-      </h2>
       <div className="flex items-center space-x-4 mt-4 mb-4">
         <PieChartStatus data={dataPiaChartStatus} totalData={totalTasks} />
         <TaskLineChartByDay tasksByDay={tasksByDay} />
       </div>
+      <hr className="border-gray-300" />
       <TaskLineChart tasksByMonth={tasksByMonth} />
 
+      <hr className="border-gray-300" />
       <h2 className="text-xl font-bold text-foreground text-center">
         My Tasks
       </h2>
+
       <MyTaskPage
         tasks={tasksForMyTasks}
         loading={loading}

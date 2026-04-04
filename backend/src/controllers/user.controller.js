@@ -24,6 +24,19 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserForAddMemberProject = async (req, res) => {
+  try {
+    const users = await User.find();
+    const userForAddMember = users.filter((user) => user._id.toString() !== req.user.id);
+    console.log("Users for add member project:", userForAddMember);
+    res.status(200).json(userForAddMember);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve users", error: error.message });
+  }
+};
+
 // GET /user/me - Get current user profile
 const getUserCurrent = async (req, res) => {
   try {
@@ -186,4 +199,5 @@ module.exports = {
   updateUser,
   changePassword,
   deleteUser,
+  getUserForAddMemberProject,
 };
