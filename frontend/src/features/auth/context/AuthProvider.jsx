@@ -9,6 +9,8 @@ import {
   changePassword,
   deleteUser,
   getUserForAddMemberProject,
+  uploadAvatar,
+  deleteAvatar,
 } from "../api/authAPI";
 
 export const AuthProvider = ({ children }) => {
@@ -21,6 +23,38 @@ export const AuthProvider = ({ children }) => {
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
     setIsLogin(token ? true : false);
+  };
+
+  const uploadAvatarProvider = async (userId, file, onProgress) => {
+    try {
+      const res = await uploadAvatar(userId, file, onProgress);
+      if (res?.user) {
+        setUserProfile(res.user);
+      }
+      setError(null);
+      return res;
+    } catch (error) {
+      console.error("Error uploading avatar:", error.message);
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteAvatarProvider = async (userId) => {
+    try {
+      const res = await deleteAvatar(userId);
+      if (res?.user) setUserProfile(res.user);
+      setError(null);
+      return res;
+    } catch (error) {
+      console.error("Error deleting avatar:", error.message);
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const register = async (userData) => {
@@ -56,6 +90,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       setIsLogin(true);
       fetchUserProfile();
+      getUsersForAddMemberProvider();
     } else {
       setIsLogin(false);
       setLoading(false);
@@ -141,12 +176,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    if (isLogin) {
-      getUsersForAddMemberProvider();
-    }
-  }, [isLogin]);
-
   const value = {
     isLogin,
     loading,
@@ -160,6 +189,8 @@ export const AuthProvider = ({ children }) => {
     changePasswordUser,
     deleteUserProvider,
     getUsersForAddMemberProvider,
+    uploadAvatarProvider,
+    deleteAvatarProvider,
     error,
   };
 

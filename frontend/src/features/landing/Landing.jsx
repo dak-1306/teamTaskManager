@@ -22,7 +22,7 @@ function Landing() {
 
   return (
     <MainLayout>
-      <div className="text-center mt-20 space-y-6">
+      <div className="text-center mt-20 space-y-6 flex flex-col items-center justify-center">
         <Motion.h1
           variants={item}
           initial="hidden"

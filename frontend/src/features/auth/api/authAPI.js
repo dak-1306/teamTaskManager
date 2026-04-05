@@ -107,3 +107,47 @@ export {
   changePassword,
   deleteUser,
 };
+
+const uploadAvatar = async (userId, file, onUploadProgress) => {
+  console.log(
+    "Uploading avatar for userId at API:",
+    userId,
+    "with file:",
+    file,
+  );
+  try {
+    const formData = new FormData();
+    formData.append("avatar", file);
+    console.log("FormData prepared for upload:", formData.get("avatar"));
+    const response = await axiosClient.post(
+      `/users/${userId}/avatar`,
+      formData,
+      {
+        onUploadProgress: (progressEvent) => {
+          if (typeof onUploadProgress === "function") {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total,
+            );
+            onUploadProgress(percentCompleted);
+          }
+        },
+      },
+    );
+    console.log("Upload Avatar API response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Failed to upload avatar");
+  }
+};
+
+const deleteAvatar = async (userId) => {
+  try {
+    const response = await axiosClient.delete(`/users/${userId}/avatar`);
+    console.log("Delete Avatar API response:", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Failed to delete avatar");
+  }
+};
+
+export { uploadAvatar, deleteAvatar };

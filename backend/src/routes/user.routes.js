@@ -1,5 +1,6 @@
 const express = require("express");
 const protect = require("../middleware/auth.middleware");
+const upload = require("../middleware/upload.middleware");
 const router = express.Router();
 const {
   getAllUsers,
@@ -10,6 +11,8 @@ const {
   updateUser,
   changePassword,
   deleteUser,
+  uploadAvatar,
+  deleteAvatar,
 } = require("../controllers/user.controller");
 
 // GET /user - Get all users
@@ -28,5 +31,10 @@ router.put("/:id", protect, updateUser);
 router.put("/:id/password", protect, changePassword);
 // DELETE /user/:id - Delete user by ID
 router.delete("/:id", protect, deleteUser);
+
+// POST /user/:id/avatar - upload avatar image (form field name: "avatar")
+router.post("/:id/avatar", protect, upload.single("avatar"), uploadAvatar);
+// DELETE /users/:id/avatar - delete avatar
+router.delete("/:id/avatar", protect, deleteAvatar);
 
 module.exports = router;

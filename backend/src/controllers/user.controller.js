@@ -27,7 +27,9 @@ const getAllUsers = async (req, res) => {
 const getUserForAddMemberProject = async (req, res) => {
   try {
     const users = await User.find();
-    const userForAddMember = users.filter((user) => user._id.toString() !== req.user.id);
+    const userForAddMember = users.filter(
+      (user) => user._id.toString() !== req.user.id,
+    );
     console.log("Users for add member project:", userForAddMember);
     res.status(200).json(userForAddMember);
   } catch (error) {
@@ -145,6 +147,107 @@ const changePassword = async (req, res) => {
   }
 };
 
+// POST /user/:id/avatar - upload avatar image
+const uploadAvatar = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // only allow user to update their own avatar
+    if (!req.user || req.user.id.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // delete previous avatar file if exists
+    try {
+      const prevAvatar = (await User.findById(userId).select("avatar")).avatar;
+      if (prevAvatar) {
+        const uploadPrefix = `${req.protocol}://${req.get("host")}/uploads/`;
+        if (prevAvatar.startsWith(uploadPrefix)) {
+          const prevFilename = prevAvatar.replace(uploadPrefix, "");
+          const prevPath = require("path").join(
+            __dirname,
+            "..",
+            "..",
+            "uploads",
+            prevFilename,
+          );
+          if (require("fs").existsSync(prevPath)) {
+            try {
+              require("fs").unlinkSync(prevPath);
+            } catch (e) {
+              console.warn("Failed to delete previous avatar file:", e.message);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn(
+        "Error while attempting to remove previous avatar:",
+        err.message,
+      );
+    }
+
+    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { avatar: fileUrl },
+      { new: true },
+    ).select("-password");
+
+    return res
+      .status(200)
+      .json({ message: "Avatar uploaded", user: updatedUser });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE /user/:id/avatar - remove avatar and delete file
+const deleteAvatar = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    if (!req.user || req.user.id.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const user = await User.findById(userId).select("-password");
+    if (!user || !user.avatar) {
+      return res.status(404).json({ message: "No avatar to delete" });
+    }
+
+    const uploadPrefix = `${req.protocol}://${req.get("host")}/uploads/`;
+    if (user.avatar.startsWith(uploadPrefix)) {
+      const filename = user.avatar.replace(uploadPrefix, "");
+      const filepath = require("path").join(
+        __dirname,
+        "..",
+        "..",
+        "uploads",
+        filename,
+      );
+      if (require("fs").existsSync(filepath)) {
+        try {
+          require("fs").unlinkSync(filepath);
+        } catch (e) {
+          console.warn("Failed to delete avatar file:", e.message);
+        }
+      }
+    }
+
+    user.avatar = "";
+    await user.save();
+
+    return res.status(200).json({ message: "Avatar deleted", user });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -200,4 +303,6 @@ module.exports = {
   changePassword,
   deleteUser,
   getUserForAddMemberProject,
+  uploadAvatar,
+  deleteAvatar,
 };
