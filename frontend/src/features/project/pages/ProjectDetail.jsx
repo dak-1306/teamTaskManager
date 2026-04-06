@@ -23,6 +23,7 @@ import Task from "../../task/pages/Task";
 import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
 import DeleteProject from "../components/DeleteProject";
+import Chat from "../../../shared/ui/Chat";
 
 import useProjectStore from "../stores/projectStore";
 
@@ -56,11 +57,11 @@ function ProjectDetail() {
       {/* Content */}
       <div className="grid grid-cols-12 gap-4">
         {/* Project Info Sidebar */}
-        <div className="col-span-12 lg:col-span-4">
+        <div className="col-span-12 lg:col-span-3">
           {/* Header */}
           <Card>
-            <header className="flex items-start justify-between mb-4 gap-4">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-4">
+              <header className="flex items-start justify-between ">
                 <Button
                   variant="secondary"
                   size="medium"
@@ -69,46 +70,45 @@ function ProjectDetail() {
                 >
                   <ArrowBigLeft />
                 </Button>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                  {projectDetail?.name || "Project Detail"}
+                </h2>
+              </header>
 
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-                    {projectDetail?.name || "Project Detail"}
-                  </h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    {projectDetail?.description || "No description provided."}
-                  </p>
-                </div>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {projectDetail?.description || "No description provided."}
+                </p>
+                {variant === "owner" && (
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="primary"
+                      size="medium"
+                      icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
+                      onClick={() => setOpenAddMember(true)}
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="medium"
+                      icon={<Pencil className="w-4 h-4 mr-2" />}
+                      onClick={() => setOpenEditProject(true)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="medium"
+                      icon={<Trash2 className="w-4 h-4 mr-2" />}
+                      onClick={() => setOpenDialogDelete(true)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
               </div>
-
-              {variant === "owner" && (
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="primary"
-                    size="medium"
-                    icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
-                    onClick={() => setOpenAddMember(true)}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="medium"
-                    icon={<Pencil className="w-4 h-4 mr-2" />}
-                    onClick={() => setOpenEditProject(true)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="medium"
-                    icon={<Trash2 className="w-4 h-4 mr-2" />}
-                    onClick={() => setOpenDialogDelete(true)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              )}
-            </header>
+            </div>
 
             <hr className="border-gray-200 dark:border-gray-700 my-4" />
 
@@ -201,9 +201,13 @@ function ProjectDetail() {
         </div>
 
         {/* Task List */}
-        <div className="col-span-12 lg:col-span-8">
+        <div className="col-span-12 lg:col-span-6">
           <Task projectId={id} variant={variant} />
         </div>
+        {/* chat  */}
+        <Card className="col-span-12 lg:col-span-3">
+          <Chat />
+        </Card>
       </div>
 
       {/* Modals */}

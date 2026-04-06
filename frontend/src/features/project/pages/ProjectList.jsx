@@ -145,9 +145,8 @@ function ProjectList() {
                       <Card
                         className="hover:shadow-lg transition-shadow"
                         title={project.name}
-                        description={project.description}
                       >
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-2">
                           <div className="text-sm text-gray-500 dark:text-gray-400">
                             {project.description?.length > 120
                               ? project.description.slice(0, 120) + "..."

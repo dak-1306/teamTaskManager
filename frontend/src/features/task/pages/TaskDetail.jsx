@@ -20,6 +20,7 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
 import SkeletonTaskDetail from "./SkeletonTaskDetail";
+import Chat from "../../../shared/ui/Chat";
 
 import useTaskStore from "../stores/taskStore";
 
@@ -43,18 +44,6 @@ function TaskDetail() {
       fetchTaskById(taskId);
     }
   }, [taskId, fetchTaskById]);
-
-  const statusColor = {
-    done: "text-green-500",
-    doing: "text-yellow-500",
-    todo: "text-red-500",
-  };
-
-  const priorityColor = {
-    high: "text-red-500",
-    medium: "text-yellow-500",
-    low: "text-green-500",
-  };
 
   const statusBadge = {
     done: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
@@ -139,101 +128,101 @@ function TaskDetail() {
           viewport={inViewOptions}
         >
           <Motion.div variants={item}>
-            <Card className="p-4 rounded shadow mb-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2">
-                  <p className="mb-3 text-gray-800 dark:text-gray-100">
-                    <strong className="mr-2">Description:</strong>
-                    {taskDetail?.description || "-"}
-                  </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="md:col-span-1">
+                <p className="mb-3 text-gray-800 dark:text-gray-100">
+                  <strong className="mr-2">Description:</strong>
+                  {taskDetail?.description || "-"}
+                </p>
 
-                  <div className="flex flex-wrap gap-3 items-center">
-                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 gap-2">
-                      <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
-                      <span>
-                        {taskDetail?.dueDate
-                          ? formatDate(taskDetail?.dueDate)
-                          : "No due date"}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600 dark:text-gray-300">
-                        Status:
-                      </span>
-                      <span
-                        className={
-                          statusBadge[taskDetail?.status] || statusBadge.todo
-                        }
-                      >
-                        {taskDetail?.status}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600 dark:text-gray-300">
-                        Priority:
-                      </span>
-                      <span
-                        className={
-                          priorityBadge[taskDetail?.priority] ||
-                          priorityBadge.low
-                        }
-                      >
-                        {taskDetail?.priority}
-                      </span>
-                    </div>
+                <div className="flex flex-wrap gap-3 items-center">
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 gap-2">
+                    <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
+                    <span>
+                      {taskDetail?.dueDate
+                        ? formatDate(taskDetail?.dueDate)
+                        : "No due date"}
+                    </span>
                   </div>
-                </div>
 
-                <div className="md:col-span-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Users className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-                      <strong className="text-sm text-gray-700 dark:text-gray-200">
-                        Assignees
-                      </strong>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        ({taskDetail?.assignedTo?.length || 0})
-                      </span>
-                    </div>
-                    <Button
-                      variant="link"
-                      size="small"
-                      onClick={() => setOpenAddAssignees(true)}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Status:
+                    </span>
+                    <span
+                      className={
+                        statusBadge[taskDetail?.status] || statusBadge.todo
+                      }
                     >
-                      Add
-                    </Button>
+                      {taskDetail?.status}
+                    </span>
                   </div>
 
-                  <ul className="space-y-2">
-                    {taskDetail?.assignedTo &&
-                      taskDetail.assignedTo.map((assignee) => (
-                        <li
-                          key={assignee._id}
-                          className="flex items-center gap-3"
-                        >
-                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-medium">
-                            {assignee.username
-                              ?.split(" ")
-                              .map((n) => n[0])
-                              .slice(0, 2)
-                              .join("")}
-                          </span>
-                          <div className="text-sm">
-                            <div className="text-gray-800 dark:text-gray-100">
-                              {assignee.username}
-                            </div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                              {assignee.email}
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                  </ul>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Priority:
+                    </span>
+                    <span
+                      className={
+                        priorityBadge[taskDetail?.priority] || priorityBadge.low
+                      }
+                    >
+                      {taskDetail?.priority}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Card>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                    <strong className="text-sm text-gray-700 dark:text-gray-200">
+                      Assignees
+                    </strong>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      ({taskDetail?.assignedTo?.length || 0})
+                    </span>
+                  </div>
+                  <Button
+                    variant="link"
+                    size="small"
+                    onClick={() => setOpenAddAssignees(true)}
+                  >
+                    Add
+                  </Button>
+                </div>
+
+                <ul className="space-y-2">
+                  {taskDetail?.assignedTo &&
+                    taskDetail.assignedTo.map((assignee) => (
+                      <li
+                        key={assignee._id}
+                        className="flex items-center gap-3"
+                      >
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-medium">
+                          {assignee.username
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .slice(0, 2)
+                            .join("")}
+                        </span>
+                        <div className="text-sm">
+                          <div className="text-gray-800 dark:text-gray-100">
+                            {assignee.username}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {assignee.email}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              </Card>
+
+              {/* chat */}
+
+              <Card className="md:col-span-1">
+                <Chat />
+              </Card>
+            </div>
           </Motion.div>
         </Motion.div>
       ) : (

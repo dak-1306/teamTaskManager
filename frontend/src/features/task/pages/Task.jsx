@@ -123,11 +123,9 @@ function Task({ projectId, variant }) {
             {tasks.tasks.map((t) => (
               <Motion.div key={t._id} variants={item} className="mb-4">
                 <Card animation={true} className="space-y-3 p-4">
-                  <div className="flex items-start justify-between">
-                    <h2 className="text-lg font-semibold truncate">
-                      {t.title}
-                    </h2>
-                    <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col items-start justify-between gap-2">
+                    <h2 className="text-lg font-semibold">{t.title}</h2>
+                    <div className="flex justify-between items-center gap-1">
                       <span
                         className={statusBadge[t.status] || statusBadge.todo}
                       >
