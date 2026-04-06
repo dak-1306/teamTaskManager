@@ -8,6 +8,7 @@ import PieChartStatus from "../components/PieChartStatus";
 import TaskLineChart from "../components/TaskLineChart";
 import TaskLineChartByDay from "../components/TaskLineChartByDay";
 import SkeletonDashboard from "./SkeletonDashboard";
+import EmptyDashboard from "../components/EmptyDashboard";
 
 import useProjectStore from "../../project/stores/projectStore";
 import useTaskStore from "../../task/stores/taskStore";
@@ -57,7 +58,9 @@ function Dashboard() {
     ],
     [completedTasks, inProgressTasks, todoTasks],
   );
-
+  console.log("project.length", projects.length);
+  console.log("tasks", tasks);
+  console.log("taskOverview.totalTasks", taskOverview.totalTasks);
   if (loading) {
     return (
       <MainLayout>
@@ -65,42 +68,55 @@ function Dashboard() {
       </MainLayout>
     );
   }
-  return (
-    <MainLayout>
-      <h1 className="text-2xl font-bold text-foreground text-center">
-        Dashboard
-      </h1>
-      <OverviewPage
-        totalProjects={totalProjects}
-        totalTasks={totalTasks}
-        completedTasks={completedTasks}
-        inProgressTasks={inProgressTasks}
-        loading={loading}
-      />
-      <hr className="border-gray-300" />
-      <div className="flex items-center space-x-4 mt-4 mb-4">
-        <PieChartStatus data={dataPiaChartStatus} totalData={totalTasks} />
-        <TaskLineChartByDay tasksByDay={tasksByDay} />
-      </div>
-      <hr className="border-gray-300" />
-      <TaskLineChart tasksByMonth={tasksByMonth} />
+  if (
+    !loading &&
+    projects.length === 0 &&
+    tasks.tasks.length === 0 &&
+    taskOverview.totalTasks === 0
+  ) {
+    return (
+      <MainLayout fullScreen={true}>
+        <EmptyDashboard />
+      </MainLayout>
+    );
+  } else {
+    return (
+      <MainLayout>
+        <h1 className="text-2xl font-bold text-foreground text-center">
+          Dashboard
+        </h1>
+        <OverviewPage
+          totalProjects={totalProjects}
+          totalTasks={totalTasks}
+          completedTasks={completedTasks}
+          inProgressTasks={inProgressTasks}
+          loading={loading}
+        />
+        <hr className="border-gray-300" />
+        <div className="flex items-center space-x-4 mt-4 mb-4">
+          <PieChartStatus data={dataPiaChartStatus} totalData={totalTasks} />
+          <TaskLineChartByDay tasksByDay={tasksByDay} />
+        </div>
+        <hr className="border-gray-300" />
+        <TaskLineChart tasksByMonth={tasksByMonth} />
 
-      <hr className="border-gray-300" />
-      <h2 className="text-xl font-bold text-foreground text-center">
-        My Tasks
-      </h2>
+        <hr className="border-gray-300" />
+        <h2 className="text-xl font-bold text-foreground text-center">
+          My Tasks
+        </h2>
 
-      <MyTaskPage
-        tasks={tasksForMyTasks}
-        loading={loading}
-        fetchTasks={fetchTasksForMyTasks}
-      />
-      <hr className="border-gray-300" />
-      <h2 className="text-xl font-bold text-foreground text-center">
-        Recent Projects
-      </h2>
-      <RecentProjectPage projects={projects} loading={loading} />
-    </MainLayout>
-  );
+        <MyTaskPage
+          tasks={tasksForMyTasks}
+          loading={loading}
+          fetchTasks={fetchTasksForMyTasks}
+        />
+        <hr className="border-gray-300" />
+        <h2 className="text-xl font-bold text-foreground text-center">
+          Recent Projects
+        </h2>
+        <RecentProjectPage projects={projects} loading={loading} />
+      </MainLayout>
+    );
+  }
 }
 export default Dashboard;

@@ -38,18 +38,24 @@ function ProjectSearchPage() {
   }
   return (
     <MainLayout>
-      <h1 className="text-2xl font-bold">Project Search Projects</h1>
-      {q && (
-        <p className="mb-4">
-          Search results for: <strong>{q}</strong>
-        </p>
-      )}
-      <Link to="/projects">
-        <Button variant="outline" size="small">
-          Back to Projects
-        </Button>
-      </Link>
-      <h2>Project Owner</h2>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">Project Search</h1>
+          {q && (
+            <p className="text-sm text-gray-600 mt-1">
+              Search results for: <strong>{q}</strong>
+            </p>
+          )}
+        </div>
+
+        <div>
+          <Link to="/projects">
+            <Button variant="outline" size="small">
+              Back to Projects
+            </Button>
+          </Link>
+        </div>
+      </div>
       {!loading && projectSearch.length > 0 && (
         <Motion.ul
           variants={container}
