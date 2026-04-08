@@ -1,4 +1,4 @@
-import axiosClient from "../../../app/axios";
+import axiosClient from "../../../lib/axios";
 import { create } from "zustand";
 
 const useTaskStore = create((set) => ({

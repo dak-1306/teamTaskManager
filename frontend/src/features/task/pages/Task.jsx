@@ -18,7 +18,7 @@ import FilterModal from "../components/FilterModal";
 
 import useTaskStore from "../stores/taskStore";
 
-import formatDate from "../../../shared/utils/formatDate";
+import formatDate from "../../../components/utils/formatDate";
 
 function Task({ projectId, variant }) {
   const navigate = useNavigate();

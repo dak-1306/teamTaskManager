@@ -6,9 +6,9 @@ import { FolderPlus, Calendar } from "lucide-react";
 import { motion as Motion } from "framer-motion";
 import { inViewOptions, container, item } from "../../../app/motionConfig";
 
-import formatDate from "../../../shared/utils/formatDate";
+import formatDate from "../../../components/utils/formatDate";
 
-import MainLayout from "../../../shared/layout/MainLayout";
+import MainLayout from "../../../components/layout/MainLayout";
 import Card from "../../../shared/ui/Card";
 import Button from "../../../shared/ui/Button";
 import SearchBar from "../../../shared/ui/SearchBar";

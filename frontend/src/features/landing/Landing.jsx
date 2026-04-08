@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import MainLayout from "../../shared/layout/MainLayout";
+import MainLayout from "../../components/layout/MainLayout";
 import Button from "../../shared/ui/Button";
 import RunningClockCanvas from "./RunningClockCanvas";
 
 import { motion as Motion } from "framer-motion";
 import { inViewOptions, item } from "../../app/motionConfig";
-import { useTheme } from "../../shared/context/useTheme";
+import { useTheme } from "../../context/useTheme";
 
 import { useEffect } from "react";
 import { useAuth } from "../auth/context/useAuth";

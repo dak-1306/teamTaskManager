@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 
-import MainLayout from "../../../shared/layout/MainLayout";
+import MainLayout from "../../../components/layout/MainLayout";
 import { motion as Motion } from "framer-motion";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 import Card from "../../../shared/ui/Card";

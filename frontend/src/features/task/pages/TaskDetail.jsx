@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import EditTask from "../components/EditTask";
-import Conversation from "../../../shared/components/conversation/Conversation";
+import Conversation from "../../chat/conversation/Conversation";
 import DeleteTask from "../components/DeleteTask";
 import AddAssignees from "../components/AddAssignees";
 
@@ -16,7 +16,7 @@ import {
 import { motion as Motion } from "framer-motion";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 
-import MainLayout from "../../../shared/layout/MainLayout";
+import MainLayout from "../../../components/layout/MainLayout";
 
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
@@ -25,7 +25,7 @@ import Chat from "../../../shared/components/chat/Chat";
 
 import useTaskStore from "../stores/taskStore";
 
-import formatDate from "../../../shared/utils/formatDate";
+import formatDate from "../../../components/utils/formatDate";
 
 function TaskDetail() {
   const { taskId } = useParams();

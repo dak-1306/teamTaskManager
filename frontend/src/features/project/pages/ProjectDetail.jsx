@@ -13,7 +13,7 @@ import {
 import { motion as Motion } from "motion/react";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
 
-import MainLayout from "../../../shared/layout/MainLayout";
+import MainLayout from "../../../components/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
 import SkeletonProjectDetail from "./SkeletonProjectDetail";
@@ -24,7 +24,7 @@ import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
 import DeleteProject from "../components/DeleteProject";
 import Chat from "../../../shared/components/chat/Chat";
-import Conversation from "../../../shared/components/conversation/Conversation";
+import Conversation from "../../chat/conversation/Conversation";
 
 import useProjectStore from "../stores/projectStore";
 

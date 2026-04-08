@@ -4,7 +4,7 @@ import { motion as Motion } from "motion/react";
 import { inViewOptions, container, item } from "../../../app/motionConfig";
 
 import Card from "../../../shared/ui/Card";
-import MainLayout from "../../../shared/layout/MainLayout";
+import MainLayout from "../../../components/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import SkeletonSearch from "./SkeletonSearch";
 

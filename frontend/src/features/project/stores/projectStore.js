@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axiosClient from "../../../app/axios";
+import axiosClient from "../../../lib/axios";
 
 const useProjectStore = create((set) => ({
   projects: [],
