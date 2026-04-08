@@ -1,0 +1,61 @@
+### Login
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "password123"
+}
+
+### Get User Info
+GET http://localhost:3000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+
+### Create Conversation
+POST http://localhost:3000/conversations
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+Content-Type: application/json
+
+{
+  "project" : "69d3c8391b9821a35139bf6c",
+  "name" : "Project Discussion",
+  "type" : "project",
+  "participants": ["69d3c8391b9821a35139bf67", "69d3c8391b9821a35139bf68"],
+  "metadata": {}
+}
+
+### Get Conversations
+GET http://localhost:3000/conversations
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+
+### Get Conversation Details
+GET http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+
+### Add Participant
+POST http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704/participants
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+Content-Type: application/json
+
+{
+  "userId": "69d3c8391b9821a35139bf68"
+}
+
+### Update Conversation
+PUT http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+Content-Type: application/json
+
+{
+  "name": "Updated Conversation Name",
+  "metadata": {
+    "description": "This is an updated description for the conversation."
+  }
+}
+
+
+### Remove Participant
+DELETE http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704/participants/69d3c8391b9821a35139bf68
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+
+
