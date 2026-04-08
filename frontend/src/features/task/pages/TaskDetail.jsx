@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import EditTask from "../components/EditTask";
+import Conversation from "../../../shared/components/conversation/Conversation";
 import DeleteTask from "../components/DeleteTask";
 import AddAssignees from "../components/AddAssignees";
 
@@ -20,7 +21,7 @@ import MainLayout from "../../../shared/layout/MainLayout";
 import Button from "../../../shared/ui/Button";
 import Card from "../../../shared/ui/Card";
 import SkeletonTaskDetail from "./SkeletonTaskDetail";
-import Chat from "../../../shared/ui/Chat";
+import Chat from "../../../shared/components/chat/Chat";
 
 import useTaskStore from "../stores/taskStore";
 
@@ -220,7 +221,11 @@ function TaskDetail() {
               {/* chat */}
 
               <Card className="md:col-span-1">
-                <Chat />
+                <div>
+                  <Conversation />
+                  <hr className="my-3" />
+                  <Chat conversation={null} />
+                </div>
               </Card>
             </div>
           </Motion.div>

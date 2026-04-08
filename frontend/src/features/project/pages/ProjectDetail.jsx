@@ -23,7 +23,8 @@ import Task from "../../task/pages/Task";
 import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
 import DeleteProject from "../components/DeleteProject";
-import Chat from "../../../shared/ui/Chat";
+import Chat from "../../../shared/components/chat/Chat";
+import Conversation from "../../../shared/components/conversation/Conversation";
 
 import useProjectStore from "../stores/projectStore";
 
@@ -201,12 +202,19 @@ function ProjectDetail() {
         </div>
 
         {/* Task List */}
-        <div className="col-span-12 lg:col-span-6">
+        <div className="col-span-12 lg:col-span-5">
           <Task projectId={id} variant={variant} />
         </div>
         {/* chat  */}
-        <Card className="col-span-12 lg:col-span-3">
-          <Chat />
+        <Card className="col-span-12 lg:col-span-4">
+          <div className="space-y-4">
+            <div>
+              {/* Conversation list manages selection; selected conversation passed to Chat */}
+              {/* example: wire conversations from store/API into the Conversation component */}
+            </div>
+            <Conversation />
+            <Chat conversation={null} />
+          </div>
         </Card>
       </div>
 

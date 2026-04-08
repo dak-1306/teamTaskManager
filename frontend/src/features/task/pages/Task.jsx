@@ -119,7 +119,7 @@ function Task({ projectId, variant }) {
           whileInView="show"
           viewport={inViewOptions}
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {tasks.tasks.map((t) => (
               <Motion.div key={t._id} variants={item} className="mb-4">
                 <Card animation={true} className="space-y-3 p-4">
