@@ -15,7 +15,8 @@ type FieldInput = {
   type: string;
   placeHolder?: string;
   label?: string;
-  ref: React.RefObject<HTMLInputElement | null>;
+  state: string;
+  setState: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type AuthFormProps = {
@@ -51,7 +52,9 @@ function AuthForm({
 
       {field.map((input) => (
         <Field key={input.id} className="mb-4">
-          <FieldLabel htmlFor={input.id}>{input.label}</FieldLabel>
+          <FieldLabel className="text-white" htmlFor={input.id}>
+            {input.label}
+          </FieldLabel>
 
           <div className="relative">
             <Input
@@ -62,7 +65,8 @@ function AuthForm({
                   : input.type
               }
               placeholder={input.placeHolder}
-              ref={input.ref}
+              value={input.state}
+              onChange={(e) => input.setState(e.target.value)}
               className={input.type === "password" ? "pr-10" : ""}
             />
 
@@ -80,9 +84,9 @@ function AuthForm({
                 }
               >
                 {showPassword[input.id] ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="w-4 h-4 text-white" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-4 h-4 text-white" />
                 )}
               </Button>
             )}

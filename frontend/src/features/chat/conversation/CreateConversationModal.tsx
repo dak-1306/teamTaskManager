@@ -13,12 +13,20 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+type CreateConversationProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate: (data: {
+    name: string;
+    type: string;
+    participants: string[];
+  }) => void;
+};
 export default function CreateConversationDialog({
   isOpen,
   onClose,
   onCreate,
-}) {
+}: CreateConversationProps) {
   const [form, setForm] = useState({
     name: "",
     type: "channel",

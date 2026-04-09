@@ -13,13 +13,18 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+type EditConversationProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  conversation: { id: string; name: string };
+  onUpdate: (data: { id: string; name: string }) => void;
+};
 export default function EditConversationDialog({
   isOpen,
   onClose,
   conversation,
   onUpdate,
-}) {
+}: EditConversationProps) {
   const [form, setForm] = useState({ name: "" });
 
   useEffect(() => {

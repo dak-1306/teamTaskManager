@@ -21,8 +21,8 @@ import SkeletonProfile from "./SkeletonProfile";
 
 import { useNavigate } from "react-router-dom";
 
-import { useAuth } from "../context/useAuth";
-import { useTheme } from "../../../context/useTheme";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../../../context/ThemContext";
 
 function Profile() {
   const {

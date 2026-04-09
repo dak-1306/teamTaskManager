@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useChatStore from "./store/chatStore";
 
 export default function ChatPanel() {
-  const selectedConv = useChatStore((s) => s.selectedConversation);
-  const messages = useChatStore((s) => s.messages);
-  const addMessage = useChatStore((s) => s.addMessage);
+  const selectedConv = useChatStore((s: any) => s.selectedConversation) as any;
+  const messages = useChatStore((s: any) => s.messages) as any[];
+  const addMessage = useChatStore((s: any) => s.addMessage) as (m: any) => void;
 
-  const [input, setInput] = useState("");
-  const bottomRef = useRef();
+  const [input, setInput] = useState<string>("");
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const currentMessages = (messages || []).filter(
-    (m) => String(m.conversationId) === String(selectedConv?.id),
+    (m: any) => String(m.conversationId) === String(selectedConv?.id),
   );
 
   const sendMessage = () => {
@@ -73,13 +73,17 @@ export default function ChatPanel() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {currentMessages.map((msg) => (
+        {currentMessages.map((msg: any) => (
           <div
-            key={msg.id}
+            key={msg.id || msg._id}
             className={`flex ${msg.sender === "me" ? "justify-end" : "justify-start"}`}
           >
             {msg.sender !== "me" && (
-              <img src={msg.avatar} className="w-8 h-8 rounded-full mr-2" />
+              <img
+                src={msg.avatar}
+                className="w-8 h-8 rounded-full mr-2"
+                alt={msg.senderName || "avatar"}
+              />
             )}
 
             <div>
@@ -96,7 +100,9 @@ export default function ChatPanel() {
               </div>
 
               <div className="text-[10px] text-gray-400 mt-1">
-                {new Date(msg.createdAt).toLocaleTimeString().slice(0, 5)}
+                {msg.createdAt
+                  ? new Date(msg.createdAt).toLocaleTimeString().slice(0, 5)
+                  : ""}
               </div>
             </div>
           </div>

@@ -1,25 +1,22 @@
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import AuthForm from "../components/AuthForm";
 import AuthBackground from "../components/AuthBackground";
 import { useNavigate } from "react-router-dom";
 
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../context/AuthContext";
 function Register() {
   const navigate = useNavigate();
   const [errorField, setErrorField] = useState<string | null>(null);
 
   const { register, error, loading } = useAuth() as any;
 
-  // Refs cho các trường nhập liệu
-  const usernameRef = useRef<HTMLInputElement | null>(null);
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
+  // State cho các trường nhập liệu
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // Xử lý Đăng ký
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const username = usernameRef.current?.value;
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
     setErrorField(null);
     if (!username) {
       setErrorField("username");
@@ -46,21 +43,24 @@ function Register() {
       type: "text",
       placeHolder: "Username",
       label: "Username",
-      ref: usernameRef,
+      state: username,
+      setState: setUsername,
     },
     {
       id: "email",
       type: "email",
       placeHolder: "Email",
       label: "Email",
-      ref: emailRef,
+      state: email,
+      setState: setEmail,
     },
     {
       id: "password",
       type: "password",
       placeHolder: "Password",
       label: "Password",
-      ref: passwordRef,
+      state: password,
+      setState: setPassword,
     },
   ];
 

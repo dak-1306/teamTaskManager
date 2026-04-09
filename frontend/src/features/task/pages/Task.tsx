@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -19,6 +19,7 @@ import AddTask from "../components/AddTask";
 import FilterModal from "../components/FilterModal";
 
 import useTaskStore from "../stores/taskStore";
+import useProjectStore from "../../project/stores/projectStore";
 
 import formatDate from "../../../components/utils/formatDate";
 
@@ -35,6 +36,20 @@ function Task({ projectId, variant }) {
   const [openFilterModal, setOpenFilterModal] = useState(false);
 
   const { tasks, fetchTasksByProjectId, filterTasks, loading } = useTaskStore();
+  const { projectDetail, fetchProjectById } = useProjectStore();
+  useEffect(() => {
+    if (projectId && !projectDetail) {
+      fetchProjectById(projectId);
+    }
+  }, [projectId, fetchProjectById]);
+  const memberOptions = useMemo(() => {
+    return (
+      projectDetail?.members?.map((member) => ({
+        value: member.email,
+        label: `${member.username} (${member.email})`,
+      })) || []
+    );
+  }, [projectDetail]);
 
   useEffect(() => {
     filterTasks({ ...filterTask, projectId });
@@ -72,7 +87,7 @@ function Task({ projectId, variant }) {
 
   console.log("Tasks for project", projectId, tasks);
   if (loading) return <SkeletonTask />;
-
+  console.log("Member options in Task component:", memberOptions);
   return (
     <div className="space-y-4">
       <Card className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
@@ -123,45 +138,6 @@ function Task({ projectId, variant }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {tasks.tasks.map((t) => (
               <Motion.div key={t._id} variants={item} className="mb-4">
-                {/* <Card animation={true} className="space-y-3 p-4">
-                  <div className="flex flex-col items-start justify-between gap-2">
-                    <h2 className="text-lg font-semibold">{t.title}</h2>
-                    <div className="flex justify-between items-center gap-1">
-                      <span
-                        className={statusBadge[t.status] || statusBadge.todo}
-                      >
-                        {t.status}
-                      </span>
-                      <span
-                        className={
-                          priorityBadge[t.priority] || priorityBadge.low
-                        }
-                      >
-                        {t.priority}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-2 flex flex-col justify-start space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
-                      <span>
-                        {t.dueDate ? formatDate(t.dueDate) : "No due date"}
-                      </span>
-                    </div>
-                    <Link
-                      to={`/projects/${projectId}/${variant}/tasks/${t._id}`}
-                    >
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        aria-label={`View ${t.title}`}
-                      >
-                        View
-                      </Button>
-                    </Link>
-                  </div>
-                </Card> */}
                 <CardTask task={t} projectId={projectId} variant={variant} />
               </Motion.div>
             ))}
@@ -184,6 +160,7 @@ function Task({ projectId, variant }) {
           isOpen={openAddTask}
           onClose={() => setOpenAddTask(false)}
           projectId={projectId}
+          memberOptions={memberOptions}
         />
       )}
       {openFilterModal && (

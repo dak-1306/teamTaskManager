@@ -1,25 +1,23 @@
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import AuthForm from "../components/AuthForm";
 import AuthBackground from "../components/AuthBackground";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
 
   const { login, error, loading } = useAuth() as any;
 
-  // Refs cho các trường nhập liệu
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
+  // State cho các trường nhập liệu
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [errorField, setErrorField] = useState<string | null>(null);
   // Xử lý Đăng nhập
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorField(null);
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
     if (!email) {
       setErrorField("email");
       return;
@@ -46,14 +44,16 @@ function Login() {
       type: "email",
       placeHolder: "Email",
       label: "Email",
-      ref: emailRef,
+      state: email,
+      setState: setEmail,
     },
     {
       id: "password",
       type: "password",
       placeHolder: "Password",
       label: "Password",
-      ref: passwordRef,
+      state: password,
+      setState: setPassword,
     },
   ];
 

@@ -129,7 +129,7 @@ function TaskDetail() {
           viewport={inViewOptions}
         >
           <Motion.div variants={item}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <Card className="md:col-span-1 space-y-4 p-6">
                 <p className="mb-3 text-gray-800 dark:text-gray-100">
                   <strong className="mr-2">Description:</strong>

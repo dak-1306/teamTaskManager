@@ -7,7 +7,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import Filter from "../../../components/common/Filter";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import useTaskStore from "../stores/taskStore";
 import useProjectStore from "../../project/stores/projectStore";
@@ -15,15 +15,10 @@ type AddTaskProps = {
   isOpen: boolean;
   onClose: () => void;
   projectId: string;
+  memberOptions: { value: string; label: string }[];
 };
-function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
+function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
   const { createTask } = useTaskStore();
-  const { projectDetail, fetchProjectById } = useProjectStore();
-  useEffect(() => {
-    if (projectId) {
-      fetchProjectById(projectId);
-    }
-  }, [projectId, fetchProjectById]);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -62,6 +57,7 @@ function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
 
     onClose();
   };
+
   const taskStatus = [
     {
       value: "todo",
@@ -90,9 +86,14 @@ function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
       label: "High",
     },
   ];
-
+  console.log("add task opened", isOpen);
   return (
-    <Dialog open={isOpen} onOpenChange={(openState) => !openState && onClose()}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent>
         <DialogTitle>Add New Task</DialogTitle>
         <div className="space-y-4">
@@ -144,50 +145,21 @@ function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
           <Filter
             name="status"
             value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            onFilterChange={setStatus}
             options={taskStatus}
           ></Filter>
 
           <Filter
             name="priority"
             value={priority}
-            onChange={(e) => setPriority(e.target.value)}
+            onFilterChange={setPriority}
             options={taskPriority}
           ></Filter>
-
-          {/* {projectDetail && projectDetail.members && (
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
-                htmlFor="memberEmail"
-              >
-                Project Members:
-              </label>
-              <select
-                id="memberEmail"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:text-white dark:bg-gray-700 dark:border-gray-500"
-                value={emailAssignTo}
-                onChange={(e) => setEmailAssignTo(e.target.value)}
-              >
-                <option value="">Select a member</option>
-                {projectDetail.members.map((member) => (
-                  <option key={member._id} value={member.email}>
-                    {member.username} ({member.email})
-                  </option>
-                ))}
-              </select>
-            </div>
-          )} */}
           <Filter
             name="assignTo"
             value={emailAssignTo}
-            onChange={(e) => setEmailAssignTo(e.target.value)}
-            options={
-              projectDetail?.members?.map((member) => ({
-                value: member.email,
-                label: `${member.username} (${member.email})`,
-              })) || []
-            }
+            onFilterChange={setEmailAssignTo}
+            options={memberOptions}
           />
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={onClose}>

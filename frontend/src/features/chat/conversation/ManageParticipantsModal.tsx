@@ -11,14 +11,20 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+type ManageParticipantsProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  conversation: { id: string; participants: string[] };
+  onAdd: (conversationId: string, userId: string) => void;
+  onRemove: (conversationId: string, userId: string) => void;
+};
 export default function ManageParticipantsDialog({
   isOpen,
   onClose,
   conversation,
   onAdd,
   onRemove,
-}) {
+}: ManageParticipantsProps) {
   const [userId, setUserId] = useState("");
 
   const add = () => {

@@ -5,10 +5,10 @@ import RunningClockCanvas from "./RunningClockCanvas";
 
 import { motion as Motion } from "framer-motion";
 import { inViewOptions, item } from "../../app/motionConfig";
-import { useTheme } from "../../context/useTheme";
+import { useTheme } from "../../context/ThemContext";
 
 import { useEffect } from "react";
-import { useAuth } from "../auth/context/useAuth";
+import { useAuth } from "../auth/context/AuthContext";
 
 function Landing() {
   const { theme } = useTheme();

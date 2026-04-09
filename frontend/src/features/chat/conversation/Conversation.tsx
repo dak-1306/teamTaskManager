@@ -1,27 +1,47 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { UserPlus, Edit2, Trash2 } from "lucide-react";
 import CreateConversationModal from "./CreateConversationModal";
 import EditConversationModal from "./EditConversationModal";
 import ManageParticipantsModal from "./ManageParticipantsModal";
 import useChatStore from "../store/chatStore";
 
-export function Conversation() {
-  const store = useChatStore();
-  const conversations = useChatStore((s) => s.conversations);
-  const selectedConversation = useChatStore((s) => s.selectedConversation);
-  const setConversations = useChatStore((s) => s.setConversations);
-  const setMessages = useChatStore((s) => s.setMessages);
-  const selectConversation = useChatStore((s) => s.selectConversation);
-  const addConversation = useChatStore((s) => s.addConversation);
-  const updateConversation = useChatStore((s) => s.updateConversation);
-  const addParticipant = useChatStore((s) => s.addParticipant);
-  const removeParticipant = useChatStore((s) => s.removeParticipant);
+export function Conversation(): JSX.Element {
+  const store = useChatStore() as any;
+  const conversations = useChatStore((s: any) => s.conversations) as any[];
+  const selectedConversation = useChatStore(
+    (s: any) => s.selectedConversation,
+  ) as any;
+  const setConversations = useChatStore((s: any) => s.setConversations) as (
+    c: any[],
+  ) => void;
+  const setMessages = useChatStore((s: any) => s.setMessages) as (
+    m: any[],
+  ) => void;
+  const selectConversation = useChatStore((s: any) => s.selectConversation) as (
+    c: any,
+  ) => void;
+  const addConversation = useChatStore((s: any) => s.addConversation) as (
+    c: any,
+  ) => void;
+  const updateConversation = useChatStore((s: any) => s.updateConversation) as (
+    id: string,
+    c: any,
+  ) => void;
+  const addParticipant = useChatStore((s: any) => s.addParticipant) as (
+    convId: string,
+    userId: string,
+  ) => void;
+  const removeParticipant = useChatStore((s: any) => s.removeParticipant) as (
+    convId: string,
+    userId: string,
+  ) => void;
 
   // local UI state for modals
-  const [openCreate, setOpenCreate] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openManage, setOpenManage] = useState(false);
-  const [activeConv, setActiveConv] = useState(null);
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [openManage, setOpenManage] = useState<boolean>(false);
+  const [activeConv, setActiveConv] = useState<any>(null);
 
   // Sample data that matches your models (conversations + messages)
   useEffect(() => {
@@ -95,10 +115,10 @@ export function Conversation() {
       </div>
 
       <div className="space-y-2 overflow-y-auto h-64">
-        {(conversations || []).map((c) => (
+        {(conversations || []).map((c: any) => (
           <div
-            key={c.id}
-            className={`flex items-center justify-between gap-2 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 ${selectedConversation?.id === c.id ? "bg-gray-100" : ""}`}
+            key={c.id || c._id}
+            className={`flex items-center justify-between gap-2 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 ${selectedConversation?.id === (c.id || c._id) ? "bg-gray-100" : ""}`}
           >
             <Button
               onClick={() => selectConversation(c)}
@@ -127,7 +147,7 @@ export function Conversation() {
                 variant="default"
                 size="sm"
               >
-                Members
+                <UserPlus size={16} />
               </Button>
               <Button
                 onClick={() => {
@@ -137,7 +157,7 @@ export function Conversation() {
                 variant="secondary"
                 size="sm"
               >
-                Edit
+                <Edit2 size={16} />
               </Button>
               <Button
                 onClick={() => {
@@ -148,7 +168,7 @@ export function Conversation() {
                 variant="destructive"
                 size="sm"
               >
-                Delete
+                <Trash2 size={16} />
               </Button>
             </div>
           </div>
@@ -158,7 +178,7 @@ export function Conversation() {
       <CreateConversationModal
         isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
-        onCreate={(conversation) => {
+        onCreate={(conversation: any) => {
           // ensure id exists
           const conv = {
             id: conversation.id || `c_${Date.now()}`,
@@ -174,7 +194,7 @@ export function Conversation() {
         isOpen={openEdit}
         onClose={() => setOpenEdit(false)}
         conversation={activeConv}
-        onUpdate={(updatedConversation) => {
+        onUpdate={(updatedConversation: any) => {
           updateConversation(updatedConversation.id, updatedConversation);
           selectConversation(updatedConversation);
           setOpenEdit(false);
@@ -185,10 +205,10 @@ export function Conversation() {
         isOpen={openManage}
         onClose={() => setOpenManage(false)}
         conversation={activeConv}
-        onAdd={(convId, userId) => {
+        onAdd={(convId: string, userId: string) => {
           addParticipant(convId, userId);
         }}
-        onRemove={(convId, userId) => {
+        onRemove={(convId: string, userId: string) => {
           removeParticipant(convId, userId);
         }}
       />
