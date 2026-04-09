@@ -1,6 +1,6 @@
 import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../features/auth/context/useAuth";
+import { useAuth } from "../../features/auth/context/AuthContext";
 function Header() {
   const { isLogin } = useAuth();
   return (
