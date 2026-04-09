@@ -11,7 +11,7 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
 import useProjectStore from "../stores/projectStore";
-import { useAuth } from "../../auth/context/useAuth";
+import { useAuth } from "../../auth/context/AuthContext";
 
 interface Props {
   isOpen: boolean;
