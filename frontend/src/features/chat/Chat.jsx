@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import useChatStore from "../../store/chatStore";
+import useChatStore from "./store/chatStore";
 
 export default function ChatPanel() {
   const selectedConv = useChatStore((s) => s.selectedConversation);

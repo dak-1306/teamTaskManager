@@ -117,7 +117,7 @@ function Profile() {
           >
             {/* PROFILE CARD */}
             <Motion.div variants={item}>
-              <Card className="space-y-4">
+              <Card className="space-y-4 p-6">
                 <h2 className="text-2xl font-bold mb-4">User Profile</h2>
 
                 <div className="flex items-center space-x-8">
@@ -213,7 +213,7 @@ function Profile() {
 
             {/* OTHER SETTINGS */}
             <Motion.div variants={item}>
-              <Card className="space-x-4">
+              <Card className="space-x-4 flex flex-col md:flex-row items-center justify-between p-6">
                 <Button
                   variant="secondary"
                   onClick={() => setOpenChangePassword(true)}
@@ -233,7 +233,7 @@ function Profile() {
 
             {/* THEME */}
             <Motion.div variants={item}>
-              <Card className="flex items-center space-x-4">
+              <Card className="space-x-2 flex flex-row p-6">
                 <p>Theme:</p>
                 <label className="flex items-center space-x-2 w-10 h-6 bg-gray-100 p-1 rounded-full border border-gray-300 cursor-pointer">
                   <input

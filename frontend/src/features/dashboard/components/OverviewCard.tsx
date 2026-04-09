@@ -18,19 +18,21 @@ function OverviewCard({ title, value, icon, color }: OverviewCardProps) {
   const defaultValue = 0;
   const defaultTitle = "Overview";
   return (
-    <Card className="flex items-center space-x-4">
-      <div
-        className={`p-3 rounded-full ${color ? colorBgIcon[color] : colorBgIcon.totalProject}`}
-      >
-        {icon || defaultIcon}
-      </div>
-      <div>
-        <p className="text-sm font-medium text-muted-foreground">
-          {title || defaultTitle}
-        </p>
-        <p className="text-2xl font-bold">
-          {value !== undefined ? value : defaultValue}
-        </p>
+    <Card>
+      <div className="flex items-center gap-6 mx-auto">
+        <div
+          className={`p-3 rounded-full ${color ? colorBgIcon[color] : colorBgIcon.totalProject}`}
+        >
+          {icon || defaultIcon}
+        </div>
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">
+            {title || defaultTitle}
+          </p>
+          <p className="text-2xl font-bold">
+            {value !== undefined ? value : defaultValue}
+          </p>
+        </div>
       </div>
     </Card>
   );

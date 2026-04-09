@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import CreateConversationModal from "./CreateConversationModal";
 import EditConversationModal from "./EditConversationModal";
 import ManageParticipantsModal from "./ManageParticipantsModal";
@@ -83,12 +84,13 @@ export function Conversation() {
       <div className="flex justify-between items-center mb-3">
         <div className="text-sm font-medium">Conversations</div>
         <div>
-          <button
+          <Button
             onClick={() => setOpenCreate(true)}
-            className="px-2 py-1 rounded bg-blue-500 text-white text-sm"
+            variant="default"
+            size="sm"
           >
             Create
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -98,9 +100,11 @@ export function Conversation() {
             key={c.id}
             className={`flex items-center justify-between gap-2 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 ${selectedConversation?.id === c.id ? "bg-gray-100" : ""}`}
           >
-            <button
+            <Button
               onClick={() => selectConversation(c)}
-              className="flex items-center gap-3 flex-1 text-left"
+              variant="ghost"
+              className="flex-1 text-left"
+              size="sm"
             >
               <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs">
                 {c.name?.slice(0, 2).toUpperCase()}
@@ -113,36 +117,39 @@ export function Conversation() {
                   {c.subtitle}
                 </div>
               </div>
-            </button>
+            </Button>
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 onClick={() => {
                   setActiveConv(c);
                   setOpenManage(true);
                 }}
-                className="text-sm px-2 py-1 rounded border"
+                variant="default"
+                size="sm"
               >
                 Members
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setActiveConv(c);
                   setOpenEdit(true);
                 }}
-                className="text-sm px-2 py-1 rounded border"
+                variant="secondary"
+                size="sm"
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   // remove from store for now
                   // optimistic UI: use store.removeConversation if available
                   if (store.removeConversation) store.removeConversation(c.id);
                 }}
-                className="text-sm px-2 py-1 rounded bg-red-500 text-white"
+                variant="destructive"
+                size="sm"
               >
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         ))}

@@ -1,7 +1,18 @@
-import Modal from "../../../shared/ui/Modal";
 import { useState } from "react";
 
-export default function ManageParticipantsModal({
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export default function ManageParticipantsDialog({
   isOpen,
   onClose,
   conversation,
@@ -11,56 +22,64 @@ export default function ManageParticipantsModal({
   const [userId, setUserId] = useState("");
 
   const add = () => {
-    if (userId && onAdd) onAdd(conversation.id, userId);
+    if (!userId) return;
+    onAdd?.(conversation.id, userId);
     setUserId("");
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Manage Participants">
-      <div className="space-y-3">
-        <div className="text-sm">Participants</div>
-        <div className="space-y-1 max-h-40 overflow-y-auto">
-          {conversation?.participants?.length ? (
-            conversation.participants.map((p) => (
-              <div
-                key={p}
-                className="flex items-center justify-between border rounded px-2 py-1"
-              >
-                <div className="text-sm truncate">{p}</div>
-                <button
-                  onClick={() => onRemove && onRemove(conversation.id, p)}
-                  className="text-sm text-red-500"
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Manage Participants</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-3">
+          <div className="text-sm font-medium">Participants</div>
+
+          <div className="space-y-1 max-h-40 overflow-y-auto">
+            {conversation?.participants?.length ? (
+              conversation.participants.map((p) => (
+                <div
+                  key={p}
+                  className="flex items-center justify-between border rounded px-2 py-1"
                 >
-                  Remove
-                </button>
+                  <span className="text-sm truncate">{p}</span>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => onRemove?.(conversation.id, p)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <div className="text-xs text-muted-foreground">
+                No participants
               </div>
-            ))
-          ) : (
-            <div className="text-xs text-gray-500">No participants</div>
-          )}
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Add participant</Label>
+            <div className="flex gap-2">
+              <Input
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                placeholder="userId"
+              />
+              <Button onClick={add}>Add</Button>
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-2">
-          <input
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            placeholder="userId to add"
-            className="flex-1 border rounded px-2 py-1"
-          />
-          <button
-            onClick={add}
-            className="px-3 py-1 rounded bg-green-500 text-white"
-          >
-            Add
-          </button>
-        </div>
-
-        <div className="flex justify-end">
-          <button onClick={onClose} className="px-3 py-1 rounded border">
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
             Close
-          </button>
-        </div>
-      </div>
-    </Modal>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

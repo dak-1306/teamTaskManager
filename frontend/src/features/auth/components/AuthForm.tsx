@@ -6,12 +6,8 @@ import { motion as Motion } from "framer-motion";
 
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
-import {
-  Field,
-  FieldLabel,
-  FieldContent,
-  FieldError,
-} from "../../../components/ui/field";
+import { Field, FieldLabel, FieldError } from "../../../components/ui/field";
+
 import { item, inViewOptions } from "../../../app/motionConfig";
 
 type FieldInput = {
@@ -39,7 +35,8 @@ function AuthForm({
   errorField,
   loading,
 }: AuthFormProps) {
-  const [showPassword, setShowPassword] = useState(false);
+  // 👉 state riêng cho từng input password
+  const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
 
   return (
     <Motion.form
@@ -51,46 +48,64 @@ function AuthForm({
       onSubmit={onSubmit}
     >
       <h1 className="text-3xl font-bold mb-6 text-white">{title} page</h1>
+
       {field.map((input) => (
-        <Field key={input.id} className="mb-4 relative">
+        <Field key={input.id} className="mb-4">
           <FieldLabel htmlFor={input.id}>{input.label}</FieldLabel>
-          <FieldContent>
+
+          <div className="relative">
             <Input
               id={input.id}
               type={
-                showPassword && input.type === "password" ? "text" : input.type
+                input.type === "password" && showPassword[input.id]
+                  ? "text"
+                  : input.type
               }
               placeholder={input.placeHolder}
-              aria-label={input.label}
               ref={input.ref}
+              className={input.type === "password" ? "pr-10" : ""}
             />
 
             {input.type === "password" && (
-              <button
+              <Button
                 type="button"
-                className="absolute right-0 top-0 mt-2 mr-3 text-slate-900 focus:outline-none"
-                onClick={() => setShowPassword((s) => !s)}
+                size="icon"
+                variant="ghost"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-7 w-7"
+                onClick={() =>
+                  setShowPassword((prev) => ({
+                    ...prev,
+                    [input.id]: !prev[input.id],
+                  }))
+                }
               >
-                {showPassword ? <EyeOff /> : <Eye />}
-              </button>
+                {showPassword[input.id] ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </Button>
             )}
+          </div>
 
-            {errorField === input.id && (
-              <FieldError>This field is required</FieldError>
-            )}
-          </FieldContent>
+          {errorField === input.id && (
+            <FieldError>This field is required</FieldError>
+          )}
         </Field>
       ))}
+
       <div className="flex flex-col items-center justify-between space-y-4">
         <Button
           type="submit"
           variant="default"
           className="w-full"
-          size="default"
+          disabled={loading}
         >
           {loading ? "Loading..." : title}
         </Button>
+
         {error && <p className="text-red-300">{error}</p>}
+
         {title === "Login" && (
           <p className="text-m text-gray-100">
             Don't have an account?{" "}
@@ -99,6 +114,7 @@ function AuthForm({
             </Link>
           </p>
         )}
+
         {title === "Register" && (
           <p className="text-m text-gray-100">
             Already have an account?{" "}
@@ -107,6 +123,7 @@ function AuthForm({
             </Link>
           </p>
         )}
+
         <Link to="/" className="text-sm text-gray-100 hover:underline">
           <House className="inline-block" />
         </Link>
@@ -114,4 +131,5 @@ function AuthForm({
     </Motion.form>
   );
 }
+
 export default AuthForm;

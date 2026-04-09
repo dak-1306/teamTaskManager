@@ -14,19 +14,21 @@ function RecentProjectCard({
   projectId,
 }: RecentProjectCardProps) {
   return (
-    <Card className="mb-4 space-y-2">
-      <h3 className="text-lg font-semibold">{title || "Project Title"}</h3>
-      <p className="text-gray-600 dark:text-gray-400">
-        {description || "Project description goes here."}
-      </p>
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        {time || "Last edited: 2 hours ago"}
-      </p>
-      <Link to={`/projects/${projectId}/owner`}>
-        <Button variant="outline" className="mt-2">
-          View Project
-        </Button>
-      </Link>
+    <Card className="mb-4">
+      <div className="flex flex-col items-start justify-between gap-2 mx-auto">
+        <h3 className="text-lg font-semibold">{title || "Project Title"}</h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          {description || "Project description goes here."}
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {time || "Last edited: 2 hours ago"}
+        </p>
+        <Link to={`/projects/${projectId}/owner`}>
+          <Button variant="outline" className="mt-2">
+            View Project
+          </Button>
+        </Link>
+      </div>
     </Card>
   );
 }
