@@ -1,12 +1,11 @@
-import * as React from "react";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { InputGroup } from "@/components/ui/input-group";
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 type Option = {
   label: string;
@@ -21,36 +20,32 @@ type FilterProps = {
   className?: string;
 };
 
-function Filter({
-  onFilterChange,
-  name,
-  options,
-  value,
-  className,
-}: FilterProps) {
+function Filter({ onFilterChange, name, options, value }: FilterProps) {
   return (
-    <div className={"flex items-center space-x-2 " + (className || "")}>
-      <InputGroup className="w-fit">
-        <Select
-          value={value ?? ""}
-          onValueChange={(val) => onFilterChange(val === "all" ? "" : val)}
-        >
-          <SelectTrigger size="default">
-            <SelectValue placeholder={`Filter by ${name}`} />
-          </SelectTrigger>
+    <Combobox
+      value={value}
+      onValueChange={(val) => onFilterChange(val)}
+      items={options.map((o) => o.value)}
+    >
+      <ComboboxInput
+        placeholder={`Filter by ${name}`}
+        onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+      />
 
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+      <ComboboxContent className="z-[9999] pointer-events-auto">
+        <ComboboxEmpty>No items found.</ComboboxEmpty>
 
-            {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+        <ComboboxList>
+          {options.map((option) => (
+            <ComboboxItem key={option.value} value={option.value} asChild>
+              <button type="button" className="w-full text-left">
                 {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </InputGroup>
-    </div>
+              </button>
+            </ComboboxItem>
+          ))}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
 }
 

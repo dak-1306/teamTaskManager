@@ -6,6 +6,7 @@ import {
 } from "../../../components/ui/dialog";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
+import Filter from "../../../components/common/Filter";
 import { useEffect, useState } from "react";
 
 import useTaskStore from "../stores/taskStore";
@@ -61,6 +62,34 @@ function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
 
     onClose();
   };
+  const taskStatus = [
+    {
+      value: "todo",
+      label: "To Do",
+    },
+    {
+      value: "doing",
+      label: "Doing",
+    },
+    {
+      value: "done",
+      label: "Done",
+    },
+  ];
+  const taskPriority = [
+    {
+      value: "low",
+      label: "Low",
+    },
+    {
+      value: "medium",
+      label: "Medium",
+    },
+    {
+      value: "high",
+      label: "High",
+    },
+  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={(openState) => !openState && onClose()}>
@@ -112,33 +141,21 @@ function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
             )}
           </div>
 
-          <select
-            id="taskStatus"
+          <Filter
             name="status"
-            className="w-full p-2 border rounded dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="">-- Select Status --</option>
-            <option value="todo">To Do</option>
-            <option value="doing">Doing</option>
-            <option value="done">Done</option>
-          </select>
+            options={taskStatus}
+          ></Filter>
 
-          <select
+          <Filter
             name="priority"
-            id="priority"
-            className="w-full p-2 border rounded dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-          >
-            <option value="">-- Select Priority --</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
+            options={taskPriority}
+          ></Filter>
 
-          {projectDetail && projectDetail.members && (
+          {/* {projectDetail && projectDetail.members && (
             <div className="mb-4">
               <label
                 className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
@@ -160,7 +177,18 @@ function AddTask({ isOpen, onClose, projectId }: AddTaskProps) {
                 ))}
               </select>
             </div>
-          )}
+          )} */}
+          <Filter
+            name="assignTo"
+            value={emailAssignTo}
+            onChange={(e) => setEmailAssignTo(e.target.value)}
+            options={
+              projectDetail?.members?.map((member) => ({
+                value: member.email,
+                label: `${member.username} (${member.email})`,
+              })) || []
+            }
+          />
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={onClose}>
               Cancel

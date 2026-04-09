@@ -72,10 +72,7 @@ function EditProject({ isOpen, onClose, project }: Props) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleOnClose()}>
       <DialogContent>
         <DialogTitle>Edit Project</DialogTitle>
-        <form
-          onSubmit={handleUpdateProject}
-          className="w-full max-w-sm bg-white dark:bg-gray-700 dark:shadow-md rounded p-6 mt-4 space-y-4"
-        >
+        <form onSubmit={handleUpdateProject}>
           {/* Input Fields */}
           {Field.map((input) => (
             <div key={input.id} className="mb-4">

@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "../../../components/ui/dialog";
+import Filter from "../../../components/common/Filter";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
@@ -19,7 +20,7 @@ interface Props {
 }
 
 function AddMember({ isOpen, onClose, projectId }: Props) {
-  const memberEmailRef = useRef<HTMLSelectElement | null>(null);
+  const [memberEmail, setMemberEmail] = useState("");
 
   const { addMemberProject } = useProjectStore();
 
@@ -33,7 +34,6 @@ function AddMember({ isOpen, onClose, projectId }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const memberEmail = memberEmailRef.current?.value;
     if (!memberEmail) {
       setErrorField("Email is required");
       return;
@@ -47,30 +47,19 @@ function AddMember({ isOpen, onClose, projectId }: Props) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogTitle>Add Member to Project</DialogTitle>
-        <form
-          className="w-full max-w-sm bg-white dark:bg-gray-700 dark:shadow-md rounded p-6 mt-4"
-          onSubmit={handleSubmit}
-        >
-          <select
-            id="memberEmail"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-500 focus:outline-none focus:shadow-outline mb-4"
-            ref={memberEmailRef}
-          >
-            <option value="">Select a member</option>
-            {usersForAddMember && usersForAddMember.length > 0 ? (
-              usersForAddMember.map((user) => (
-                <option key={user._id} value={user.email}>
-                  {user.username} ({user.email})
-                </option>
-              ))
-            ) : (
-              <option value="" disabled>
-                No users available
-              </option>
-            )}
-          </select>
+        <form onSubmit={handleSubmit}>
+          <Filter
+            name="email"
+            options={usersForAddMember.map((user) => ({
+              value: user.email,
+              label: `${user.username} (${user.email})`,
+            }))}
+            value={memberEmail}
+            onFilterChange={setMemberEmail}
+          />
+
           {errorField && <p className="text-red-500 text-sm">{errorField}</p>}
-          <div className="flex space-x-4 justify-center ">
+          <div className="flex space-x-4 justify-center mt-4">
             <Button type="submit" variant="default" size="default">
               Add Member
             </Button>

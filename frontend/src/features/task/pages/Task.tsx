@@ -12,6 +12,7 @@ import { Button } from "../../../components/ui/button";
 import SearchBar from "../../../components/common/Search";
 import Filter from "../../../components/common/Filter";
 import Pagination from "../../../components/common/Pagination";
+import CardTask from "../components/CardTask";
 import SkeletonTask from "./SkeletonTask";
 
 import AddTask from "../components/AddTask";
@@ -119,10 +120,10 @@ function Task({ projectId, variant }) {
           whileInView="show"
           viewport={inViewOptions}
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {tasks.tasks.map((t) => (
               <Motion.div key={t._id} variants={item} className="mb-4">
-                <Card animation={true} className="space-y-3 p-4">
+                {/* <Card animation={true} className="space-y-3 p-4">
                   <div className="flex flex-col items-start justify-between gap-2">
                     <h2 className="text-lg font-semibold">{t.title}</h2>
                     <div className="flex justify-between items-center gap-1">
@@ -160,7 +161,8 @@ function Task({ projectId, variant }) {
                       </Button>
                     </Link>
                   </div>
-                </Card>
+                </Card> */}
+                <CardTask task={t} projectId={projectId} variant={variant} />
               </Motion.div>
             ))}
           </div>

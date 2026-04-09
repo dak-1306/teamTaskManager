@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "../../../components/ui/dialog";
+import Filter from "../../../components/common/Filter";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
@@ -77,6 +78,27 @@ function EditTask({
     onClose();
   };
 
+  const taskStatus = [{
+    value: "todo",
+    label: "To Do",
+  }, {
+    value: "doing",
+    label: "Doing",
+  }, {
+    value: "done",
+    label: "Done",
+  }];
+  const taskPriority = [{
+    value: "low",
+    label: "Low",
+  }, {
+    value: "medium",
+    label: "Medium",
+  }, {
+    value: "high",
+    label: "High",
+  }];
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleCancel()}>
       <DialogContent>
@@ -101,29 +123,19 @@ function EditTask({
             onChange={(e) => setDueDate(e.target.value)}
           />
 
-          <select
-            id="taskStatus"
-            className="w-full p-2 border rounded"
+          <Filter
+            name="status"
+            options={taskStatus}
             value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="">Select Status</option>
-            <option value="todo">To Do</option>
-            <option value="doing">Doing</option>
-            <option value="done">Done</option>
-          </select>
+            onFilterChange={setStatus}
+          />
 
-          <select
-            id="taskPriority"
-            className="w-full p-2 border rounded"
+          <Filter
+            name="priority"
+            options={taskPriority}
             value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option value="">Select Priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
+            onFilterChange={setPriority}
+          />
 
           <p className="font-semibold">Assigned Users</p>
           {assignedEmailEdit.length > 0

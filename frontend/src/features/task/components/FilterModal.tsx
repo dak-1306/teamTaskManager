@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "../../../components/ui/dialog";
+import Filter from "../../../components/common/Filter";
 import { Button } from "../../../components/ui/button";
 
 const filterStatus = [
@@ -37,13 +38,7 @@ export default function FilterModal({
     date: initialFilters.date || "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((p) => ({ ...p, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     onApply(filters);
     onClose();
   };
@@ -52,70 +47,46 @@ export default function FilterModal({
     <Dialog open={isOpen} onOpenChange={(openState) => !openState && onClose()}>
       <DialogContent>
         <DialogTitle>Filter Tasks</DialogTitle>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              name="status"
-              value={filters.status}
-              onChange={handleChange}
-              className="w-full rounded-md border p-2"
-            >
-              {filterStatus.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Priority
-            </label>
-            <select
-              name="priority"
-              value={filters.priority}
-              onChange={handleChange}
-              className="w-full rounded-md border p-2"
-            >
-              {filterPriority.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sort by due date
-            </label>
-            <select
-              name="date"
-              value={filters.date}
-              onChange={handleChange}
-              className="w-full rounded-md border p-2"
-            >
-              {filterTime.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="space-y-4">
+          <Filter
+            name="Status"
+            options={filterStatus}
+            value={filters.status}
+            onFilterChange={(value) =>
+              setFilters((p) => ({ ...p, status: value }))
+            }
+          />
+          <Filter
+            name="Priority"
+            options={filterPriority}
+            value={filters.priority}
+            onFilterChange={(value) =>
+              setFilters((p) => ({ ...p, priority: value }))
+            }
+          />
+          <Filter
+            name="Time"
+            options={filterTime}
+            value={filters.date}
+            onFilterChange={(value) =>
+              setFilters((p) => ({ ...p, date: value }))
+            }
+          />
 
           <div className="flex justify-end space-x-2">
             <Button variant="outline" size="sm" onClick={onClose} type="button">
               Cancel
             </Button>
-            <Button variant="default" size="sm" type="submit">
+            <Button
+              variant="default"
+              size="sm"
+              type="button"
+              onClick={handleSubmit}
+            >
               Apply
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

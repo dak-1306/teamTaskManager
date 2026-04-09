@@ -11,8 +11,9 @@ import { inViewOptions, container, item } from "../../../app/motionConfig";
 import formatDate from "../../../components/utils/formatDate";
 
 import MainLayout from "../../../components/layout/MainLayout";
-import { Card } from "../../../components/ui/card";
+import CardProject from "../components/CardProject";
 import { Button } from "../../../components/ui/button";
+import { Card } from "../../../components/ui/card";
 import SearchBar from "../../../components/common/Search";
 import Filter from "../../../components/common/Filter";
 import SkeletonProjectList from "./SkeletonProjectList";
@@ -50,17 +51,22 @@ function ProjectList() {
     console.log("Search term:", searchTerm);
   };
 
-  const handleFilterChange = ({ name, date }: any) => {
-    setFilter({ name: name ? name : "", date: date ? date : "" });
+  const handleFilterChange = (payload: any) => {
+    setFilter((prev) => ({
+      ...prev,
+      ...payload,
+    }));
   };
 
   // Define filter options
   const filterName = [
+    { value: "", label: "Default" },
     { value: "nameAsc", label: "Name (A-Z)" },
     { value: "nameDesc", label: "Name (Z-A)" },
   ];
 
   const filterDate = [
+    { value: "", label: "Default" },
     { value: "createdAtAsc", label: "Created At (Asc)" },
     { value: "createdAtDesc", label: "Created At (Desc)" },
   ];
@@ -82,137 +88,109 @@ function ProjectList() {
         <EmptyProjectBox onCreate={() => setOpenCreateProject(true)} />
       ) : (
         <div>
-          <div className="space-y-4">
-            <Motion.ul
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={inViewOptions}
-            >
-              <Card className="flex items-center justify-between gap-4 p-4">
-                <div className="flex items-center space-x-2">
-                  <SearchBar
-                    placeholder="Search projects..."
-                    onChange={handleSearch}
-                    value={searchTerm}
-                    onSubmit={handleSubmitSearch}
-                  />
-                  <Filter
-                    name="name"
-                    options={filterName}
-                    value={filter.name}
-                    onFilterChange={(e: any) =>
-                      handleFilterChange({ name: e.target.value })
-                    }
-                  />
-
-                  <Filter
-                    name="date"
-                    options={filterDate}
-                    value={filter.date}
-                    onFilterChange={(e: any) =>
-                      handleFilterChange({ date: e.target.value })
-                    }
-                  />
-
-                  <Button
-                    variant="default"
-                    size="lg"
-                    icon={<FolderPlus className="w-4 h-4 mr-2" />}
-                    onClick={() => setOpenCreateProject(true)}
-                  >
-                    Create Project
-                  </Button>
-                </div>
-              </Card>
-            </Motion.ul>
-            <h1 className="text-2xl font-semibold text-center">My Projects</h1>
-            <Motion.ul
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={inViewOptions}
-              className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 list-none"
-            >
-              {hasProjects ? (
-                projects.map((project: any) => (
-                  <Motion.li
-                    key={project._id}
-                    variants={item}
-                    className="list-none"
-                  >
-                    <Link to={`/projects/${project._id}/owner`}>
-                      <Card>
-                        <div className="flex flex-col gap-2 mx-auto">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {project.description?.length > 120
-                              ? project.description.slice(0, 120) + "..."
-                              : project.description}
-                          </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            <span>
-                              {project.createdAt
-                                ? formatDate(project.createdAt)
-                                : ""}
-                            </span>
-                          </div>
-                        </div>
-                      </Card>
-                    </Link>
-                  </Motion.li>
-                ))
-              ) : (
-                <p className="col-span-full text-gray-500 text-center">
-                  No projects found.
-                </p>
-              )}
-            </Motion.ul>
-          </div>
-
-          <hr className="my-8" />
-          <h2 className="text-xl font-semibold mt-8 text-center">
-            Projects I'm a Member Of
-          </h2>
-
           <Motion.ul
             variants={container}
             initial="hidden"
             whileInView="show"
             viewport={inViewOptions}
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 list-none"
           >
-            {hasMemberProjects ? (
-              memberProject.map((project: any) => (
-                <Motion.li
-                  key={project._id}
-                  variants={item}
-                  className="list-none"
+            <Card className="flex items-center justify-between gap-4 p-4">
+              <div className="flex items-center space-x-2">
+                <SearchBar
+                  placeholder="Search projects..."
+                  onChange={handleSearch}
+                  value={searchTerm}
+                  onSubmit={handleSubmitSearch}
+                />
+                <Filter
+                  name="name"
+                  options={filterName}
+                  value={filter.name}
+                  onFilterChange={(value) =>
+                    handleFilterChange({ name: value })
+                  }
+                />
+
+                <Filter
+                  name="date"
+                  options={filterDate}
+                  value={filter.date}
+                  onFilterChange={(value) =>
+                    handleFilterChange({ date: value })
+                  }
+                />
+
+                <Button
+                  variant="default"
+                  size="lg"
+                  icon={<FolderPlus className="w-4 h-4 mr-2" />}
+                  onClick={() => setOpenCreateProject(true)}
                 >
-                  <Link to={`/projects/${project._id}/member`}>
-                    <Card>
-                      <div className="flex flex-col gap-2 mx-auto">
-                        <h2 className="text-lg font-semibold">
-                          {project.name}
-                        </h2>
-                        <p className="text-gray-600 dark:text-gray-300">
-                          {project.description}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {project.createdAt &&
-                            `Created: ${formatDate(project.createdAt)}`}
-                        </p>
-                      </div>
-                    </Card>
-                  </Link>
-                </Motion.li>
-              ))
-            ) : (
-              <p className="col-span-full text-gray-500 text-center">
-                No member projects found.
-              </p>
-            )}
+                  Create Project
+                </Button>
+              </div>
+            </Card>
           </Motion.ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
+            <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">
+              <h1 className="text-2xl font-semibold text-center">
+                My Projects
+              </h1>
+              <Motion.ul
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={inViewOptions}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
+              >
+                {hasProjects ? (
+                  projects.map((project: any) => (
+                    <Motion.li
+                      key={project._id}
+                      variants={item}
+                      className="list-none"
+                    >
+                      <CardProject project={project} variant="owner" />
+                    </Motion.li>
+                  ))
+                ) : (
+                  <p className="col-span-full text-gray-500 text-center">
+                    No projects found.
+                  </p>
+                )}
+              </Motion.ul>
+            </div>
+
+            <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-2">
+              <h2 className="text-xl font-semibold text-center">
+                Projects I'm a Member Of
+              </h2>
+
+              <Motion.ul
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={inViewOptions}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
+              >
+                {hasMemberProjects ? (
+                  memberProject.map((project: any) => (
+                    <Motion.li
+                      key={project._id}
+                      variants={item}
+                      className="list-none"
+                    >
+                      <CardProject project={project} variant="member" />
+                    </Motion.li>
+                  ))
+                ) : (
+                  <p className="col-span-full text-gray-500 text-center">
+                    No member projects found.
+                  </p>
+                )}
+              </Motion.ul>
+            </div>
+          </div>
         </div>
       )}
 
