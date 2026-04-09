@@ -19,7 +19,7 @@ import {
   FieldError,
 } from "../../../components/ui/field";
 
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../context/AuthContext";
 
 type ChangePasswordProps = {
   isOpen: boolean;

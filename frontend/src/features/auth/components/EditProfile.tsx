@@ -14,7 +14,7 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Field, FieldLabel, FieldContent } from "../../../components/ui/field";
 
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../context/AuthContext";
 
 type EditProfileProps = {
   user: any;
