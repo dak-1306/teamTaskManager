@@ -12,7 +12,7 @@ import ProjectSearchPage from "../features/project/pages/ProjectSearchPage";
 import TaskSearchPage from "../features/task/pages/TaskSearchPage";
 
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../features/auth/context/useAuth";
+import { useAuth } from "../features/auth/context/AuthContext";
 
 const ProtectedRoute: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const { isLogin, loading } = useAuth();
