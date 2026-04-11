@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import Filter from "../../../components/common/Filter";
 
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -21,11 +22,23 @@ type CreateConversationProps = {
     type: string;
     participants: string[];
   }) => void;
+  memberOfProject: any[];
+  projectId: string;
 };
+
+const options = [
+  { value: "channel", label: "Channel" },
+  { value: "project", label: "Project" },
+  { value: "task", label: "Task" },
+  { value: "direct", label: "Direct" },
+];
+
 export default function CreateConversationDialog({
   isOpen,
   onClose,
   onCreate,
+  memberOfProject,
+  projectId,
 }: CreateConversationProps) {
   const [form, setForm] = useState({
     name: "",
@@ -35,6 +48,7 @@ export default function CreateConversationDialog({
 
   const submit = () => {
     const payload = {
+      project: projectId,
       name: form.name,
       type: form.type,
       participants: form.participants
@@ -42,9 +56,12 @@ export default function CreateConversationDialog({
         .map((s) => s.trim())
         .filter(Boolean),
     };
+    console.log("payload in create conversation", payload);
     onCreate?.(payload);
     onClose();
   };
+
+  console.log("member of project in create conversation", memberOfProject);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -66,28 +83,27 @@ export default function CreateConversationDialog({
 
             <Field>
               <Label>Type</Label>
-              <select
+              <Filter
+                name="type"
+                options={options}
                 value={form.type}
-                onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full border rounded px-2 py-2 text-sm"
-              >
-                <option value="channel">Channel</option>
-                <option value="project">Project</option>
-                <option value="task">Task</option>
-                <option value="direct">Direct</option>
-              </select>
-            </Field>
-
-            <Field>
-              <Label>Participants</Label>
-              <Input
-                value={form.participants}
-                onChange={(e) =>
-                  setForm({ ...form, participants: e.target.value })
-                }
-                placeholder="user1, user2"
+                onFilterChange={(value) => setForm({ ...form, type: value })}
               />
             </Field>
+
+            {memberOfProject && (
+              <Field>
+                <Label>Participants</Label>
+                <Filter
+                  name="participants"
+                  options={memberOfProject}
+                  value={form.participants}
+                  onFilterChange={(value) =>
+                    setForm({ ...form, participants: value })
+                  }
+                />
+              </Field>
+            )}
           </FieldGroup>
 
           <DialogFooter>

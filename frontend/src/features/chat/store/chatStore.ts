@@ -1,20 +1,20 @@
 import { create } from "zustand";
+import axiosClient from "../../../lib/axios";
 
 // Basic types for chat
 export type Conversation = {
-  id: string;
   _id?: string;
   name?: string;
   type?: string;
   project?: string;
   task?: string;
   participants?: string[];
-  subtitle?: string;
+  metadata?: Record<string, any>;
+  isArchived?: boolean;
   [key: string]: any;
 };
 
 export type Message = {
-  id: string;
   _id?: string;
   conversationId: string;
   sender?: string;
@@ -26,121 +26,195 @@ export type Message = {
   [key: string]: any;
 };
 
-type ChatState = {
+type ChatStore = {
   conversations: Conversation[];
   messages: Message[];
   selectedConversation: Conversation | null;
+  loading: boolean;
+  error: string | null;
 
-  setConversations: (conversations: Conversation[]) => void;
-  addConversation: (conversation: Conversation) => void;
-  updateConversation: (id: string, patch: Partial<Conversation>) => void;
-  removeConversation: (id: string) => void;
-  clearConversations: () => void;
+  // Conversations
+  fetchConversations: (filters?: {
+    project?: string;
+    participant?: string;
+  }) => Promise<void>;
+  fetchConversationById: (id: string) => Promise<void>;
+  createConversation: (data: Partial<Conversation>) => Promise<void>;
+  updateConversation: (
+    id: string,
+    data: Partial<Conversation>,
+  ) => Promise<void>;
+  deleteConversation: (id: string) => Promise<void>;
+  addParticipant: (conversationId: string, userId: string) => Promise<void>;
+  removeParticipant: (conversationId: string, userId: string) => Promise<void>;
 
+  // Messages (hiện tại giữ đồng bộ do chưa có API cho messages được đề cập)
   setMessages: (messages: Message[]) => void;
   addMessage: (message: Message) => void;
-  updateMessage: (id: string, patch: Partial<Message>) => void;
-  removeMessage: (id: string) => void;
-  clearMessagesForConversation: (conversationId: string) => void;
 
   selectConversation: (conversation: Conversation | null) => void;
   clearSelection: () => void;
-
-  addParticipant: (conversationId: string, userId: string) => void;
-  removeParticipant: (conversationId: string, userId: string) => void;
-
   resetStore: () => void;
 };
 
-const useChatStore = create<ChatState>((set) => ({
+const useChatStore = create<ChatStore>((set) => ({
   conversations: [],
   messages: [],
   selectedConversation: null,
+  loading: false,
+  error: null,
 
-  setConversations: (conversations: Conversation[]) =>
-    set(() => ({ conversations })),
+  fetchConversations: async (filters = {}) => {
+    set({ loading: true, error: null });
+    try {
+      // Gọi API lấy danh sách cuộc trò chuyện, truyền params lọc (nếu có: project, participant)
+      const response = await axiosClient.get<Conversation[]>("/conversations", {
+        params: filters,
+      });
+      set({ conversations: response.data, loading: false });
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  addConversation: (conversation: Conversation) =>
-    set((state) => ({ conversations: [...state.conversations, conversation] })),
+  fetchConversationById: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      // Gọi API lấy thông tin chi tiết một cuộc trò chuyện
+      const response = await axiosClient.get<Conversation>(
+        `/conversations/${id}`,
+      );
+      set({ selectedConversation: response.data, loading: false });
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  updateConversation: (id: string, patch: Partial<Conversation>) =>
-    set((state) => ({
-      conversations: state.conversations.map((c) =>
-        String(c.id) === String(id) ? { ...c, ...patch } : c,
-      ),
-    })),
+  createConversation: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      // Gọi API tạo cuộc trò chuyện mới, payload: name, type, participants, project...
+      const response = await axiosClient.post<Conversation>(
+        "/conversations",
+        data,
+      );
+      set((state) => ({
+        conversations: [response.data, ...state.conversations],
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  removeConversation: (id: string) =>
-    set((state) => ({
-      conversations: state.conversations.filter(
-        (c) => String(c.id) !== String(id),
-      ),
-    })),
+  updateConversation: async (id, data) => {
+    set({ loading: true, error: null });
+    try {
+      // Cập nhật thông tin cuộc trò chuyện (đổi tên, trạng thái isArchived...)
+      const response = await axiosClient.put<Conversation>(
+        `/conversations/${id}`,
+        data,
+      );
+      set((state) => ({
+        conversations: state.conversations.map((c) =>
+          c._id === id ? response.data : c,
+        ),
+        selectedConversation:
+          state.selectedConversation?._id === id
+            ? response.data
+            : state.selectedConversation,
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  clearConversations: () => set(() => ({ conversations: [] })),
+  deleteConversation: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      // Gọi API xóa cuộc trò chuyện
+      await axiosClient.delete(`/conversations/${id}`);
+      set((state) => ({
+        conversations: state.conversations.filter(
+          (c) => String(c._id) !== String(id) && String(c.id) !== String(id),
+        ),
+        selectedConversation:
+          String(state.selectedConversation?._id) === String(id) ||
+          String(state.selectedConversation?.id) === String(id)
+            ? null
+            : state.selectedConversation,
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  setMessages: (messages: Message[]) => set(() => ({ messages })),
+  addParticipant: async (conversationId, userId) => {
+    set({ loading: true, error: null });
+    try {
+      // Gọi API đẩy thêm userId vào mảng participants của conversation
+      const response = await axiosClient.post<Conversation>(
+        `/conversations/${conversationId}/participants`,
+        { userId },
+      );
+      set((state) => ({
+        conversations: state.conversations.map((c) =>
+          c._id === conversationId ? response.data : c,
+        ),
+        selectedConversation:
+          state.selectedConversation?._id === conversationId
+            ? response.data
+            : state.selectedConversation,
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  addMessage: (message: Message) =>
+  removeParticipant: async (conversationId, userId) => {
+    set({ loading: true, error: null });
+    console.log("conversationId", conversationId);
+    console.log("userId", userId);
+    try {
+      // Xóa thành viên khỏi cuộc trò chuyện
+      const response = await axiosClient.delete<Conversation>(
+        `/conversations/${conversationId}/participants/${userId}`,
+      );
+      set((state) => ({
+        conversations: state.conversations.map((c) =>
+          c._id === conversationId ? response.data : c,
+        ),
+        selectedConversation:
+          state.selectedConversation?._id === conversationId
+            ? response.data
+            : state.selectedConversation,
+        loading: false,
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
+
+  setMessages: (messages) => set(() => ({ messages })),
+
+  addMessage: (message) =>
     set((state) => ({ messages: [...state.messages, message] })),
 
-  updateMessage: (id: string, patch: Partial<Message>) =>
-    set((state) => ({
-      messages: state.messages.map((m) =>
-        String(m.id) === String(id) ? { ...m, ...patch } : m,
-      ),
-    })),
-
-  removeMessage: (id: string) =>
-    set((state) => ({
-      messages: state.messages.filter((m) => String(m.id) !== String(id)),
-    })),
-
-  clearMessagesForConversation: (conversationId: string) =>
-    set((state) => ({
-      messages: state.messages.filter(
-        (m) => String(m.conversationId) !== String(conversationId),
-      ),
-    })),
-
-  selectConversation: (conversation: Conversation | null) =>
+  selectConversation: (conversation) =>
     set(() => ({ selectedConversation: conversation })),
 
   clearSelection: () => set(() => ({ selectedConversation: null })),
-
-  addParticipant: (conversationId: string, userId: string) =>
-    set((state) => ({
-      conversations: state.conversations.map((c) =>
-        String(c.id) === String(conversationId)
-          ? {
-              ...c,
-              participants: Array.from(
-                new Set([...(c.participants || []), userId]),
-              ),
-            }
-          : c,
-      ),
-    })),
-
-  removeParticipant: (conversationId: string, userId: string) =>
-    set((state) => ({
-      conversations: state.conversations.map((c) =>
-        String(c.id) === String(conversationId)
-          ? {
-              ...c,
-              participants: (c.participants || []).filter(
-                (p) => String(p) !== String(userId),
-              ),
-            }
-          : c,
-      ),
-    })),
 
   resetStore: () =>
     set(() => ({
       conversations: [],
       messages: [],
       selectedConversation: null,
+      error: null,
+      loading: false,
     })),
 }));
 

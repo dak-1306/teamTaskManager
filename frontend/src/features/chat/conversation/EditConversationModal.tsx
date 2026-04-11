@@ -16,8 +16,8 @@ import { Label } from "@/components/ui/label";
 type EditConversationProps = {
   isOpen: boolean;
   onClose: () => void;
-  conversation: { id: string; name: string };
-  onUpdate: (data: { id: string; name: string }) => void;
+  conversation: any;
+  onUpdate: (data: { id?: string; _id?: string; name: string }) => void;
 };
 export default function EditConversationDialog({
   isOpen,
@@ -32,6 +32,7 @@ export default function EditConversationDialog({
   }, [conversation]);
 
   const submit = () => {
+    // Truyền dữ liệu mới kèm theo _id (hoặc id nếu fallback) của cuộc trò chuyện cần sửa
     onUpdate?.({ ...conversation, name: form.name });
     onClose();
   };

@@ -10,8 +10,9 @@ router.get("/:id", protect, controller.get);
 // Create conversation
 router.post("/", protect, controller.create);
 
-// Update
+// Update and Delete
 router.put("/:id", protect, controller.update);
+router.delete("/:id", protect, controller.delete);
 
 // Participants
 router.post("/:id/participants", protect, controller.addParticipant);

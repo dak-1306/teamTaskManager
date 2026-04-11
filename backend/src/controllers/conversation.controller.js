@@ -65,7 +65,7 @@ exports.create = async (req, res) => {
       participants = [],
       metadata = {},
     } = req.body;
-
+    console.log("payload in create conversation", req.body);
     const allowed = await canCreateConversation(req.user.id, {
       projectId: project,
       taskId: task,
@@ -83,6 +83,7 @@ exports.create = async (req, res) => {
       participants,
       metadata,
     });
+    console.log("conv in create conversation", conv);
     await conv.save();
     res.status(201).json(conv);
   } catch (err) {
@@ -154,5 +155,23 @@ exports.removeParticipant = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to remove participant", error: err.message });
+  }
+};
+
+// Delete conversation
+exports.delete = async (req, res) => {
+  try {
+    const conv = await Conversation.findById(req.params.id);
+    if (!conv) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    // Thực hiện xóa phòng
+    await Conversation.findByIdAndDelete(req.params.id);
+    res.json({ message: "Conversation deleted successfully" });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete conversation", error: err.message });
   }
 };
