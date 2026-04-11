@@ -11,7 +11,7 @@ import { inViewOptions, container, item } from "../../../app/motionConfig";
 import formatDate from "../../../components/utils/formatDate";
 
 import MainLayout from "../../../components/layout/MainLayout";
-import CardProject from "../components/CardProject";
+import CardProject from "../../../components/common/CardProject";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import SearchBar from "../../../components/common/Search";

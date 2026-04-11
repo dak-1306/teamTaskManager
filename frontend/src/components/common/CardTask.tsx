@@ -8,14 +8,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, View } from "lucide-react";
-import formatDate from "../../../components/utils/formatDate";
+import formatDate from "../../components/utils/formatDate";
 import { Link } from "react-router-dom";
 type Props = {
   task: any;
   projectId: string;
-  variant?: "default" | "compact";
+  variant?: "owner" | "member";
+  status: "todo" | "doing" | "done";
 };
-export default function CardTask({ task, projectId, variant }: Props) {
+export default function CardTask({ task, projectId, variant, status }: Props) {
   return (
     <Link to={`/projects/${projectId}/${variant}/tasks/${task._id}`}>
       <Card>
@@ -27,10 +28,15 @@ export default function CardTask({ task, projectId, variant }: Props) {
               : task.description}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex items-center justify-between">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300 inline-block mr-1" />
             {task.createdAt && `${formatDate(task.createdAt)}`}
+          </p>
+          <p
+            className={`text-sm font-medium ${status === "done" ? "text-green-500 dark:text-green-400" : status === "doing" ? "text-yellow-500 dark:text-yellow-400" : "text-gray-500 dark:text-gray-400"}`}
+          >
+            {status}
           </p>
         </CardContent>
         <CardFooter>

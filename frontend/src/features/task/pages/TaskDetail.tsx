@@ -71,162 +71,173 @@ function TaskDetail() {
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         {taskDetail?.title || "Loading..."}
       </h1>
-      <Card className="flex items-center justify-end gap-2 p-4">
-        <Motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={inViewOptions}
-          className="flex items-center justify-start space-x-2"
-        >
-          <Motion.div variants={item} className="flex items-center space-x-2">
-            <Button
-              className="mr-6"
-              variant="outline"
-              size="default"
-              onClick={() => navigate(-1)}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="md:col-span-1 space-y-4">
+          <Card className="flex items-center justify-end gap-2 p-4">
+            <Motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
+              className="flex items-center justify-between space-x-4"
             >
-              <ArrowBigLeft />
-            </Button>
-            <Button
-              variant="default"
-              size="default"
-              icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
-              onClick={() => setOpenAddAssignees(true)}
+              <Motion.div
+                variants={item}
+                className="flex items-center space-x-2"
+              >
+                <Button
+                  className="mr-6"
+                  variant="outline"
+                  size="default"
+                  onClick={() => navigate(-1)}
+                >
+                  <ArrowBigLeft />
+                </Button>
+                <Button
+                  variant="default"
+                  size="default"
+                  icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
+                  onClick={() => setOpenAddAssignees(true)}
+                >
+                  Add Assignees
+                </Button>
+                <Button
+                  variant="default"
+                  size="default"
+                  icon={<Pencil className="w-4 h-4 mr-2" />}
+                  onClick={() => {
+                    setTaskDetailForEdit(taskDetail);
+                    setAssignedEmailEdit(
+                      taskDetail?.assignedTo?.map((u) => u.email) ?? [],
+                    );
+                    setOpenEditTask(true);
+                  }}
+                >
+                  Edit Task
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="default"
+                  icon={<Trash2 className="w-4 h-4 mr-2" />}
+                  onClick={() => setOpenDeleteTask(true)}
+                >
+                  Delete Task
+                </Button>
+              </Motion.div>
+            </Motion.div>
+          </Card>
+          {!loading && taskDetail ? (
+            <Motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
             >
-              Add Assignees
-            </Button>
-            <Button
-              variant="default"
-              size="default"
-              icon={<Pencil className="w-4 h-4 mr-2" />}
-              onClick={() => {
-                setTaskDetailForEdit(taskDetail);
-                setAssignedEmailEdit(
-                  taskDetail?.assignedTo?.map((u) => u.email) ?? [],
-                );
-                setOpenEditTask(true);
-              }}
-            >
-              Edit Task
-            </Button>
-            <Button
-              variant="destructive"
-              size="default"
-              icon={<Trash2 className="w-4 h-4 mr-2" />}
-              onClick={() => setOpenDeleteTask(true)}
-            >
-              Delete Task
-            </Button>
-          </Motion.div>
-        </Motion.div>
-      </Card>
-      {!loading && taskDetail ? (
-        <Motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={inViewOptions}
-        >
-          <Motion.div variants={item}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <Card className="md:col-span-1 space-y-4 p-6">
-                <p className="mb-3 text-gray-800 dark:text-gray-100">
-                  <strong className="mr-2">Description:</strong>
-                  {taskDetail?.description || "-"}
-                </p>
-                <div className="flex flex-wrap gap-3 items-center">
-                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 gap-2">
-                    <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
-                    <span>
-                      {taskDetail?.dueDate
-                        ? formatDate(taskDetail?.dueDate)
-                        : "No due date"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Status:
-                    </span>
-                    <span
-                      className={
-                        statusBadge[taskDetail?.status] || statusBadge.todo
-                      }
-                    >
-                      {taskDetail?.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Priority:
-                    </span>
-                    <span
-                      className={
-                        priorityBadge[taskDetail?.priority] || priorityBadge.low
-                      }
-                    >
-                      {taskDetail?.priority}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-                    <strong className="text-sm text-gray-700 dark:text-gray-200">
-                      Assignees
-                    </strong>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      ({taskDetail?.assignedTo?.length || 0})
-                    </span>
-                  </div>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => setOpenAddAssignees(true)}
-                  >
-                    Add
-                  </Button>
-                </div>
-                <ul className="space-y-2">
-                  {taskDetail?.assignedTo &&
-                    taskDetail.assignedTo.map((assignee) => (
-                      <li
-                        key={assignee._id}
-                        className="flex items-center gap-3"
+              <Motion.div variants={item}>
+                <Card className="p-6 space-y-4">
+                  <p className="mb-3 text-gray-800 dark:text-gray-100">
+                    <strong className="mr-2">Description:</strong>
+                    {taskDetail?.description || "-"}
+                  </p>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 gap-2">
+                      <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-300" />
+                      <span>
+                        {taskDetail?.dueDate
+                          ? formatDate(taskDetail?.dueDate)
+                          : "No due date"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        Status:
+                      </span>
+                      <span
+                        className={
+                          statusBadge[taskDetail?.status] || statusBadge.todo
+                        }
                       >
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-medium">
-                          {assignee.username
-                            ?.split(" ")
-                            .map((n) => n[0])
-                            .slice(0, 2)
-                            .join("")}
-                        </span>
-                        <div className="text-sm">
-                          <div className="text-gray-800 dark:text-gray-100">
-                            {assignee.username}
+                        {taskDetail?.status}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        Priority:
+                      </span>
+                      <span
+                        className={
+                          priorityBadge[taskDetail?.priority] ||
+                          priorityBadge.low
+                        }
+                      >
+                        {taskDetail?.priority}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                      <strong className="text-sm text-gray-700 dark:text-gray-200">
+                        Assignees
+                      </strong>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        ({taskDetail?.assignedTo?.length || 0})
+                      </span>
+                    </div>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => setOpenAddAssignees(true)}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  <ul className="space-y-2">
+                    {taskDetail?.assignedTo &&
+                      taskDetail.assignedTo.map((assignee) => (
+                        <li
+                          key={assignee._id}
+                          className="flex items-center gap-3"
+                        >
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-medium">
+                            {assignee.username
+                              ?.split(" ")
+                              .map((n) => n[0])
+                              .slice(0, 2)
+                              .join("")}
+                          </span>
+                          <div className="text-sm">
+                            <div className="text-gray-800 dark:text-gray-100">
+                              {assignee.username}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              {assignee.email}
+                            </div>
                           </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {assignee.email}
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                </ul>
-              </Card>
-              <Card className="md:col-span-1 p-6">
-                <div className="space-y-4 flex flex-col">
-                  <Conversation />
-                  <hr className="my-3" />
-                  <Chat conversation={null} />
-                </div>
-              </Card>
-            </div>
+                        </li>
+                      ))}
+                  </ul>
+                </Card>
+              </Motion.div>
+            </Motion.div>
+          ) : (
+            <p className="text-gray-500">Task not found.</p>
+          )}
+        </div>
+        <Card className="md:col-span-1 p-6">
+          <Motion.div
+            className="space-y-4 flex flex-col"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={inViewOptions}
+          >
+            <Conversation />
+            <hr className="my-3" />
+            <Chat conversation={null} />
           </Motion.div>
-        </Motion.div>
-      ) : (
-        <p className="text-gray-500">Task not found.</p>
-      )}
-
+        </Card>
+      </div>
       {openAddAssignees && (
         <AddAssignees
           isOpen={openAddAssignees}

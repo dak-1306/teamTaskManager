@@ -4,14 +4,14 @@ import {
   CardDescription,
   CardContent,
   CardHeader,
-} from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
+} from "../ui/card";
+import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { View } from "lucide-react";
-import formatDate from "../../../components/utils/formatDate";
+import formatDate from "../utils/formatDate";
 type Props = {
   project: any;
-  variant?: "default" | "compact";
+  variant?: "owner" | "member";
 };
 export default function CardProject({ project, variant }: Props) {
   return (

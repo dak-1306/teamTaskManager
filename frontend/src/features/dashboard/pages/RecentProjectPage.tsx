@@ -1,9 +1,8 @@
 import React from "react";
 import { motion as Motion } from "framer-motion";
 
-import RecentProjectCard from "../components/RecentProjectCard";
+import CardProject from "../../../components/common/CardProject";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
-import formatDate from "../../../components/utils/formatDate";
 
 type Props = {
   projects: any[];
@@ -11,6 +10,7 @@ type Props = {
 };
 
 const RecentProjectPage: React.FC<Props> = ({ projects, loading }) => {
+  console.log("RecentProjectPage projects:", projects);
   return (
     <Motion.ul
       variants={container}
@@ -23,12 +23,7 @@ const RecentProjectPage: React.FC<Props> = ({ projects, loading }) => {
         projects?.length > 0 &&
         projects.map((project: any) => (
           <Motion.li key={project._id} variants={item}>
-            <RecentProjectCard
-              title={project.name}
-              description={project.description}
-              time={formatDate(project.updatedAt)}
-              projectId={project._id}
-            />
+            <CardProject project={project} variant="owner" />
           </Motion.li>
         ))}
     </Motion.ul>

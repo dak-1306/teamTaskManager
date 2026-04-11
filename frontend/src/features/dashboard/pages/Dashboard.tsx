@@ -62,11 +62,7 @@ export default function Dashboard() {
   );
 
   if (loading) {
-    return (
-      <MainLayout>
-        <SkeletonDashboard />
-      </MainLayout>
-    );
+    return <SkeletonDashboard />;
   }
   if (
     !loading &&

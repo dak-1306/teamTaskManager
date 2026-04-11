@@ -1,11 +1,15 @@
 import { Card } from "../../../components/ui/card";
 import { Skeleton } from "../../../components/ui/skeleton";
+import MainLayout from "../../../components/layout/MainLayout";
 
 function SkeletonDashboard() {
   return (
-    <div className="space-y-6">
+    <MainLayout>
+      <h1 className="text-2xl font-bold text-foreground text-center">
+        Dashboard
+      </h1>
       {/* Overview cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-7xl">
         {Array.from({ length: 4 }).map((_, idx) => (
           <Card key={idx} className="p-4">
             <div className="flex items-center space-x-4">
@@ -22,18 +26,17 @@ function SkeletonDashboard() {
       </div>
 
       {/* Charts: main line chart + pie/status */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="p-4 lg:col-span-2">
-          <Skeleton className="h-4 w-full" />
-          <div className="mt-4">
-            <div className="h-64 w-full rounded bg-gray-200 dark:bg-gray-700" />
-          </div>
-        </Card>
-
-        <Card className="p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card className="p-4 lg:col-span-1">
           <Skeleton className="h-4 w-full" />
           <div className="mt-4 flex items-center justify-center">
             <div className="rounded-full bg-gray-200 dark:bg-gray-700 w-40 h-40" />
+          </div>
+        </Card>
+        <Card className="p-4 lg:col-span-1">
+          <Skeleton className="h-4 w-full" />
+          <div className="mt-4">
+            <div className="h-64 w-full rounded bg-gray-200 dark:bg-gray-700" />
           </div>
         </Card>
       </div>
@@ -82,7 +85,7 @@ function SkeletonDashboard() {
           ))}
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }
 

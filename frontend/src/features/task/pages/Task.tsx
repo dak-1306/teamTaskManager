@@ -12,7 +12,7 @@ import { Button } from "../../../components/ui/button";
 import SearchBar from "../../../components/common/Search";
 import Filter from "../../../components/common/Filter";
 import Pagination from "../../../components/common/Pagination";
-import CardTask from "../components/CardTask";
+import CardTask from "../../../components/common/CardTask";
 import SkeletonTask from "./SkeletonTask";
 
 import AddTask from "../components/AddTask";
@@ -138,7 +138,12 @@ function Task({ projectId, variant }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {tasks.tasks.map((t) => (
               <Motion.div key={t._id} variants={item} className="mb-4">
-                <CardTask task={t} projectId={projectId} variant={variant} />
+                <CardTask
+                  task={t}
+                  projectId={projectId}
+                  variant={variant}
+                  status={t.status}
+                />
               </Motion.div>
             ))}
           </div>

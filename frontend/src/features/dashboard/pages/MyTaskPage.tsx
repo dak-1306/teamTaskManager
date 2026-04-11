@@ -2,10 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion as Motion } from "framer-motion";
 
-import MyTaskCard from "../components/MyTaskCard";
+import CardTask from "../../../components/common/CardTask";
 import Pagination from "../../../components/common/Pagination";
 import { container, item, inViewOptions } from "../../../app/motionConfig";
-import formatDate from "../../../components/utils/formatDate";
 
 type Props = {
   tasks: any;
@@ -28,9 +27,10 @@ const MyTaskPage: React.FC<Props> = ({ tasks, loading, fetchTasks }) => {
           tasks.tasks.map((task: any) => (
             <Motion.li key={task._id} variants={item}>
               <Link to={`tasks/${task._id}`}>
-                <MyTaskCard
-                  title={task.title}
-                  dueDate={formatDate(task.dueDate)}
+                <CardTask
+                  task={task}
+                  projectId={task.project._id}
+                  variant="member"
                   status={task.status}
                 />
               </Link>

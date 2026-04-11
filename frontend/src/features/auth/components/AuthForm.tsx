@@ -51,7 +51,7 @@ function AuthForm({
       <h1 className="text-3xl font-bold mb-6 text-white">{title} page</h1>
 
       {field.map((input) => (
-        <Field key={input.id} className="mb-4">
+        <Field key={input.id} className="mb-4 text-white">
           <FieldLabel className="text-white" htmlFor={input.id}>
             {input.label}
           </FieldLabel>
