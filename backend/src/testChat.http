@@ -1,4 +1,10 @@
-### Login
+### Test Chat & Conversation API
+
+# Notes:
+- Replace `REPLACE_TOKEN` with a valid JWT returned from `/users/login` or paste your token directly.
+- Replace `REPLACE_CONVERSATION_ID` and `REPLACE_MESSAGE_ID` with IDs returned by the create calls below.
+
+### Login (get token)
 POST http://localhost:3000/users/login
 Content-Type: application/json
 
@@ -7,55 +13,100 @@ Content-Type: application/json
   "password": "password123"
 }
 
-### Get User Info
+### Get User Info (verify token)
 GET http://localhost:3000/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 
-### Create Conversation
+### Create Conversation (project)
 POST http://localhost:3000/conversations
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 Content-Type: application/json
 
 {
-  "project" : "69d3c8391b9821a35139bf6c",
-  "name" : "Project Discussion",
-  "type" : "project",
+  "project": "69d3c8391b9821a35139bf6c",
+  "name": "Project Discussion",
+  "type": "project",
   "participants": ["69d3c8391b9821a35139bf67", "69d3c8391b9821a35139bf68"],
   "metadata": {}
 }
 
-### Get Conversations
+### Get Conversations (list)
 GET http://localhost:3000/conversations
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 
 ### Get Conversation Details
-GET http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+GET http://localhost:3000/conversations/69db496615ee04cbfbccf556
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 
 ### Add Participant
-POST http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704/participants
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+POST http://localhost:3000/conversations/69db496615ee04cbfbccf556/participants
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 Content-Type: application/json
 
 {
-  "userId": "69d3c8391b9821a35139bf68"
+  "userId": "69d3c8391b9821a35139bf66"
 }
 
 ### Update Conversation
-PUT http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+PUT http://localhost:3000/conversations/69db496615ee04cbfbccf556
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 Content-Type: application/json
 
 {
   "name": "Updated Conversation Name",
-  "metadata": {
-    "description": "This is an updated description for the conversation."
-  }
+  "metadata": { "description": "Updated via test file" }
 }
 
+### Remove Participant (by URL)
+DELETE http://localhost:3000/conversations/69db496615ee04cbfbccf556/participants/69d3c8391b9821a35139bf68
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
 
-### Remove Participant
-DELETE http://localhost:3000/conversations/69d614f2cbf90ff3a18a9704/participants/69d3c8391b9821a35139bf68
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTYzODYyMCwiZXhwIjoxNzc1NjYzODIwfQ.6poWBRkyWa3AGn2g2jqJ2eACwVStPuyNTZLYfH6Lt2Q
+### --- Chat message tests ---
+
+### Send Text Message
+POST http://localhost:3000/chats/conversation/69db496615ee04cbfbccf556
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
+Content-Type: application/json
+
+{
+  "type": "text",
+  "content": "Hello from test client"
+}
+
+### Send Image/File Message (with attachments)
+POST http://localhost:3000/chats/conversation/69db496615ee04cbfbccf556
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
+Content-Type: application/json
+
+{
+  "type": "image",
+  "content": "Image uploaded",
+  "attachments": [
+    { "url": "http://localhost:3000/uploads/sample.jpg", "filename": "sample.jpg", "mimeType": "image/jpeg", "size": 12345 }
+  ]
+}
+
+### List Messages (latest first, optional: ?limit=50&before=ISODate)
+GET http://localhost:3000/chats/conversation/69db496615ee04cbfbccf556?limit=50
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
+
+### Edit Message (replace REPLACE_MESSAGE_ID with id returned from create)
+PUT http://localhost:3000/chats/69db4afe3324c55bc6f1b2f0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
+Content-Type: application/json
+
+{
+  "content": "Edited message content"
+}
+
+### Delete Message (soft delete)
+DELETE http://localhost:3000/chats/69db4afe3324c55bc6f1b2f0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDNjODM5MWI5ODIxYTM1MTM5YmY2NiIsImlhdCI6MTc3NTk3ODcwNiwiZXhwIjoxNzc2MDAzOTA2fQ.Fkvxlq4YlvAnMAd-syge1x469s7H4DT-zZz6JNtmlb4
+
+### Helpful workflow notes
+- Run `Login` first and copy the token into `REPLACE_TOKEN`.
+- After creating a conversation, copy its `_id` into `69db496615ee04cbfbccf556`.
+- After sending a message, copy its `_id` into `REPLACE_MESSAGE_ID` to test edit/delete.
+
 
 

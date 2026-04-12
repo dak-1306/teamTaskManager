@@ -35,7 +35,9 @@ export function Conversation() {
 
   // Derive activeConv from store conversations so updates are reactive
   const activeConv = useMemo(() => {
-    return conversations.find((c: any) => (c._id || c.id) === activeConvId) || null;
+    return (
+      conversations.find((c: any) => (c._id || c.id) === activeConvId) || null
+    );
   }, [conversations, activeConvId]);
 
   // Lấy dữ liệu thực từ server khi component vừa được render

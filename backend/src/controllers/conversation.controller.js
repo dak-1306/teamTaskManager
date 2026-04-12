@@ -75,12 +75,20 @@ exports.create = async (req, res) => {
         .status(403)
         .json({ message: "Not allowed to create conversation" });
 
+    // ensure creator is included in participants
+    let participantsArr = Array.isArray(participants)
+      ? participants.slice()
+      : [];
+    if (!participantsArr.map(String).includes(String(req.user.id))) {
+      participantsArr.push(req.user.id);
+    }
+
     const conv = new Conversation({
       project,
       task,
       name,
       type,
-      participants,
+      participants: participantsArr,
       metadata,
     });
     console.log("conv in create conversation", conv);
