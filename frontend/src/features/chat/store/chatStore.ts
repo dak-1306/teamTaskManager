@@ -48,9 +48,12 @@ type ChatStore = {
   addParticipant: (conversationId: string, userId: string) => Promise<void>;
   removeParticipant: (conversationId: string, userId: string) => Promise<void>;
 
-  // Messages (hiện tại giữ đồng bộ do chưa có API cho messages được đề cập)
-  setMessages: (messages: Message[]) => void;
-  addMessage: (message: Message) => void;
+  // Messages
+  fetchMessages: (conversationId: string) => Promise<void>;
+  sendMessage: (
+    conversationId: string,
+    payload: { content?: string; type?: string; attachments?: any[] },
+  ) => Promise<void>;
 
   selectConversation: (conversation: Conversation | null) => void;
   clearSelection: () => void;
@@ -198,10 +201,31 @@ const useChatStore = create<ChatStore>((set) => ({
     }
   },
 
-  setMessages: (messages) => set(() => ({ messages })),
+  fetchMessages: async (conversationId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosClient.get<Message[]>(
+        `/chats/conversation/${conversationId}`,
+      );
+      set({ messages: response.data, loading: false });
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err), loading: false });
+    }
+  },
 
-  addMessage: (message) =>
-    set((state) => ({ messages: [...state.messages, message] })),
+  sendMessage: async (conversationId, payload) => {
+    console.log("payload in chat store", payload);
+    console.log("conversationId in chat store", conversationId);
+    try {
+      const response = await axiosClient.post<Message>(
+        `/chats/conversation/${conversationId}`,
+        payload,
+      );
+      set((state) => ({ messages: [...state.messages, response.data] }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err) });
+    }
+  },
 
   selectConversation: (conversation) =>
     set(() => ({ selectedConversation: conversation })),

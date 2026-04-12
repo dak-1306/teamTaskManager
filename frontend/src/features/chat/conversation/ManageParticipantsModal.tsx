@@ -19,7 +19,7 @@ type ManageParticipantsProps = {
   onAdd: (conversationId: string, userId: string) => void;
   // Function callback khi xóa user, sẽ gọi API
   onRemove: (conversationId: string, userId: string) => void;
-  memberOfProject: { value: string; label: string }[];
+  memberOfProject: { value: string; label: string; variant: string }[];
 };
 
 export default function ManageParticipantsDialog({
@@ -47,6 +47,9 @@ export default function ManageParticipantsDialog({
       (member) => !usersInConversation.includes(member.value),
     ) || [];
 
+  console.log("conversation in manage participants", conversation);
+  console.log("member of project", memberOfProject);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
@@ -59,10 +62,10 @@ export default function ManageParticipantsDialog({
 
           <div className="space-y-1 max-h-40 overflow-y-auto">
             {usersInConversation.length ? (
-              usersInConversation.map((p) => {
+              usersInConversation.map((p: any) => {
                 // Map ID thành tên cho dễ nhìn
                 const matchedMember = memberOfProject?.find(
-                  (m) => m.value === p,
+                  (m: any) => m.value === p,
                 );
                 return (
                   <div
@@ -72,18 +75,22 @@ export default function ManageParticipantsDialog({
                     <span className="text-sm truncate">
                       {matchedMember ? matchedMember.label : p}
                     </span>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => {
-                        onRemove?.(
-                          conversation._id || conversation.id || "",
-                          p,
-                        );
-                      }}
-                    >
-                      Xóa
-                    </Button>
+                    {matchedMember?.variant !== "owner" ? (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => {
+                          onRemove?.(
+                            conversation._id || conversation.id || "",
+                            p,
+                          );
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    ) : (
+                      <span className="text-sm text-gray-500">Chủ sở hữu</span>
+                    )}
                   </div>
                 );
               })

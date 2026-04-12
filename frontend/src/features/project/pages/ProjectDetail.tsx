@@ -214,12 +214,16 @@ function ProjectDetail() {
           <Task projectId={id} variant={variant} />
         </div>
         {/* chat  */}
-        <Card className="col-span-12 lg:col-span-4 p-6">
+        <div className="col-span-12 lg:col-span-4">
           <div className="space-y-4 flex flex-col">
-            <Conversation />
-            <Chat conversation={null} />
+            <Card className="p-4">
+              <Conversation />
+            </Card>
+            <Card className="p-4">
+              <Chat conversation={null} />
+            </Card>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Modals */}

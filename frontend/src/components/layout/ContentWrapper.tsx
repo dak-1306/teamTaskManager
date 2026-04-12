@@ -10,8 +10,8 @@ function ContentWrapper({
   className = "",
 }: ContentWrapperProps) {
   const base = fullScreen
-    ? "w-full h-[calc(100vh-8rem)]"
-    : "w-full max-w-7xl mx-auto mt-8 space-y-8";
+    ? "w-full h-[calc(100vh-8rem)] overflow-hidden"
+    : "w-full h-full max-w-7xl mx-auto mt-8 space-y-8";
 
   return <div className={`${base} ${className}`}>{children}</div>;
 }

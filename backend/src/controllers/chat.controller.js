@@ -23,7 +23,8 @@ exports.listByConversation = async (req, res) => {
 
     const docs = await Chat.find(filter)
       .sort({ createdAt: -1 })
-      .limit(parseInt(limit, 10));
+      .limit(parseInt(limit, 10))
+      .populate("sender", "username avatar");
     // return ascending order (oldest first)
     res.json(docs.reverse());
   } catch (err) {
@@ -70,6 +71,7 @@ exports.create = async (req, res) => {
     });
 
     await chat.save();
+    await chat.populate("sender", "username avatar");
     res.status(201).json(chat);
   } catch (err) {
     res

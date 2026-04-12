@@ -45,12 +45,16 @@ export function Conversation() {
     fetchConversations();
   }, [fetchConversations]);
 
+  // Lấy danh sách thành viên trong dự án bao gồm (members + owner)
   const dataMemberOfProject = useMemo(() => {
-    if (projectDetail?.members) {
-      return projectDetail.members.map((member: any) => ({
-        value: member._id,
-        label: member.name || member.username, // Fallback username if name doesn't exist
-      }));
+    if (projectDetail?.members && projectDetail?.owner) {
+      return [...projectDetail.members, projectDetail.owner].map(
+        (member: any) => ({
+          value: member._id,
+          label: member.name || member.username, // Fallback username if name doesn't exist
+          variant: member._id === projectDetail.owner._id ? "owner" : "member",
+        }),
+      );
     }
     return [];
   }, [projectDetail]);
@@ -59,7 +63,7 @@ export function Conversation() {
   console.log("project detail in conversation", projectDetail);
 
   return (
-    <>
+    <div className="h-60">
       <div className="flex justify-between items-center mb-3">
         <div className="text-sm font-medium">Conversations</div>
         <div>
@@ -198,7 +202,7 @@ export function Conversation() {
         chatId={activeConv?._id || activeConv?.id}
         chatName={activeConv?.name || ""}
       />
-    </>
+    </div>
   );
 }
 

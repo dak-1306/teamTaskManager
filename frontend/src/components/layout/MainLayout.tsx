@@ -7,9 +7,9 @@ type MainLayoutProps = {
 };
 function MainLayout({ children, fullScreen = false }: MainLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen overflow-hidden">
       <Header />
-      <main className="flex-1 pt-16 w-full h-full mx-auto text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-900 min-h-0">
+      <main className="flex-1 pt-16 w-full h-[calc(100vh-16rem)] mx-auto text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-900 overflow-y-auto">
         <ContentWrapper fullScreen={fullScreen}>{children}</ContentWrapper>
       </main>
       <Footer />
