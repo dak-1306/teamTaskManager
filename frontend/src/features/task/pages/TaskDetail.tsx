@@ -29,7 +29,7 @@ import useTaskStore from "../stores/taskStore";
 import formatDate from "../../../components/utils/formatDate";
 
 function TaskDetail() {
-  const { taskId } = useParams();
+  const { taskId, variant } = useParams();
   const navigate = useNavigate();
   const taskDetail = useTaskStore((state) => state.taskDetail);
   const fetchTaskById = useTaskStore((state) => state.fetchTaskById);
@@ -232,7 +232,11 @@ function TaskDetail() {
             whileInView="show"
             viewport={inViewOptions}
           >
-            <Conversation />
+            <Conversation
+              projectId={undefined}
+              taskId={taskId}
+              variant={variant}
+            />
             <hr className="my-3" />
             <Chat conversation={null} />
           </Motion.div>

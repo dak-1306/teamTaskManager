@@ -54,7 +54,8 @@ type ChatStore = {
     conversationId: string,
     payload: { content?: string; type?: string; attachments?: any[] },
   ) => Promise<void>;
-
+  deleteMessage: (messageId: string) => Promise<void>;
+  editMessage: (messageId: string, content: string) => Promise<void>;
   selectConversation: (conversation: Conversation | null) => void;
   clearSelection: () => void;
   resetStore: () => void;
@@ -70,7 +71,7 @@ const useChatStore = create<ChatStore>((set) => ({
   fetchConversations: async (filters = {}) => {
     set({ loading: true, error: null });
     try {
-      // Gọi API lấy danh sách cuộc trò chuyện, truyền params lọc (nếu có: project, participant)
+      // Gọi API lấy danh sách cuộc trò chuyện, truyền params lọc (nếu có: projectId,` taskId)
       const response = await axiosClient.get<Conversation[]>("/conversations", {
         params: filters,
       });
@@ -213,15 +214,49 @@ const useChatStore = create<ChatStore>((set) => ({
     }
   },
 
-  sendMessage: async (conversationId, payload) => {
-    console.log("payload in chat store", payload);
+  sendMessage: async (conversationId, formData) => {
+    console.log("formData in chat store", formData);
     console.log("conversationId in chat store", conversationId);
     try {
       const response = await axiosClient.post<Message>(
         `/chats/conversation/${conversationId}`,
-        payload,
+        formData,
       );
       set((state) => ({ messages: [...state.messages, response.data] }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err) });
+    }
+  },
+  deleteMessage: async (messageId) => {
+    console.log("Deleting message with ID:", messageId);
+    try {
+      await axiosClient.delete(`/chats/message/${messageId}`);
+      set((state) => ({
+        messages: state.messages.filter(
+          (msg) =>
+            String(msg._id) !== String(messageId) &&
+            String(msg.id) !== String(messageId),
+        ),
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? String(err) });
+    }
+  },
+
+  editMessage: async (messageId, content) => {
+    try {
+      const response = await axiosClient.put<Message>(
+        `/chats/message/${messageId}`,
+        { content },
+      );
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          String(msg._id) === String(messageId) ||
+          String(msg.id) === String(messageId)
+            ? response.data
+            : msg,
+        ),
+      }));
     } catch (err: any) {
       set({ error: err?.message ?? String(err) });
     }

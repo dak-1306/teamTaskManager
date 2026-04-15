@@ -7,10 +7,16 @@ import ManageParticipantsModal from "./ManageParticipantsModal";
 import DeleteConversation from "./DeleteConversation";
 import useChatStore from "../store/chatStore";
 import useProjectStore from "../../project/stores/projectStore";
-import { useParams } from "react-router-dom";
 
-export function Conversation() {
-  const { id } = useParams() as any;
+export function Conversation({
+  projectId,
+  taskId,
+  variant,
+}: {
+  projectId?: string;
+  taskId?: string;
+  variant?: "owner" | "member";
+}) {
   // Lấy các state và function cần thiết từ store
   const {
     conversations,
@@ -40,10 +46,20 @@ export function Conversation() {
     );
   }, [conversations, activeConvId]);
 
+  const filter = useMemo(() => {
+    // Nếu có id trong params, ưu tiên lọc theo projectId
+    if (projectId) {
+      return { project: projectId };
+    }
+    if (taskId) {
+      return { task: taskId };
+    }
+    return {};
+  }, [projectId, taskId]);
   // Lấy dữ liệu thực từ server khi component vừa được render
   useEffect(() => {
-    fetchConversations();
-  }, [fetchConversations]);
+    fetchConversations(filter);
+  }, [fetchConversations, filter]);
 
   // Lấy danh sách thành viên trong dự án bao gồm (members + owner)
   const dataMemberOfProject = useMemo(() => {
@@ -66,7 +82,8 @@ export function Conversation() {
     <div className="h-60">
       <div className="flex justify-between items-center mb-3">
         <div className="text-sm font-medium">Conversations</div>
-        <div>
+
+        {variant === "owner" ? (
           <Button
             onClick={() => setOpenCreate(true)}
             variant="default"
@@ -74,7 +91,15 @@ export function Conversation() {
           >
             Create
           </Button>
-        </div>
+        ) : (
+          <Button
+            onClick={() => setOpenCreate(true)}
+            variant="outline"
+            size="sm"
+          >
+            Join
+          </Button>
+        )}
       </div>
 
       <div className="space-y-2 overflow-y-auto h-64">
@@ -163,7 +188,8 @@ export function Conversation() {
           createConversation(conversation);
           setOpenCreate(false);
         }}
-        projectId={id}
+        projectId={projectId}
+        taskId={taskId}
       />
 
       <EditConversationModal

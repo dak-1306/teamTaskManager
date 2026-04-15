@@ -16,7 +16,7 @@ exports.listByConversation = async (req, res) => {
       return res.status(403).json({ message: "Not a participant" });
     }
 
-    const filter = { conversationId };
+    const filter = { conversationId, deletedAt: null };
     if (before || after) filter.createdAt = {};
     if (before) filter.createdAt.$lt = new Date(before);
     if (after) filter.createdAt.$gt = new Date(after);
@@ -38,13 +38,16 @@ exports.listByConversation = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const {
-      type = "text",
+    const { type = "text", content, mentions = [] } = req.body;
+    console.log("Creating chat with data:", {
+      conversationId,
+      type,
       content,
-      attachments = [],
-      mentions = [],
-    } = req.body;
-
+      attachments: req.files || [],
+      mentions: Array.isArray(mentions) ? mentions : [],
+    });
+    // 🔥 lấy file từ req.files
+    const attachments = req.files || [];
     const conv = await Conversation.findById(conversationId);
     if (!conv)
       return res.status(404).json({ message: "Conversation not found" });
@@ -66,8 +69,14 @@ exports.create = async (req, res) => {
       sender: req.user.id,
       type,
       content,
-      attachments,
-      mentions,
+      attachments: attachments.map((file) => ({
+        url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+        filename: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size,
+        thumbnailUrl: file.thumbnailPath || "",
+      })),
+      mentions: Array.isArray(mentions) ? mentions : [],
     });
 
     await chat.save();
@@ -108,6 +117,7 @@ exports.update = async (req, res) => {
 
 // Delete a chat (soft delete) – only sender can delete
 exports.delete = async (req, res) => {
+  console.log("Attempting to delete message with ID:", req.params.id);
   try {
     const chat = await Chat.findById(req.params.id);
     if (!chat) return res.status(404).json({ message: "Chat not found" });

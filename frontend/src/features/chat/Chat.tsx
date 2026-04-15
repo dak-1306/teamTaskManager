@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import useChatStore from "./store/chatStore";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import Menu from "./components/Menu";
 import { useAuth } from "../auth/context/AuthContext";
-import { Send, Loader2, MessageSquare, Info } from "lucide-react";
+import { Send, Loader2, MessageSquare, Info, File, X } from "lucide-react";
 
 export default function ChatPanel() {
   const selectedConv = useChatStore((s: any) => s.selectedConversation) as any;
@@ -13,11 +17,21 @@ export default function ChatPanel() {
     convId: string,
     p: any,
   ) => Promise<void>;
+  const deleteMessageStore = useChatStore((s: any) => s.deleteMessage) as (
+    messageId: string,
+  ) => Promise<void>;
+  const editMessageStore = useChatStore((s: any) => s.editMessage) as (
+    messageId: string,
+    content: string,
+  ) => Promise<void>;
   const loading = useChatStore((s: any) => s.loading) as boolean;
 
   const { userProfile } = useAuth();
 
   const [input, setInput] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [editingContent, setEditingContent] = useState<string>("");
+  const [inputFile, setInputFile] = useState<File[] | []>([]);
   const [isSending, setIsSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,14 +47,38 @@ export default function ChatPanel() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, activeId]);
 
+  const handleDeleteMessage = async (messageId: string) => {
+    try {
+      await deleteMessageStore(messageId);
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+    }
+  };
+
+  const handleEditMessage = async (messageId: string, content: string) => {
+    try {
+      await editMessageStore(messageId, content);
+    } catch (error) {
+      console.error("Failed to edit message:", error);
+    }
+  };
+
   const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim() || !activeId) return;
+    if (!input.trim() || !activeId || !inputFile) return;
+    const formData = new FormData();
+    formData.append("content", input.trim());
+    formData.append("type", "text");
+    formData.append("mentions", JSON.stringify([]));
+    inputFile.forEach((file) => {
+      formData.append("attachments", file);
+    });
 
     try {
       setIsSending(true);
-      await sendMessageStore(activeId, { content: input.trim(), type: "text" });
+      await sendMessageStore(activeId, formData);
       setInput("");
+      setInputFile([]);
     } finally {
       setIsSending(false);
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,6 +86,7 @@ export default function ChatPanel() {
   };
 
   const currentUserId = userProfile?._id || userProfile?.id;
+  console.log("messages:", messages);
 
   if (!selectedConv) {
     return (
@@ -62,7 +101,7 @@ export default function ChatPanel() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-white dark:bg-gray-900  relative shadow-inner">
+    <div className="w-full h-120 flex flex-col bg-white dark:bg-gray-900  relative shadow-inner overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md">
         <div className="flex items-center gap-3">
@@ -79,9 +118,7 @@ export default function ChatPanel() {
             </span>
           </div>
         </div>
-        <button className="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-          <Info className="w-5 h-5" />
-        </button>
+        <Menu messageId="" handleDelete={() => {}} handleEdit={() => {}} />
       </div>
 
       {/* Messages */}
@@ -114,12 +151,12 @@ export default function ChatPanel() {
             return (
               <div
                 key={msg._id || msg.id}
-                className={`flex gap-3 max-w-[80%] ${isMe ? "ml-auto flex-row-reverse" : "mr-auto"}`}
+                className={`flex gap-3 items-center max-w-[80%] ${isMe ? "ml-auto flex-row-reverse" : "mr-auto"}`}
               >
                 {!isMe && (
                   <img
                     src={senderAvatar}
-                    className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm mt-auto shrink-0"
+                    className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm my-auto shrink-0"
                     alt={senderName}
                   />
                 )}
@@ -141,7 +178,52 @@ export default function ChatPanel() {
                         : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-200/50 dark:border-gray-700/50"
                     }`}
                   >
-                    {msg.content}
+                    {isEditing === (msg._id || msg.id) ? (
+                      <div className="flex flex-col gap-2">
+                        <Input
+                          defaultValue={msg.content}
+                          onChange={(e) => setEditingContent(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+
+                              setIsEditing(null);
+                            }
+                          }}
+                        />
+                        <div className="flex gap-2 justify-end">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setIsEditing(null)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              handleEditMessage(
+                                msg._id || msg.id,
+                                editingContent,
+                              );
+                              setIsEditing(null);
+                            }}
+                          >
+                            Save
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      msg.content
+                    )}
+                    {Array.isArray(msg.attachments) &&
+                      msg.attachments.length > 0 && (
+                        <img
+                          src={msg.attachments[0].url || ""}
+                          className="w-20 h-20 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm my-auto shrink-0"
+                          alt={msg.senderName}
+                        />
+                      )}
                   </div>
 
                   <span className="text-[10px] text-gray-400 mt-1 opacity-80">
@@ -153,6 +235,13 @@ export default function ChatPanel() {
                       : ""}
                   </span>
                 </div>
+                <span>
+                  <Menu
+                    messageId={msg._id || msg.id}
+                    handleDelete={() => handleDeleteMessage(msg._id || msg.id)}
+                    handleEdit={() => setIsEditing(msg._id || msg.id)}
+                  />
+                </span>
               </div>
             );
           })
@@ -162,16 +251,54 @@ export default function ChatPanel() {
 
       {/* Input Form */}
       <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        {inputFile && inputFile.length > 0 && (
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            {inputFile.map((file, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-1 text-sm text-gray-500"
+              >
+                <File className="w-4 h-4" />
+                <span>{file.name}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() =>
+                    setInputFile(inputFile.filter((_, i) => i !== idx))
+                  }
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
         <form
           onSubmit={handleSend}
           className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800/50 p-2 border border-gray-200 dark:border-gray-700 rounded-full focus-within:ring-2 ring-blue-500/50 focus-within:border-blue-500/50 transition-all shadow-sm"
         >
-          <input
+          <Label
+            htmlFor="file-input"
+            className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer transition-colors"
+          >
+            <Input
+              id="file-input"
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files) {
+                  setInputFile([...inputFile, ...Array.from(files)]);
+                }
+              }}
+            />
+            <File className="w-5 h-5" />
+          </Label>
+          <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 bg-transparent border-none focus:outline-none px-4 py-1 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 w-full"
             disabled={!selectedConv || loading}
           />
           <button

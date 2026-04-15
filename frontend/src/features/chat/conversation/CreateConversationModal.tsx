@@ -23,7 +23,8 @@ type CreateConversationProps = {
     participants: string[];
   }) => void;
   memberOfProject: any[];
-  projectId: string;
+  projectId: string | undefined;
+  taskId: string | undefined;
 };
 
 const options = [
@@ -39,6 +40,7 @@ export default function CreateConversationDialog({
   onCreate,
   memberOfProject,
   projectId,
+  taskId,
 }: CreateConversationProps) {
   const [form, setForm] = useState({
     name: "",
@@ -48,7 +50,8 @@ export default function CreateConversationDialog({
 
   const submit = () => {
     const payload = {
-      project: projectId,
+      project: projectId || undefined,
+      task: taskId || undefined,
       name: form.name,
       type: form.type,
       participants: form.participants

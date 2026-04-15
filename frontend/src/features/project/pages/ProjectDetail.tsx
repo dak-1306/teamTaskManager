@@ -217,7 +217,11 @@ function ProjectDetail() {
         <div className="col-span-12 lg:col-span-4">
           <div className="space-y-4 flex flex-col">
             <Card className="p-4">
-              <Conversation />
+              <Conversation
+                projectId={id}
+                taskId={undefined}
+                variant={variant}
+              />
             </Card>
             <Card className="p-4">
               <Chat conversation={null} />

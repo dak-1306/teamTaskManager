@@ -2,13 +2,14 @@ const Conversation = require("../models/conversation.model");
 const Project = require("../models/project.model");
 const Task = require("../models/task.model");
 
-// List conversations, optionally filtered by project or participant
+// List conversations, optionally filtered by project or task
 exports.list = async (req, res) => {
+  console.log("query params in list conversations", req.query);
   try {
-    const { project, participant } = req.query;
+    const { project, task } = req.query;
     const filter = {};
     if (project) filter.project = project;
-    if (participant) filter.participants = participant;
+    if (task) filter.task = task;
 
     const conversations = await Conversation.find(filter).sort({
       updatedAt: -1,

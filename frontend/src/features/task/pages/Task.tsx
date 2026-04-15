@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect, useState, useMemo } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { FilePlus, Funnel, Calendar, Tag } from "lucide-react";
 import { motion as Motion } from "framer-motion";
@@ -23,7 +23,10 @@ import useProjectStore from "../../project/stores/projectStore";
 
 import formatDate from "../../../components/utils/formatDate";
 
-function Task({ projectId, variant }) {
+function Task() {
+  const { id, variant } = useParams();
+  const projectId = id; // Đổi tên cho rõ ràng
+  console.log("Task component params", { projectId, variant });
   const navigate = useNavigate();
 
   const [openAddTask, setOpenAddTask] = useState(false);
@@ -137,7 +140,7 @@ function Task({ projectId, variant }) {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {tasks.tasks.map((t) => (
-              <Motion.div key={t._id} variants={item} className="mb-4">
+              <Motion.div key={t._id} variants={item}>
                 <CardTask
                   task={t}
                   projectId={projectId}
@@ -153,6 +156,7 @@ function Task({ projectId, variant }) {
             onPageChange={(page) =>
               fetchTasksByProjectId(projectId, page, tasks.limit)
             }
+            className="mt-4"
           />
         </Motion.div>
       ) : (
