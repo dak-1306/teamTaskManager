@@ -47,9 +47,6 @@ export default function ManageParticipantsDialog({
       (member) => !usersInConversation.includes(member.value),
     ) || [];
 
-  console.log("conversation in manage participants", conversation);
-  console.log("member of project", memberOfProject);
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">

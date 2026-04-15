@@ -40,7 +40,7 @@ function CreateProject({ isOpen, onClose }: Props) {
     }
 
     createProject(newProject);
-    console.log("Project created:", newProject);
+
     onClose();
   };
 

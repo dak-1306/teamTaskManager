@@ -25,10 +25,6 @@ function AddMember({ isOpen, onClose, projectId }: Props) {
   const { addMemberProject } = useProjectStore();
 
   const { usersForAddMember } = useAuth();
-  console.log(
-    "Users for add member project in AddMember component:",
-    usersForAddMember,
-  );
 
   const [errorField, setErrorField] = useState<string | null>(null);
 

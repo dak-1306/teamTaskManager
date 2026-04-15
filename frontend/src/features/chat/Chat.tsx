@@ -86,7 +86,6 @@ export default function ChatPanel() {
   };
 
   const currentUserId = userProfile?._id || userProfile?.id;
-  console.log("messages:", messages);
 
   if (!selectedConv) {
     return (

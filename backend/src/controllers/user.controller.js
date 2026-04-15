@@ -30,7 +30,7 @@ const getUserForAddMemberProject = async (req, res) => {
     const userForAddMember = users.filter(
       (user) => user._id.toString() !== req.user.id,
     );
-    console.log("Users for add member project:", userForAddMember);
+    
     res.status(200).json(userForAddMember);
   } catch (error) {
     res
@@ -58,7 +58,6 @@ const getUserCurrent = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log("Creating user with data:", { username, email, password });
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = new User({ username, email, password: hashedPassword });
     const savedUser = await newUser.save();
@@ -74,7 +73,6 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("Login attempt with:", { email, password });
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -83,10 +81,8 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    console.log("SECRET:", process.env.JWT_SECRET);
-    console.log("EXPIRES:", process.env.JWT_EXPIRES);
     const token = generateToken(user._id);
-    console.log("Generated token:", token);
+    
     res.status(200).json({
       message: "Login successful",
       token,

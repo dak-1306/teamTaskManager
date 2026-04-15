@@ -29,7 +29,6 @@ function ProjectSearchPage() {
     }
   }, [searchParams, searchProjects]);
 
-  console.log("Search Results:", projectSearch);
   if (loading) {
     return (
       <MainLayout>

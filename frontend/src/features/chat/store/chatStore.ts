@@ -180,8 +180,6 @@ const useChatStore = create<ChatStore>((set) => ({
 
   removeParticipant: async (conversationId, userId) => {
     set({ loading: true, error: null });
-    console.log("conversationId", conversationId);
-    console.log("userId", userId);
     try {
       // Xóa thành viên khỏi cuộc trò chuyện
       const response = await axiosClient.delete<Conversation>(
@@ -215,8 +213,6 @@ const useChatStore = create<ChatStore>((set) => ({
   },
 
   sendMessage: async (conversationId, formData) => {
-    console.log("formData in chat store", formData);
-    console.log("conversationId in chat store", conversationId);
     try {
       const response = await axiosClient.post<Message>(
         `/chats/conversation/${conversationId}`,
@@ -228,7 +224,6 @@ const useChatStore = create<ChatStore>((set) => ({
     }
   },
   deleteMessage: async (messageId) => {
-    console.log("Deleting message with ID:", messageId);
     try {
       await axiosClient.delete(`/chats/message/${messageId}`);
       set((state) => ({

@@ -4,7 +4,6 @@ const Task = require("../models/task.model");
 
 // List conversations, optionally filtered by project or task
 exports.list = async (req, res) => {
-  console.log("query params in list conversations", req.query);
   try {
     const { project, task } = req.query;
     const filter = {};
@@ -66,7 +65,7 @@ exports.create = async (req, res) => {
       participants = [],
       metadata = {},
     } = req.body;
-    console.log("payload in create conversation", req.body);
+    
     const allowed = await canCreateConversation(req.user.id, {
       projectId: project,
       taskId: task,
@@ -92,7 +91,6 @@ exports.create = async (req, res) => {
       participants: participantsArr,
       metadata,
     });
-    console.log("conv in create conversation", conv);
     await conv.save();
     res.status(201).json(conv);
   } catch (err) {

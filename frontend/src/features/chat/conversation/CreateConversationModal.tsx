@@ -59,12 +59,10 @@ export default function CreateConversationDialog({
         .map((s) => s.trim())
         .filter(Boolean),
     };
-    console.log("payload in create conversation", payload);
+
     onCreate?.(payload);
     onClose();
   };
-
-  console.log("member of project in create conversation", memberOfProject);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

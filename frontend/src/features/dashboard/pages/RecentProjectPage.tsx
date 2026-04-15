@@ -10,7 +10,6 @@ type Props = {
 };
 
 const RecentProjectPage: React.FC<Props> = ({ projects, loading }) => {
-  console.log("RecentProjectPage projects:", projects);
   return (
     <Motion.ul
       variants={container}

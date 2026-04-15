@@ -111,8 +111,7 @@ const useTaskStore = create<TaskStore>((set) => ({
           params: { page, limit },
         },
       );
-      // eslint-disable-next-line no-console
-      console.log("Fetched tasks for project", projectId, response.data);
+
       set({ tasks: response.data, loading: false });
     } catch (err: any) {
       set({ error: err?.message ?? String(err), loading: false });
@@ -207,8 +206,7 @@ const useTaskStore = create<TaskStore>((set) => ({
       const response = await axiosClient.get<PaginatedTasks>("/tasks/search", {
         params: { query, projectId, page, limit },
       });
-      // eslint-disable-next-line no-console
-      console.log("Search results for query", query, response.data);
+
       set({ taskSearchResults: response.data, loading: false });
     } catch (err: any) {
       set({ error: err?.message ?? String(err), loading: false });

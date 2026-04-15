@@ -27,7 +27,6 @@ function Login() {
       return;
     }
 
-    console.log("Login attempt with:", { email, password });
     try {
       await login({ email, password });
       navigate("/dashboard");

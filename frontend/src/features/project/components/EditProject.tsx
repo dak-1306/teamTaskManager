@@ -66,8 +66,6 @@ function EditProject({ isOpen, onClose, project }: Props) {
     },
   ];
 
-  console.log("EditProject component received project:", project);
-
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleOnClose()}>
       <DialogContent>

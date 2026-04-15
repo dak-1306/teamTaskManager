@@ -51,8 +51,6 @@ function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
       setErrorField("dueDate");
       return;
     }
-
-    console.log("Creating task with data:", taskData);
     createTask(taskData);
 
     onClose();
@@ -86,7 +84,7 @@ function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
       label: "High",
     },
   ];
-  console.log("add task opened", isOpen);
+  
   return (
     <Dialog
       open={isOpen}

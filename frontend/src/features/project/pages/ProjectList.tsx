@@ -48,7 +48,6 @@ function ProjectList() {
   const handleSubmitSearch = (e: any) => {
     e.preventDefault();
     navigate(`/projects/search?query=${encodeURIComponent(searchTerm)}`);
-    console.log("Search term:", searchTerm);
   };
 
   const handleFilterChange = (payload: any) => {

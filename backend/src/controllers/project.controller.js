@@ -18,11 +18,7 @@ const createProject = async (req, res) => {
   try {
     const { name, description } = req.body;
     const newProject = new Project({ name, description, owner: req.user.id });
-    console.log("Creating project with data:", {
-      name,
-      description,
-      owner: req.user.id,
-    });
+    
     const savedProject = await newProject.save();
     res.status(201).json(savedProject);
   } catch (error) {
@@ -39,11 +35,9 @@ const getProjectMe = async (req, res) => {
       "owner",
       "username email",
     );
-    console.log("Projects for user:", req.user.id, "Owned projects:", projects);
     const memberProjects = await Project.find({
       members: req.user.id,
     }).populate("owner", "username email");
-    console.log("Member projects:", memberProjects);
     res.status(200).json({ projects, memberProjects });
   } catch (error) {
     res
@@ -75,16 +69,6 @@ const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, members } = req.body;
-    console.log(
-      "Updating project with ID:",
-      id,
-      "Name:",
-      name,
-      "Description:",
-      description,
-      "Members:",
-      members,
-    );
     const updatedProject = await Project.findByIdAndUpdate(
       id,
       { name, description, members },
@@ -186,7 +170,6 @@ const filterProjects = async (req, res) => {
   try {
     const { name, date } = req.query;
     const userId = req.user.id;
-    console.log("Filtering projects for user:", userId, name, date);
     let sortOptions = {};
     if (name) {
       sortOptions.name = name === "nameAsc" ? 1 : -1;
@@ -205,8 +188,6 @@ const filterProjects = async (req, res) => {
     })
       .populate("owner", "username email")
       .sort(sortOptions);
-    console.log("Filtered owned projects:", ownerProject);
-    console.log("Filtered member projects:", memberProject);
     res
       .status(200)
       .json({ ownedProjects: ownerProject, memberProjects: memberProject });

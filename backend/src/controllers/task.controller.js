@@ -143,9 +143,9 @@ const createTask = async (req, res) => {
       projectId,
       emailAssignTo,
     } = req.body;
-    console.log("Received task creation request with data:", req.body);
+    
     const project = await Project.findById(projectId);
-    console.log("Fetched project for task creation:", project);
+    
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -155,7 +155,7 @@ const createTask = async (req, res) => {
     let userToAssign = null;
     if (emailAssignTo) {
       userToAssign = await User.findOne({ email: emailAssignTo });
-      console.log("Fetched user to assign for task creation:", userToAssign);
+      
       if (!userToAssign) {
         return res.status(404).json({ message: "User to assign not found" });
       }
@@ -170,10 +170,8 @@ const createTask = async (req, res) => {
       project: projectId,
       assignedTo: emailAssignTo ? [userToAssign._id] : [],
     });
-    console.log("Created new task object:", newTask);
     const savedTask = await newTask.save();
     await savedTask.populate("assignedTo", "username email");
-    console.log("Populated task with assigned user details:", savedTask);
     res.status(201).json(savedTask);
   } catch (error) {
     res
@@ -219,8 +217,6 @@ const getTaskById = async (req, res) => {
     const task = await Task.findById(id)
       .populate("project", "name owner")
       .populate("assignedTo", "username email");
-    console.log("Received request to get task by ID:", id);
-    console.log("Fetched task by ID:", task);
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
@@ -235,7 +231,6 @@ const getTaskById = async (req, res) => {
 
 // GET /tasks/projects/:id - Get a task by project ID
 const getTaskByProjectId = async (req, res) => {
-  console.log("getTaskByProjectId called");
   try {
     const { id } = req.params;
     const { page, limit } = req.query;
@@ -243,7 +238,7 @@ const getTaskByProjectId = async (req, res) => {
     const limitNumber = parseInt(limit) || 10;
     // Tìm project
     const project = await Project.findById(id);
-    console.log("Fetched project for getTaskByProjectId:", project);
+   
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
@@ -265,8 +260,8 @@ const getTaskByProjectId = async (req, res) => {
       .populate("assignedTo", "username email")
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
-    console.log("Received request to get task by project ID:", id);
-    console.log("Fetched task by project ID:", tasks);
+    
+    
     if (!tasks || tasks.length === 0) {
       return res.status(404).json({ message: "Tasks not found" });
     }
@@ -287,8 +282,7 @@ const getTaskByProjectId = async (req, res) => {
 // PUT /tasks/:id - Update a task by ID
 const updateTask = async (req, res) => {
   try {
-    console.log("Received request to update task with ID:", req.params.id);
-    console.log("Request body for updating task:", req.body);
+    
     const { id } = req.params;
     const { title, description, dueDate, priority, status, assignedTo } =
       req.body;
@@ -403,7 +397,6 @@ const searchTasks = async (req, res) => {
     const { query, projectId, page, limit } = req.query;
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 10;
-    console.log("Search query:", query, "Project ID:", projectId);
     const taskAll = await Task.find({
       title: { $regex: query, $options: "i" },
       project: projectId,
@@ -416,7 +409,6 @@ const searchTasks = async (req, res) => {
       .populate("assignedTo", "username email")
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
-    console.log("Search results for tasks:", tasks);
     res.status(200).json({
       tasks,
       total: taskAll.length,
@@ -432,21 +424,14 @@ const searchTasks = async (req, res) => {
 
 // GET /tasks - Filter tasks by status, priority, or sort by date
 const filterTasks = async (req, res) => {
-  console.log("filterTasks called");
+  
   try {
     const { status, priority, date, page, limit } = req.query;
     const userId = req.user.id;
     const projectId = req.query.projectId;
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 10;
-    console.log(
-      "Filtering tasks for user:",
-      userId,
-      status,
-      priority,
-      date,
-      projectId,
-    );
+    
     let filterOptions = {};
     if (status) {
       filterOptions.status = status;
@@ -474,7 +459,6 @@ const filterTasks = async (req, res) => {
       .sort(sortOptions)
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
-    console.log("Filtered tasks:", tasks);
     res.status(200).json({
       tasks,
       total: taskAll.length,

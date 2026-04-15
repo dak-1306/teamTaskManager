@@ -16,9 +16,6 @@ function AddAssignees({ isOpen, onClose, taskId, projectId }) {
   const [memberEmail, setMemberEmail] = useState("");
   const { addAssignees } = useTaskStore();
 
-  console.log("AddAssignees component received taskId:", taskId);
-  console.log("AddAssignees component received projectId:", projectId);
-
   const { projectDetail, fetchProjectById } = useProjectStore();
 
   useEffect(() => {
@@ -26,8 +23,6 @@ function AddAssignees({ isOpen, onClose, taskId, projectId }) {
       fetchProjectById(projectId);
     }
   }, [projectId, fetchProjectById]);
-
-  console.log("Project Detail in AddAssignees:", projectDetail);
 
   const handleSubmit = (e) => {
     e.preventDefault();

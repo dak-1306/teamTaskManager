@@ -31,7 +31,6 @@ function Register() {
       return;
     }
 
-    console.log("Register attempt with:", { username, email, password });
     register({ username, email, password });
     navigate("/login");
   };

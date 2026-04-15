@@ -75,9 +75,6 @@ export function Conversation({
     return [];
   }, [projectDetail]);
 
-  console.log("conversation in conversation", conversations);
-  console.log("project detail in conversation", projectDetail);
-
   return (
     <div className="h-60">
       <div className="flex justify-between items-center mb-3">

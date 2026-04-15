@@ -26,7 +26,6 @@ import formatDate from "../../../components/utils/formatDate";
 function Task() {
   const { id, variant } = useParams();
   const projectId = id; // Đổi tên cho rõ ràng
-  console.log("Task component params", { projectId, variant });
   const navigate = useNavigate();
 
   const [openAddTask, setOpenAddTask] = useState(false);
@@ -88,9 +87,8 @@ function Task() {
     low: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-200",
   };
 
-  console.log("Tasks for project", projectId, tasks);
   if (loading) return <SkeletonTask />;
-  console.log("Member options in Task component:", memberOptions);
+
   return (
     <div className="space-y-4">
       <Card className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">

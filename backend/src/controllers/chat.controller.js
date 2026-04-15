@@ -39,14 +39,8 @@ exports.create = async (req, res) => {
   try {
     const { conversationId } = req.params;
     const { type = "text", content, mentions = [] } = req.body;
-    console.log("Creating chat with data:", {
-      conversationId,
-      type,
-      content,
-      attachments: req.files || [],
-      mentions: Array.isArray(mentions) ? mentions : [],
-    });
-    // 🔥 lấy file từ req.files
+
+    // lấy file từ req.files
     const attachments = req.files || [];
     const conv = await Conversation.findById(conversationId);
     if (!conv)
@@ -117,7 +111,6 @@ exports.update = async (req, res) => {
 
 // Delete a chat (soft delete) – only sender can delete
 exports.delete = async (req, res) => {
-  console.log("Attempting to delete message with ID:", req.params.id);
   try {
     const chat = await Chat.findById(req.params.id);
     if (!chat) return res.status(404).json({ message: "Chat not found" });
