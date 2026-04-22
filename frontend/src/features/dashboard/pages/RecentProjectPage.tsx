@@ -16,7 +16,7 @@ const RecentProjectPage: React.FC<Props> = ({ projects, loading }) => {
       initial="hidden"
       whileInView="show"
       viewport={inViewOptions}
-      className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-7xl list-none"
+      className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-7xl list-none pb-10"
     >
       {!loading &&
         projects?.length > 0 &&

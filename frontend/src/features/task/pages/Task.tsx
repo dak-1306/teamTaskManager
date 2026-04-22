@@ -97,9 +97,9 @@ function Task() {
           initial="hidden"
           whileInView="show"
           viewport={inViewOptions}
-          className="flex flex-wrap items-center justify-start gap-2"
+          className="flex flex-wrap items-center justify-start gap-2 w-full"
         >
-          <div className="flex-1 min-w-[220px]">
+          <div className="flex-1 w-full">
             <SearchBar
               placeholder="Search tasks..."
               value={taskSearch}

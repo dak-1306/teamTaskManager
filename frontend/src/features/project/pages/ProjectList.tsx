@@ -94,7 +94,7 @@ function ProjectList() {
             viewport={inViewOptions}
           >
             <Card className="flex items-center justify-between gap-4 p-4">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 w-full">
                 <SearchBar
                   placeholder="Search projects..."
                   onChange={handleSearch}

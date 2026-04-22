@@ -215,18 +215,11 @@ function ProjectDetail() {
         </div>
         {/* chat  */}
         <div className="col-span-12 lg:col-span-4">
-          <div className="space-y-4 flex flex-col">
-            <Card className="p-4">
-              <Conversation
-                projectId={id}
-                taskId={undefined}
-                variant={variant}
-              />
-            </Card>
-            <Card className="p-4">
-              <Chat conversation={null} />
-            </Card>
-          </div>
+          <Card className="space-y-4 flex flex-col p-6 mb-10">
+            <Conversation projectId={id} taskId={undefined} variant={variant} />
+            <hr className="border-gray-200 dark:border-gray-700" />
+            <Chat conversation={null} />
+          </Card>
         </div>
       </div>
 

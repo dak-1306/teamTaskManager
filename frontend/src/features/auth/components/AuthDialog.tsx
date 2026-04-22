@@ -42,7 +42,9 @@ function AuthDialog({
             <Button variant="outline">Cancel</Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Button onClick={onConfirm}>Confirm</Button>
+            <Button variant="destructive" onClick={onConfirm}>
+              Confirm
+            </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

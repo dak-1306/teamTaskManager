@@ -199,14 +199,6 @@ function Profile() {
                     className="hidden"
                     onChange={handleAvatarChange}
                   />
-
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => setOpenLogoutDialog(true)}
-                  >
-                    <SquareArrowRightExit className="w-4 h-4 mr-2" /> Logout
-                  </Button>
                 </div>
               </Card>
             </Motion.div>
@@ -220,6 +212,13 @@ function Profile() {
                   size="sm"
                 >
                   Change password
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setOpenLogoutDialog(true)}
+                >
+                  <SquareArrowRightExit className="w-4 h-4 mr-2" /> Logout
                 </Button>
                 <Button
                   variant="destructive"

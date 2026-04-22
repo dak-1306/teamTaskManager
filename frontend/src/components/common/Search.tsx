@@ -18,7 +18,7 @@ export default function SearchBar({
   onSubmit,
 }: SearchBarProps) {
   return (
-    <InputGroup className="max-w-xs">
+    <InputGroup className="w-full">
       <InputGroupInput
         placeholder={placeholder}
         value={value}
@@ -31,7 +31,6 @@ export default function SearchBar({
       >
         <Search />
       </InputGroupAddon>
-      <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
     </InputGroup>
   );
 }

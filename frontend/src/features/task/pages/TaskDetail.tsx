@@ -73,13 +73,13 @@ function TaskDetail() {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="md:col-span-1 space-y-4">
-          <Card className="flex items-center justify-end gap-2 p-4">
+          <Card className="flex items-center justify-start gap-2 p-4">
             <Motion.div
               variants={container}
               initial="hidden"
               whileInView="show"
               viewport={inViewOptions}
-              className="flex items-center justify-between space-x-4"
+              className="flex items-center justify-between space-x-4 w-full"
             >
               <Motion.div
                 variants={item}
@@ -224,7 +224,7 @@ function TaskDetail() {
             <p className="text-gray-500">Task not found.</p>
           )}
         </div>
-        <Card className="md:col-span-1 p-6">
+        <Card className="md:col-span-1 p-6 mb-10">
           <Motion.div
             className="space-y-4 flex flex-col"
             variants={container}

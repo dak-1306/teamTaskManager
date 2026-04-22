@@ -49,7 +49,7 @@ function CreateProject({ isOpen, onClose }: Props) {
       <DialogContent>
         <DialogTitle>Create New Project</DialogTitle>
         <form
-          className="w-full max-w-sm bg-white dark:bg-gray-700 shadow-lg rounded p-6 mt-4"
+          className="w-full max-w-sm dark:bg-gray-700"
           onSubmit={handleCreateProject}
         >
           <div className="mb-4">

@@ -47,8 +47,8 @@ function SkeletonProjectDetail() {
                 <Skeleton className="h-4 w-1/2 rounded bg-muted dark:bg-muted" />
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex space-x-1">
-                     <Skeleton className="h-6 w-8 rounded-full bg-muted dark:bg-muted" />
-                     <Skeleton className="h-6 w-8 rounded-full bg-muted dark:bg-muted" />
+                    <Skeleton className="h-6 w-8 rounded-full bg-muted dark:bg-muted" />
+                    <Skeleton className="h-6 w-8 rounded-full bg-muted dark:bg-muted" />
                   </div>
                   <Skeleton className="h-8 w-20 rounded bg-muted dark:bg-muted" />
                 </div>
@@ -58,14 +58,15 @@ function SkeletonProjectDetail() {
         </div>
 
         {/* Chat / Conversation */}
-        <div className="col-span-12 lg:col-span-4 space-y-4">
-          <Card className="p-4 flex flex-col space-y-4 h-[300px]">
-             <Skeleton className="h-full w-full rounded bg-muted dark:bg-muted" />
-          </Card>
-          <Card className="p-4 flex flex-col space-y-4 h-[350px]">
-             <Skeleton className="h-full w-full rounded bg-muted dark:bg-muted" />
-          </Card>
-        </div>
+        <Card className="col-span-12 lg:col-span-4 space-y-4">
+          <div className="p-4 flex flex-col space-y-4 h-[300px]">
+            <Skeleton className="h-full w-full rounded bg-muted dark:bg-muted" />
+          </div>
+          <hr className="border-gray-200 dark:border-gray-700" />
+          <div className="p-4 flex flex-col space-y-4 h-[300px]">
+            <Skeleton className="h-full w-full rounded bg-muted dark:bg-muted" />
+          </div>
+        </Card>
       </div>
     </div>
   );
