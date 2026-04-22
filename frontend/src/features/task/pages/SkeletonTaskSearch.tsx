@@ -6,44 +6,35 @@ import { Skeleton } from "../../../components/ui/skeleton";
 function SkeletonTaskSearch() {
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Task Search</h1>
-      <div className="mb-4 flex items-center space-x-3">
-        <div className="w-1/2">
-          <Skeleton className="h-10 rounded" />
-        </div>
-        <Skeleton className="w-28 h-10 rounded" />
-        <div className="flex-1" />
-        <Skeleton className="w-28 h-10 rounded" />
-      </div>
+      <Skeleton className="h-8 w-48 rounded bg-muted dark:bg-muted mb-2" />
+      <Skeleton className="h-4 w-64 rounded bg-muted dark:bg-muted mb-4" />
+      <Skeleton className="w-48 h-8 rounded bg-muted dark:bg-muted" />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {Array.from({ length: 8 }).map((_, idx) => (
-          <Card key={idx} className="p-4">
-            <div className="space-y-2">
-              <Skeleton className="h-6 w-3/4 rounded" />
-              <Skeleton className="h-4 w-full rounded" />
-              <Skeleton className="h-4 w-1/2 rounded" />
-              <div>
-                <h3 className="font-semibold">Assignees:</h3>
-                <ul className="list-none mt-2 space-y-1">
-                  {Array.from({ length: 2 }).map((_, i) => (
-                    <li key={i} className="flex items-center space-x-2">
-                      <Skeleton className="h-8 w-8 rounded-full" />
-                      <Skeleton className="h-3 w-32 rounded" />
-                    </li>
-                  ))}
-                </ul>
+          <Card key={idx} className="p-4 space-y-3">
+            <Skeleton className="h-6 w-3/4 rounded bg-muted dark:bg-muted" />
+            <Skeleton className="h-4 w-full rounded bg-muted dark:bg-muted" />
+            <Skeleton className="h-4 w-1/2 rounded bg-muted dark:bg-muted mt-2" />
+            <Skeleton className="h-4 w-1/3 rounded bg-muted dark:bg-muted" />
+            <Skeleton className="h-4 w-1/3 rounded bg-muted dark:bg-muted" />
+            <div className="space-y-2 pt-2">
+              <Skeleton className="h-5 w-24 rounded bg-muted dark:bg-muted" />
+              <div className="space-y-2">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <Skeleton key={i} className="h-4 w-4/5 rounded bg-muted dark:bg-muted" />
+                ))}
               </div>
-              <div className="flex justify-end">
-                <Skeleton className="w-24 h-8 rounded" />
-              </div>
+            </div>
+            <div className="pt-3">
+              <Skeleton className="w-28 h-8 rounded bg-muted dark:bg-muted" />
             </div>
           </Card>
         ))}
       </div>
 
-      <div className="flex justify-center mt-4">
-        <Skeleton className="h-10 w-64 rounded" />
+      <div className="flex justify-center mt-6">
+        <Skeleton className="h-10 w-64 rounded bg-muted dark:bg-muted" />
       </div>
     </div>
   );
