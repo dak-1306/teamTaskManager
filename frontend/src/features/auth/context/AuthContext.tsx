@@ -26,7 +26,7 @@ type AuthContextType = {
   checkLoginStatus: () => void;
   userProfile: AnyObj | null;
   usersForAddMember: AnyObj[];
-  register: (userData: AnyObj) => Promise<void>;
+  registerContext: (userData: AnyObj) => Promise<void>;
   login: (credentials: AnyObj) => Promise<void>;
   logout: () => void;
   updateInfoUser: (userId: string, updatedData: AnyObj) => void;
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     }
   };
 
-  const register = async (userData: AnyObj) => {
+  const registerContext = async (userData: AnyObj) => {
     try {
       setLoading(true);
       await registerUser(userData);
@@ -227,7 +227,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     checkLoginStatus,
     userProfile,
     usersForAddMember,
-    register,
+    registerContext,
     login,
     logout,
     updateInfoUser,

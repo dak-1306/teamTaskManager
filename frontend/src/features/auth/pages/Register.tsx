@@ -1,79 +1,115 @@
 import { useState } from "react";
-import AuthForm from "../components/AuthForm";
-import AuthBackground from "../components/AuthBackground";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterFormData } from "../utils/schemal";
 import { useNavigate } from "react-router-dom";
-
 import { useAuth } from "../context/AuthContext";
+
+import AuthBackground from "../components/AuthBackground";
+import AuthCard from "../components/AuthCard";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
+import { Eye, EyeOff } from "lucide-react";
+
 function Register() {
   const navigate = useNavigate();
-  const [errorField, setErrorField] = useState<string | null>(null);
+  const { registerContext, error, loading } = useAuth() as any;
 
-  const { register, error, loading } = useAuth() as any;
+  const [showPassword, setShowPassword] = useState(false);
 
-  // State cho các trường nhập liệu
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // Xử lý Đăng ký
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorField(null);
-    if (!username) {
-      setErrorField("username");
-      return;
-    }
-    if (!email) {
-      setErrorField("email");
-      return;
-    }
-    if (!password) {
-      setErrorField("password");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
 
-    register({ username, email, password });
-    navigate("/login");
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await registerContext(data);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Register error:", err);
+    }
   };
-
-  // Cấu hình các trường nhập liệu cho AuthForm
-  const field = [
-    {
-      id: "username",
-      type: "text",
-      placeHolder: "Username",
-      label: "Username",
-      state: username,
-      setState: setUsername,
-    },
-    {
-      id: "email",
-      type: "email",
-      placeHolder: "Email",
-      label: "Email",
-      state: email,
-      setState: setEmail,
-    },
-    {
-      id: "password",
-      type: "password",
-      placeHolder: "Password",
-      label: "Password",
-      state: password,
-      setState: setPassword,
-    },
-  ];
 
   return (
     <AuthBackground>
-      <AuthForm
-        onSubmit={handleSubmit}
-        field={field}
-        error={error}
+      <AuthCard
         title="Register"
-        errorField={errorField}
+        description="Create a new account"
+        onSubmit={handleSubmit(onSubmit)}
         loading={loading}
-      />
+        isSubmitting={isSubmitting}
+        error={error}
+        action={
+          <Button variant="link" onClick={() => navigate("/login")}>
+            Login
+          </Button>
+        }
+        footer={
+          <Button variant="outline" className="w-full">
+            Register with Google
+          </Button>
+        }
+      >
+        {/* Username */}
+        <div className="grid gap-2">
+          <Label htmlFor="username">Username</Label>
+          <Input
+            id="username"
+            type="text"
+            placeholder="yourname"
+            {...register("username")}
+          />
+          {errors.username && (
+            <p className="text-red-500 text-sm">{errors.username.message}</p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            {...register("email")}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
+        </div>
+
+        {/* Password */}
+        <div className="grid gap-2 relative">
+          <Label htmlFor="password">Password</Label>
+
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            {...register("password")}
+          />
+
+          <button
+            type="button"
+            className="absolute right-2 top-8"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
+
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
+        </div>
+      </AuthCard>
     </AuthBackground>
   );
 }
+
 export default Register;

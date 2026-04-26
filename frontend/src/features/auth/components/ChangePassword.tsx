@@ -1,134 +1,112 @@
-import React, { useRef, useState } from "react";
-
-import {
-  Dialog,
-  DialogPortal,
-  DialogOverlay,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogClose,
-} from "../../../components/ui/dialog";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
-import {
-  Field,
-  FieldLabel,
-  FieldContent,
-  FieldError,
-} from "../../../components/ui/field";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { changePasswordSchema, ChangePasswordData } from "../utils/schemal";
 
 import { useAuth } from "../context/AuthContext";
 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
 type ChangePasswordProps = {
-  isOpen: boolean;
-  onClose: () => void;
   userId: string;
 };
 
-function ChangePassword({ isOpen, onClose, userId }: ChangePasswordProps) {
-  const currentPasswordRef = useRef<HTMLInputElement | null>(null);
-  const newPasswordRef = useRef<HTMLInputElement | null>(null);
-  const confirmPasswordRef = useRef<HTMLInputElement | null>(null);
+function ChangePassword({ userId }: ChangePasswordProps) {
+  const { changePasswordUser, loading, error } = useAuth() as any;
 
-  const [errorField, setErrorField] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ChangePasswordData>({
+    resolver: zodResolver(changePasswordSchema),
+  });
 
-  const { changePasswordUser } = useAuth() as any;
-
-  const handleChangePassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    const currentPassword = currentPasswordRef.current?.value;
-    const newPassword = newPasswordRef.current?.value;
-    const confirmPassword = confirmPasswordRef.current?.value;
-
-    setErrorField(null);
-    if (!currentPassword) {
-      setErrorField("currentPassword");
-      return;
+  const onSubmit = async (data: ChangePasswordData) => {
+    try {
+      await changePasswordUser(userId, {
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
+    } catch (err) {
+      console.error("Change password error:", err);
     }
-    if (!newPassword) {
-      setErrorField("newPassword");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setErrorField("confirmPassword");
-      return;
-    }
-
-    changePasswordUser(userId, { currentPassword, newPassword });
-    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogPortal>
-        <DialogOverlay />
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-          </DialogHeader>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Change Password</CardTitle>
+        <CardDescription>Update your account password</CardDescription>
+      </CardHeader>
 
-          <form
-            className="w-full max-w-sm mt-2 space-y-4"
-            onSubmit={handleChangePassword}
-          >
-            <Field>
-              <FieldLabel htmlFor="currentPassword">
-                Current Password
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="currentPassword"
-                  type="password"
-                  ref={currentPasswordRef}
-                />
-                {errorField === "currentPassword" && (
-                  <FieldError>This field is required</FieldError>
-                )}
-              </FieldContent>
-            </Field>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="space-y-4">
+          {/* Current Password */}
+          <div className="grid gap-2">
+            <Label htmlFor="currentPassword">Current Password</Label>
+            <Input
+              id="currentPassword"
+              type="password"
+              {...register("currentPassword")}
+            />
+            {errors.currentPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.currentPassword.message}
+              </p>
+            )}
+          </div>
 
-            <Field>
-              <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
-              <FieldContent>
-                <Input id="newPassword" type="password" ref={newPasswordRef} />
-                {errorField === "newPassword" && (
-                  <FieldError>This field is required</FieldError>
-                )}
-              </FieldContent>
-            </Field>
+          {/* New Password */}
+          <div className="grid gap-2">
+            <Label htmlFor="newPassword">New Password</Label>
+            <Input
+              id="newPassword"
+              type="password"
+              {...register("newPassword")}
+            />
+            {errors.newPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.newPassword.message}
+              </p>
+            )}
+          </div>
 
-            <Field>
-              <FieldLabel htmlFor="confirmPassword">
-                Confirm New Password
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  ref={confirmPasswordRef}
-                />
-                {errorField === "confirmPassword" && (
-                  <FieldError>Passwords do not match</FieldError>
-                )}
-              </FieldContent>
-            </Field>
+          {/* Confirm Password */}
+          <div className="grid gap-2">
+            <Label htmlFor="confirmNewPassword">Confirm Password</Label>
+            <Input
+              id="confirmNewPassword"
+              type="password"
+              {...register("confirmNewPassword")}
+            />
+            {errors.confirmNewPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.confirmNewPassword.message}
+              </p>
+            )}
+          </div>
+        </CardContent>
 
-            <DialogFooter className="flex justify-center gap-4">
-              <Button type="submit" variant="default" size="default">
-                Change Password
-              </Button>
-              <DialogClose asChild>
-                <Button variant="outline" size="default">
-                  Close
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </DialogPortal>
-    </Dialog>
+        <CardFooter className="flex flex-col gap-2">
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {loading ? "Loading..." : "Change Password"}
+          </Button>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+        </CardFooter>
+      </form>
+    </Card>
   );
 }
 
