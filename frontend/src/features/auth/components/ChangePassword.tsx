@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 type ChangePasswordProps = {
-  userId: string;
+  userId: string | null;
 };
 
 function ChangePassword({ userId }: ChangePasswordProps) {

@@ -5,7 +5,6 @@ import { registerSchema, RegisterFormData } from "../utils/schemal";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-import AuthBackground from "../components/AuthBackground";
 import AuthCard from "../components/AuthCard";
 
 import { Input } from "@/components/ui/input";
@@ -38,77 +37,75 @@ function Register() {
   };
 
   return (
-    <AuthBackground>
-      <AuthCard
-        title="Register"
-        description="Create a new account"
-        onSubmit={handleSubmit(onSubmit)}
-        loading={loading}
-        isSubmitting={isSubmitting}
-        error={error}
-        action={
-          <Button variant="link" onClick={() => navigate("/login")}>
-            Login
-          </Button>
-        }
-        footer={
-          <Button variant="outline" className="w-full">
-            Register with Google
-          </Button>
-        }
-      >
-        {/* Username */}
-        <div className="grid gap-2">
-          <Label htmlFor="username">Username</Label>
-          <Input
-            id="username"
-            type="text"
-            placeholder="yourname"
-            {...register("username")}
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm">{errors.username.message}</p>
-          )}
-        </div>
+    <AuthCard
+      title="Register"
+      description="Create a new account"
+      onSubmit={handleSubmit(onSubmit)}
+      loading={loading}
+      isSubmitting={isSubmitting}
+      error={error}
+      action={
+        <Button variant="link" onClick={() => navigate("/login")}>
+          Login
+        </Button>
+      }
+      footer={
+        <Button variant="outline" className="w-full">
+          Register with Google
+        </Button>
+      }
+    >
+      {/* Username */}
+      <div className="grid gap-2">
+        <Label htmlFor="username">Username</Label>
+        <Input
+          id="username"
+          type="text"
+          placeholder="yourname"
+          {...register("username")}
+        />
+        {errors.username && (
+          <p className="text-red-500 text-sm">{errors.username.message}</p>
+        )}
+      </div>
 
-        {/* Email */}
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            {...register("email")}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
-          )}
-        </div>
+      {/* Email */}
+      <div className="grid gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="m@example.com"
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
+      </div>
 
-        {/* Password */}
-        <div className="grid gap-2 relative">
-          <Label htmlFor="password">Password</Label>
+      {/* Password */}
+      <div className="grid gap-2 relative">
+        <Label htmlFor="password">Password</Label>
 
-          <Input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            {...register("password")}
-          />
+        <Input
+          id="password"
+          type={showPassword ? "text" : "password"}
+          {...register("password")}
+        />
 
-          <button
-            type="button"
-            className="absolute right-2 top-8"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOff /> : <Eye />}
-          </button>
+        <button
+          type="button"
+          className="absolute right-2 top-8"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff /> : <Eye />}
+        </button>
 
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
-          )}
-        </div>
-      </AuthCard>
-    </AuthBackground>
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
+      </div>
+    </AuthCard>
   );
 }
 

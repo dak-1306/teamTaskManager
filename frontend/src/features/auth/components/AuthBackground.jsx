@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import {Outlet} from "react-router-dom";
 
 function StarCanvas() {
   const canvasRef = useRef(null);
@@ -93,12 +94,12 @@ function StarCanvas() {
   return <canvas ref={canvasRef} className="fixed inset-0 z-0" />;
 }
 
-export default function AuthBackground({ children }) {
+export default function AuthBackground() {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 flex items-center justify-center">
       <StarCanvas />
       <div className="relative z-10 w-full flex items-center justify-center">
-        {children}
+        <Outlet />
       </div>
     </div>
   );

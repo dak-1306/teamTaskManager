@@ -63,14 +63,14 @@ function ProjectDetail() {
 
   if (loading) {
     return (
-      <MainLayout>
+      <>
         <SkeletonProjectDetail />
-      </MainLayout>
+      </>
     );
   }
 
   return (
-    <MainLayout>
+    <>
       {/* Content */}
       <div className="grid grid-cols-12 gap-4 mb-6">
         {/* Project Info Sidebar */}
@@ -248,7 +248,7 @@ function ProjectDetail() {
           projectName={projectDetail ? projectDetail.title : "this project"}
         />
       )}
-    </MainLayout>
+    </>
   );
 }
 

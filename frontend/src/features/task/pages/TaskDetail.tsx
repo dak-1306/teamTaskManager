@@ -61,13 +61,13 @@ function TaskDetail() {
 
   if (loading)
     return (
-      <MainLayout>
+      <>
         <SkeletonTaskDetail />
-      </MainLayout>
+      </>
     );
 
   return (
-    <MainLayout>
+    <>
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         {taskDetail?.title || "Loading..."}
       </h1>
@@ -266,7 +266,7 @@ function TaskDetail() {
           taskId={taskId}
         />
       )}
-    </MainLayout>
+    </>
   );
 }
 

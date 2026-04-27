@@ -1,6 +1,4 @@
-import React, { useEffect, useMemo, useCallback } from "react";
-
-import MainLayout from "../../../components/layout/MainLayout";
+import { useEffect, useMemo, useCallback } from "react";
 
 import OverviewPage from "./OverviewPage";
 import MyTaskPage from "./MyTaskPage";
@@ -70,14 +68,10 @@ export default function Dashboard() {
     tasks.tasks.length === 0 &&
     taskOverview.totalTasks === 0
   ) {
-    return (
-      <MainLayout fullScreen={true}>
-        <EmptyDashboard />
-      </MainLayout>
-    );
+    return <EmptyDashboard />;
   } else {
     return (
-      <MainLayout>
+      <>
         <h1 className="text-2xl font-bold text-foreground text-center">
           Dashboard
         </h1>
@@ -111,7 +105,7 @@ export default function Dashboard() {
           Recent Projects
         </h2>
         <RecentProjectPage projects={projects} loading={loading} />
-      </MainLayout>
+      </>
     );
   }
 }

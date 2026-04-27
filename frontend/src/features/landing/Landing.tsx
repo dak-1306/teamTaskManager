@@ -21,49 +21,47 @@ function Landing() {
   }, [isLogin, navigate]);
 
   return (
-    <MainLayout>
-      <div className="text-center mt-20 space-y-6 flex flex-col items-center justify-center">
-        <Motion.h1
-          variants={item}
-          initial="hidden"
-          whileInView="show"
-          viewport={inViewOptions}
-          className="text-4xl font-bold "
-        >
-          Welcome to Team Task Manager
-        </Motion.h1>
-        <Motion.p
-          variants={item}
-          initial="hidden"
-          whileInView="show"
-          viewport={inViewOptions}
-          className="text-lg"
-        >
-          Organize your team's tasks efficiently and effectively.
-        </Motion.p>
+    <div className="text-center mt-20 space-y-6 flex flex-col items-center justify-center">
+      <Motion.h1
+        variants={item}
+        initial="hidden"
+        whileInView="show"
+        viewport={inViewOptions}
+        className="text-4xl font-bold "
+      >
+        Welcome to Team Task Manager
+      </Motion.h1>
+      <Motion.p
+        variants={item}
+        initial="hidden"
+        whileInView="show"
+        viewport={inViewOptions}
+        className="text-lg"
+      >
+        Organize your team's tasks efficiently and effectively.
+      </Motion.p>
 
-        <Motion.div
-          variants={item}
-          initial="hidden"
-          whileInView="show"
-          viewport={inViewOptions}
-        >
-          <RunningClockCanvas theme={theme} />
-        </Motion.div>
-        <Motion.div
-          variants={item}
-          initial="hidden"
-          whileInView="show"
-          viewport={inViewOptions}
-        >
-          <Link to="/login">
-            <Button variant="default" size="lg">
-              Get Started
-            </Button>
-          </Link>
-        </Motion.div>
-      </div>
-    </MainLayout>
+      <Motion.div
+        variants={item}
+        initial="hidden"
+        whileInView="show"
+        viewport={inViewOptions}
+      >
+        <RunningClockCanvas theme={theme} />
+      </Motion.div>
+      <Motion.div
+        variants={item}
+        initial="hidden"
+        whileInView="show"
+        viewport={inViewOptions}
+      >
+        <Link to="/login">
+          <Button variant="default" size="lg">
+            Get Started
+          </Button>
+        </Link>
+      </Motion.div>
+    </div>
   );
 }
 export default Landing;

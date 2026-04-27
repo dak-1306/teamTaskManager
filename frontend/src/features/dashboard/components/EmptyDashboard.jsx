@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion as Motion } from "framer-motion";
+import Header from "../../../components/layout/Header";
 
 export default function EmptyDashboard() {
   const canvasRef = useRef(null);
@@ -84,43 +85,49 @@ export default function EmptyDashboard() {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-      {/* Canvas bubbles */}
-      <canvas
-        ref={canvasRef}
-        className="absolute top-0 left-0 w-full h-full opacity-60"
-      />
+    <div className="flex flex-col h-screen overflow-hidden">
+      <Header />
+      <main className="flex-1 pt-16 w-full h-[calc(100vh-16rem)] mx-auto text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-900 overflow-y-auto">
+        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
+          {/* Canvas bubbles */}
+          <canvas
+            ref={canvasRef}
+            className="absolute top-0 left-0 w-full h-full opacity-60"
+          />
 
-      {/* Content */}
-      <Motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 bg-white/80 dark:bg-gray-800 dark:backdrop-blur-md shadow-xl rounded-2xl p-10 text-center max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-3">No projects yet 🚀</h2>
+          {/* Content */}
+          <Motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative z-10 bg-white/80 dark:bg-gray-800 dark:backdrop-blur-md shadow-xl rounded-2xl p-10 text-center max-w-md"
+          >
+            <h2 className="text-2xl font-bold mb-3">No projects yet 🚀</h2>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Start by creating your first project and manage tasks with your team.
-        </p>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Start by creating your first project and manage tasks with your
+              team.
+            </p>
 
-        <Motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="px-6 py-3 rounded-xl bg-indigo-600 dark:bg-indigo-700 text-white font-semibold shadow-md"
-          onClick={() => navigate("/projects")}
-        >
-          Create Project
-        </Motion.button>
-      </Motion.div>
+            <Motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 rounded-xl bg-indigo-600 dark:bg-indigo-700 text-white font-semibold shadow-md"
+              onClick={() => navigate("/projects")}
+            >
+              Create Project
+            </Motion.button>
+          </Motion.div>
 
-      <Motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ repeat: Infinity, duration: 3 }}
-        className="absolute bottom-10 text-gray-400 dark:text-gray-500 text-sm"
-      >
-        Your workspace is empty
-      </Motion.div>
+          <Motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ repeat: Infinity, duration: 3 }}
+            className="absolute bottom-10 text-gray-400 dark:text-gray-500 text-sm"
+          >
+            Your workspace is empty
+          </Motion.div>
+        </div>
+      </main>
     </div>
   );
 }

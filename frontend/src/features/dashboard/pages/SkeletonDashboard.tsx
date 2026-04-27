@@ -4,7 +4,7 @@ import MainLayout from "../../../components/layout/MainLayout";
 
 function SkeletonDashboard() {
   return (
-    <MainLayout>
+    <>
       <h1 className="text-2xl font-bold text-foreground text-center">
         Dashboard
       </h1>
@@ -85,7 +85,7 @@ function SkeletonDashboard() {
           ))}
         </div>
       </div>
-    </MainLayout>
+    </>
   );
 }
 

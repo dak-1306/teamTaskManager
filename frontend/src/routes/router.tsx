@@ -1,8 +1,12 @@
 import React, { ReactNode } from "react";
 import { Routes, Route } from "react-router-dom";
+import MainLayout from "../components/layout/MainLayout";
+import AuthBackground from "../features/auth/components/AuthBackground";
 import Landing from "../features/landing/Landing";
 import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
+import ForgotPassword from "@/features/auth/pages/ForgotPassword";
+import ResetPassword from "@/features/auth/pages/ResetPassword";
 import Dashboard from "../features/dashboard/pages/Dashboard";
 import TaskDetail from "../features/task/pages/TaskDetail";
 import ProjectList from "../features/project/pages/ProjectList";
@@ -26,73 +30,80 @@ const ProtectedRoute: React.FC<{ children?: ReactNode }> = ({ children }) => {
 function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/tasks/:taskId"
-        element={
-          <ProtectedRoute>
-            <TaskDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="projects/:projectId/:variant/tasks/:taskId"
-        element={
-          <ProtectedRoute>
-            <TaskDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects"
-        element={
-          <ProtectedRoute>
-            <ProjectList />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:id/:variant"
-        element={
-          <ProtectedRoute>
-            <ProjectDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/search"
-        element={
-          <ProtectedRoute>
-            <ProjectSearchPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:projectId/:variant/tasks/search"
-        element={
-          <ProtectedRoute>
-            <TaskSearchPage />
-          </ProtectedRoute>
-        }
-      />
+      <Route element={<AuthBackground />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+      </Route>
+
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Landing />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/tasks/:taskId"
+          element={
+            <ProtectedRoute>
+              <TaskDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/:projectId/:variant/tasks/:taskId"
+          element={
+            <ProtectedRoute>
+              <TaskDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <ProjectList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects/:id/:variant"
+          element={
+            <ProtectedRoute>
+              <ProjectDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects/search"
+          element={
+            <ProtectedRoute>
+              <ProjectSearchPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects/:projectId/:variant/tasks/search"
+          element={
+            <ProtectedRoute>
+              <TaskSearchPage />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
     </Routes>
   );
 }

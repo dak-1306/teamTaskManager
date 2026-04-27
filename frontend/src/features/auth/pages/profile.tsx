@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function Profile() {
   return (
-    <MainLayout>
+    <>
       <div className="max-w-2xl mx-auto mt-10">
         <Tabs defaultValue="profile">
           <TabsList>
@@ -29,7 +29,7 @@ function Profile() {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
+    </>
   );
 }
 

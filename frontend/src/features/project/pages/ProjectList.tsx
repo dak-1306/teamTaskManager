@@ -74,132 +74,117 @@ function ProjectList() {
   const hasMemberProjects = memberProject.length > 0;
 
   if (loading) {
-    return (
-      <MainLayout>
-        <SkeletonProjectList />
-      </MainLayout>
-    );
+    return <SkeletonProjectList />;
   }
 
-  return (
-    <MainLayout>
-      {!loading && !hasProjects && !hasMemberProjects ? (
-        <EmptyProjectBox onCreate={() => setOpenCreateProject(true)} />
-      ) : (
-        <div>
+  return !loading && !hasProjects && !hasMemberProjects ? (
+    <EmptyProjectBox onCreate={() => setOpenCreateProject(true)} />
+  ) : (
+    <div>
+      <Motion.ul
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={inViewOptions}
+      >
+        <Card className="flex items-center justify-between gap-4 p-4">
+          <div className="flex items-center space-x-2 w-full">
+            <SearchBar
+              placeholder="Search projects..."
+              onChange={handleSearch}
+              value={searchTerm}
+              onSubmit={handleSubmitSearch}
+            />
+            <Filter
+              name="name"
+              options={filterName}
+              value={filter.name}
+              onFilterChange={(value) => handleFilterChange({ name: value })}
+            />
+
+            <Filter
+              name="date"
+              options={filterDate}
+              value={filter.date}
+              onFilterChange={(value) => handleFilterChange({ date: value })}
+            />
+
+            <Button
+              variant="default"
+              size="lg"
+              icon={<FolderPlus className="w-4 h-4 mr-2" />}
+              onClick={() => setOpenCreateProject(true)}
+            >
+              Create Project
+            </Button>
+          </div>
+        </Card>
+      </Motion.ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
+        <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">
+          <h1 className="text-2xl font-semibold text-center">My Projects</h1>
           <Motion.ul
             variants={container}
             initial="hidden"
             whileInView="show"
             viewport={inViewOptions}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
           >
-            <Card className="flex items-center justify-between gap-4 p-4">
-              <div className="flex items-center space-x-2 w-full">
-                <SearchBar
-                  placeholder="Search projects..."
-                  onChange={handleSearch}
-                  value={searchTerm}
-                  onSubmit={handleSubmitSearch}
-                />
-                <Filter
-                  name="name"
-                  options={filterName}
-                  value={filter.name}
-                  onFilterChange={(value) =>
-                    handleFilterChange({ name: value })
-                  }
-                />
-
-                <Filter
-                  name="date"
-                  options={filterDate}
-                  value={filter.date}
-                  onFilterChange={(value) =>
-                    handleFilterChange({ date: value })
-                  }
-                />
-
-                <Button
-                  variant="default"
-                  size="lg"
-                  icon={<FolderPlus className="w-4 h-4 mr-2" />}
-                  onClick={() => setOpenCreateProject(true)}
+            {hasProjects ? (
+              projects.map((project: any) => (
+                <Motion.li
+                  key={project._id}
+                  variants={item}
+                  className="list-none"
                 >
-                  Create Project
-                </Button>
-              </div>
-            </Card>
+                  <CardProject project={project} variant="owner" />
+                </Motion.li>
+              ))
+            ) : (
+              <p className="col-span-full text-gray-500 text-center">
+                No projects found.
+              </p>
+            )}
           </Motion.ul>
-          <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
-            <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">
-              <h1 className="text-2xl font-semibold text-center">
-                My Projects
-              </h1>
-              <Motion.ul
-                variants={container}
-                initial="hidden"
-                whileInView="show"
-                viewport={inViewOptions}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
-              >
-                {hasProjects ? (
-                  projects.map((project: any) => (
-                    <Motion.li
-                      key={project._id}
-                      variants={item}
-                      className="list-none"
-                    >
-                      <CardProject project={project} variant="owner" />
-                    </Motion.li>
-                  ))
-                ) : (
-                  <p className="col-span-full text-gray-500 text-center">
-                    No projects found.
-                  </p>
-                )}
-              </Motion.ul>
-            </div>
-
-            <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-2">
-              <h2 className="text-xl font-semibold text-center">
-                Projects I'm a Member Of
-              </h2>
-
-              <Motion.ul
-                variants={container}
-                initial="hidden"
-                whileInView="show"
-                viewport={inViewOptions}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
-              >
-                {hasMemberProjects ? (
-                  memberProject.map((project: any) => (
-                    <Motion.li
-                      key={project._id}
-                      variants={item}
-                      className="list-none"
-                    >
-                      <CardProject project={project} variant="member" />
-                    </Motion.li>
-                  ))
-                ) : (
-                  <p className="col-span-full text-gray-500 text-center">
-                    No member projects found.
-                  </p>
-                )}
-              </Motion.ul>
-            </div>
-          </div>
         </div>
-      )}
 
+        <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-2">
+          <h2 className="text-xl font-semibold text-center">
+            Projects I'm a Member Of
+          </h2>
+
+          <Motion.ul
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={inViewOptions}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
+          >
+            {hasMemberProjects ? (
+              memberProject.map((project: any) => (
+                <Motion.li
+                  key={project._id}
+                  variants={item}
+                  className="list-none"
+                >
+                  <CardProject project={project} variant="member" />
+                </Motion.li>
+              ))
+            ) : (
+              <p className="col-span-full text-gray-500 text-center">
+                No member projects found.
+              </p>
+            )}
+          </Motion.ul>
+        </div>
+      </div>
       {openCreateProject && (
         <CreateProject
           isOpen={openCreateProject}
           onClose={() => setOpenCreateProject(false)}
         />
       )}
-    </MainLayout>
+    </div>
   );
 }
 export default ProjectList;
