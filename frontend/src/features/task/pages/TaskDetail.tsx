@@ -21,7 +21,7 @@ import MainLayout from "../../../components/layout/MainLayout";
 
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
-import SkeletonTaskDetail from "./SkeletonTaskDetail";
+import { Skeleton } from "../../../components/ui/skeleton";
 import Chat from "../../chat/Chat";
 
 import useTaskStore from "../stores/taskStore";
@@ -59,16 +59,34 @@ function TaskDetail() {
     low: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-200",
   };
 
-  if (loading)
-    return (
-      <>
-        <SkeletonTaskDetail />
-      </>
-    );
+  const renderSidebarSkeleton = () => (
+    <Card className="p-6 space-y-4">
+      <Skeleton className="h-6 w-3/4 rounded bg-muted" />
+      <div className="flex gap-4">
+        <Skeleton className="h-6 w-24 rounded bg-muted" />
+        <Skeleton className="h-6 w-24 rounded bg-muted" />
+        <Skeleton className="h-6 w-24 rounded bg-muted" />
+      </div>
+      <div className="flex justify-between items-center mt-4">
+        <Skeleton className="h-6 w-32 rounded bg-muted" />
+        <Skeleton className="h-8 w-16 rounded bg-muted" />
+      </div>
+      <div className="space-y-4 mt-4">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-8 w-8 rounded-full bg-muted" />
+          <Skeleton className="h-6 w-1/2 rounded bg-muted" />
+        </div>
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-8 w-8 rounded-full bg-muted" />
+          <Skeleton className="h-6 w-1/2 rounded bg-muted" />
+        </div>
+      </div>
+    </Card>
+  );
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-6">
         {taskDetail?.title || "Loading..."}
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -126,7 +144,10 @@ function TaskDetail() {
               </Motion.div>
             </Motion.div>
           </Card>
-          {!loading && taskDetail ? (
+          
+          {loading ? (
+            renderSidebarSkeleton()
+          ) : taskDetail ? (
             <Motion.div
               variants={container}
               initial="hidden"

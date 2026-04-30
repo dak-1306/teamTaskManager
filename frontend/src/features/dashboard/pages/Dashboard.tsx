@@ -6,8 +6,10 @@ import RecentProjectPage from "./RecentProjectPage";
 import PieChartStatus from "../components/PieChartStatus";
 import TaskLineChart from "../components/TaskLineChart";
 import TaskLineChartByDay from "../components/TaskLineChartByDay";
-import SkeletonDashboard from "./SkeletonDashboard";
 import EmptyDashboard from "../components/EmptyDashboard";
+
+import { Card } from "../../../components/ui/card";
+import { Skeleton } from "../../../components/ui/skeleton";
 
 import useProjectStore from "../../project/stores/projectStore";
 import useTaskStore from "../../task/stores/taskStore";
@@ -59,9 +61,28 @@ export default function Dashboard() {
     [completedTasks, inProgressTasks, todoTasks],
   );
 
-  if (loading) {
-    return <SkeletonDashboard />;
-  }
+  const renderChartSkeletons = () => (
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4 mb-4">
+        <Card className="p-4 lg:col-span-1">
+          <Skeleton className="h-6 w-1/3 mb-6 rounded bg-muted dark:bg-muted" />
+          <div className="flex items-center justify-center">
+            <Skeleton className="rounded-full w-40 h-40 bg-muted dark:bg-muted" />
+          </div>
+        </Card>
+        <Card className="p-4 lg:col-span-1">
+          <Skeleton className="h-6 w-1/3 mb-6 rounded bg-muted dark:bg-muted" />
+          <Skeleton className="h-64 w-full rounded bg-muted dark:bg-muted" />
+        </Card>
+      </div>
+      <hr className="border-gray-100 dark:border-gray-800" />
+      <Card className="p-4 mt-4 mb-4">
+        <Skeleton className="h-6 w-1/4 mb-6 rounded bg-muted dark:bg-muted" />
+        <Skeleton className="h-64 w-full rounded bg-muted dark:bg-muted" />
+      </Card>
+    </>
+  );
+
   if (
     !loading &&
     projects.length === 0 &&
@@ -72,7 +93,7 @@ export default function Dashboard() {
   } else {
     return (
       <>
-        <h1 className="text-2xl font-bold text-foreground text-center">
+        <h1 className="text-2xl font-bold text-foreground text-center mb-6">
           Dashboard
         </h1>
         <OverviewPage
@@ -82,16 +103,27 @@ export default function Dashboard() {
           inProgressTasks={inProgressTasks}
           loading={loading}
         />
-        <hr className="border-gray-300" />
-        <div className="flex items-center space-x-4 mt-4 mb-4">
-          <PieChartStatus data={dataPiaChartStatus} totalData={totalTasks} />
-          <TaskLineChartByDay tasksByDay={tasksByDay} />
-        </div>
-        <hr className="border-gray-300" />
-        <TaskLineChart tasksByMonth={tasksByMonth} />
+        <hr className="border-gray-100 dark:border-gray-800 my-4" />
+        
+        {loading ? (
+          renderChartSkeletons()
+        ) : (
+          <>
+            <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-4 mt-4 mb-4">
+              <div className="w-full lg:w-1/2">
+                <PieChartStatus data={dataPiaChartStatus} totalData={totalTasks} />
+              </div>
+              <div className="w-full lg:w-1/2">
+                <TaskLineChartByDay tasksByDay={tasksByDay} />
+              </div>
+            </div>
+            <hr className="border-gray-100 dark:border-gray-800 my-4" />
+            <TaskLineChart tasksByMonth={tasksByMonth} />
+          </>
+        )}
 
-        <hr className="border-gray-300" />
-        <h2 className="text-xl font-bold text-foreground text-center">
+        <hr className="border-gray-100 dark:border-gray-800 my-4" />
+        <h2 className="text-xl font-bold text-foreground text-center mb-4">
           My Tasks
         </h2>
 
@@ -100,8 +132,8 @@ export default function Dashboard() {
           loading={loading}
           fetchTasks={fetchTasksForMyTasks}
         />
-        <hr className="border-gray-300" />
-        <h2 className="text-xl font-bold text-foreground text-center">
+        <hr className="border-gray-100 dark:border-gray-800 my-4" />
+        <h2 className="text-xl font-bold text-foreground text-center mb-4">
           Recent Projects
         </h2>
         <RecentProjectPage projects={projects} loading={loading} />

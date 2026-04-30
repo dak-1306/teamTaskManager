@@ -14,9 +14,9 @@ import MainLayout from "../../../components/layout/MainLayout";
 import CardProject from "../../../components/common/CardProject";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
+import { Skeleton } from "../../../components/ui/skeleton";
 import SearchBar from "../../../components/common/Search";
 import Filter from "../../../components/common/Filter";
-import SkeletonProjectList from "./SkeletonProjectList";
 import EmptyProjectBox from "../components/EmptyProjectBox";
 
 import CreateProject from "../components/CreateProject";
@@ -73,13 +73,24 @@ function ProjectList() {
   const hasProjects = projects.length > 0;
   const hasMemberProjects = memberProject.length > 0;
 
-  if (loading) {
-    return <SkeletonProjectList />;
-  }
+  const renderSkeletonCards = () => (
+    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none">
+      {Array.from({ length: 6 }).map((_, idx) => (
+        <li key={idx}>
+          <Card className="p-4 space-y-2 block h-[160px]">
+            <Skeleton className="h-5 w-3/4 rounded bg-muted dark:bg-muted" />
+            <Skeleton className="h-4 w-full rounded bg-muted dark:bg-muted mt-3" />
+            <Skeleton className="h-4 w-5/6 rounded bg-muted dark:bg-muted mt-2" />
+            <div className="flex justify-end mt-auto pt-4">
+              <Skeleton className="w-24 h-8 rounded bg-muted dark:bg-muted" />
+            </div>
+          </Card>
+        </li>
+      ))}
+    </ul>
+  );
 
-  return !loading && !hasProjects && !hasMemberProjects ? (
-    <EmptyProjectBox onCreate={() => setOpenCreateProject(true)} />
-  ) : (
+  return (
     <div>
       <Motion.ul
         variants={container}
@@ -120,64 +131,83 @@ function ProjectList() {
           </div>
         </Card>
       </Motion.ul>
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
-        <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">
-          <h1 className="text-2xl font-semibold text-center">My Projects</h1>
-          <Motion.ul
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={inViewOptions}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
-          >
-            {hasProjects ? (
-              projects.map((project: any) => (
-                <Motion.li
-                  key={project._id}
-                  variants={item}
-                  className="list-none"
-                >
-                  <CardProject project={project} variant="owner" />
-                </Motion.li>
-              ))
-            ) : (
-              <p className="col-span-full text-gray-500 text-center">
-                No projects found.
-              </p>
-            )}
-          </Motion.ul>
-        </div>
 
-        <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-2">
-          <h2 className="text-xl font-semibold text-center">
-            Projects I'm a Member Of
-          </h2>
-
-          <Motion.ul
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={inViewOptions}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
-          >
-            {hasMemberProjects ? (
-              memberProject.map((project: any) => (
-                <Motion.li
-                  key={project._id}
-                  variants={item}
-                  className="list-none"
-                >
-                  <CardProject project={project} variant="member" />
-                </Motion.li>
-              ))
-            ) : (
-              <p className="col-span-full text-gray-500 text-center">
-                No member projects found.
-              </p>
-            )}
-          </Motion.ul>
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
+          <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">
+            <h1 className="text-2xl font-semibold text-center">My Projects</h1>
+            {renderSkeletonCards()}
+          </div>
+          <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-2">
+            <h2 className="text-xl font-semibold text-center">
+              Projects I'm a Member Of
+            </h2>
+            {renderSkeletonCards()}
+          </div>
         </div>
-      </div>
+      ) : !hasProjects && !hasMemberProjects ? (
+        <EmptyProjectBox onCreate={() => setOpenCreateProject(true)} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
+          <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">
+            <h1 className="text-2xl font-semibold text-center">My Projects</h1>
+            <Motion.ul
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
+            >
+              {hasProjects ? (
+                projects.map((project: any) => (
+                  <Motion.li
+                    key={project._id}
+                    variants={item}
+                    className="list-none"
+                  >
+                    <CardProject project={project} variant="owner" />
+                  </Motion.li>
+                ))
+              ) : (
+                <p className="col-span-full text-gray-500 text-center">
+                  No projects found.
+                </p>
+              )}
+            </Motion.ul>
+          </div>
+
+          <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-2">
+            <h2 className="text-xl font-semibold text-center">
+              Projects I'm a Member Of
+            </h2>
+
+            <Motion.ul
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={inViewOptions}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none"
+            >
+              {hasMemberProjects ? (
+                memberProject.map((project: any) => (
+                  <Motion.li
+                    key={project._id}
+                    variants={item}
+                    className="list-none"
+                  >
+                    <CardProject project={project} variant="member" />
+                  </Motion.li>
+                ))
+              ) : (
+                <p className="col-span-full text-gray-500 text-center">
+                  No member projects found.
+                </p>
+              )}
+            </Motion.ul>
+          </div>
+        </div>
+      )}
+
       {openCreateProject && (
         <CreateProject
           isOpen={openCreateProject}

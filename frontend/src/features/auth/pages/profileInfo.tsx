@@ -12,6 +12,7 @@ import { User, Mail, Pencil, Camera, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditProfile from "../components/EditProfile";
 import { Spinner } from "@/components/ui/spinner";
+import { Skeleton } from "../../../components/ui/skeleton";
 export default function ProfileInfo() {
   const { userProfile, loading, uploadAvatarProvider, deleteAvatarProvider } =
     useAuth() as any;
@@ -71,12 +72,24 @@ export default function ProfileInfo() {
       setIsProcessing(false);
     }
   };
+  const renderSkeleton = () => (
+    <Card className="space-y-4 p-6">
+      <CardHeader>
+        <Skeleton className="h-6 w-1/4 rounded bg-muted dark:bg-muted" />
+        <Skeleton className="h-4 w-1/2 rounded bg-muted dark:bg-muted" />
+      </CardHeader>
+      <CardContent className="flex items-center space-x-8">
+        <Skeleton className="w-40 h-40 rounded-full bg-muted dark:bg-muted" />
+        <div className="flex-1 space-y-4">
+          <Skeleton className="h-6 w-1/3 rounded bg-muted dark:bg-muted" />
+          <Skeleton className="h-6 w-1/3 rounded bg-muted dark:bg-muted" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   if (loading || !userProfile) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Spinner />
-      </div>
-    );
+    return renderSkeleton();
   }
   return (
     <>

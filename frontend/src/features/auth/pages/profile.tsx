@@ -1,8 +1,6 @@
 import ProfileInfo from "./profileInfo";
 import ProfileSetting from "./ProfileSetting";
 import ProfileAccount from "./ProfileAccount";
-
-import SkeletonProfile from "./SkeletonProfile";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function Profile() {

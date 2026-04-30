@@ -9,11 +9,11 @@ import { container, item, inViewOptions } from "../../../app/motionConfig";
 
 import { Card } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
+import { Skeleton } from "../../../components/ui/skeleton";
 import SearchBar from "../../../components/common/Search";
 import Filter from "../../../components/common/Filter";
 import Pagination from "../../../components/common/Pagination";
 import CardTask from "../../../components/common/CardTask";
-import SkeletonTask from "./SkeletonTask";
 
 import AddTask from "../components/AddTask";
 import FilterModal from "../components/FilterModal";
@@ -87,7 +87,21 @@ function Task() {
     low: "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-200",
   };
 
-  if (loading) return <SkeletonTask />;
+  const renderSkeletonGrid = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {Array.from({ length: 4 }).map((_, idx) => (
+        <Card key={idx} className="p-4 space-y-3 block h-[140px]">
+          <Skeleton className="h-5 w-3/4 bg-muted rounded" />
+          <Skeleton className="h-4 w-full bg-muted rounded" />
+          <Skeleton className="h-4 w-1/2 bg-muted rounded" />
+          <div className="flex justify-end mt-auto pt-4 space-x-2">
+            <Skeleton className="w-12 h-6 bg-muted rounded-full" />
+            <Skeleton className="w-12 h-6 bg-muted rounded-full" />
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
 
   return (
     <div className="space-y-4">
@@ -129,7 +143,10 @@ function Task() {
           </div>
         </Motion.div>
       </Card>
-      {!loading && tasks.tasks && tasks.tasks.length > 0 ? (
+      
+      {loading ? (
+        renderSkeletonGrid()
+      ) : tasks.tasks && tasks.tasks.length > 0 ? (
         <Motion.div
           variants={container}
           initial="hidden"
