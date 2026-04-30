@@ -14,6 +14,7 @@ import ProjectDetail from "../features/project/pages/ProjectDetail";
 import Profile from "../features/auth/pages/profile";
 import ProjectSearchPage from "../features/project/pages/ProjectSearchPage";
 import TaskSearchPage from "../features/task/pages/TaskSearchPage";
+import ServerError from "../components/ServerError";
 
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext";
@@ -104,6 +105,7 @@ function Router() {
         />
       </Route>
       <Route path="/" element={<Landing />} />
+      <Route path="/server-error" element={<ServerError />} />
     </Routes>
   );
 }
