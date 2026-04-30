@@ -1,6 +1,3 @@
-import MainLayout from "../../../components/layout/MainLayout";
-import { motion as Motion } from "framer-motion";
-import { container, item, inViewOptions } from "../../../app/motionConfig";
 import ProfileInfo from "./profileInfo";
 import ProfileSetting from "./ProfileSetting";
 import ProfileAccount from "./ProfileAccount";

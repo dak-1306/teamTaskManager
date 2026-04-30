@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function RunningClockCanvas({ theme }) {
+export default function RunningClockCanvas() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -31,8 +31,8 @@ export default function RunningClockCanvas({ theme }) {
 
         ctx.beginPath();
         ctx.arc(x, y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = theme === "dark" ? "#3b82f6" : "#60a5fa"; // blue-400
-        ctx.shadowColor = theme === "dark" ? "#3b82f6" : "#60a5fa";
+        ctx.fillStyle = "#60a5fa"; // blue-400
+        ctx.shadowColor = "#60a5fa";
         ctx.shadowBlur = 6;
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -51,8 +51,8 @@ export default function RunningClockCanvas({ theme }) {
         radius,
         radius,
       );
-      gradient.addColorStop(0, theme === "dark" ? "#111827" : "#e5e7eb");
-      gradient.addColorStop(1, theme === "dark" ? "#020617" : "#040445");
+      gradient.addColorStop(0, "#e5e7eb");
+      gradient.addColorStop(1, "#040445");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, size, size);
@@ -73,16 +73,16 @@ export default function RunningClockCanvas({ theme }) {
     function drawFace() {
       ctx.beginPath();
       ctx.arc(0, 0, radius - 10, 0, Math.PI * 2);
-      ctx.fillStyle = theme === "dark" ? "#030712" : "#e5e7eb";
+      ctx.fillStyle = "#e5e7eb";
       ctx.fill();
 
       ctx.lineWidth = 2;
-      ctx.strokeStyle = theme === "dark" ? "#1f2937" : "#9ca3af";
+      ctx.strokeStyle = "#9ca3af";
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(0, 0, 4, 0, Math.PI * 2);
-      ctx.fillStyle = theme === "dark" ? "#e5e7eb" : "#1f2937";
+      ctx.fillStyle = "#1f2937";
       ctx.fill();
     }
 
@@ -90,7 +90,7 @@ export default function RunningClockCanvas({ theme }) {
       ctx.font = "14px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = theme === "dark" ? "#9ca3af" : "#374151";
+      ctx.fillStyle = "#374151";
 
       for (let num = 1; num <= 12; num++) {
         const angle = (num * Math.PI) / 6;
@@ -125,28 +125,13 @@ export default function RunningClockCanvas({ theme }) {
       const minAngle = (min * Math.PI) / 30;
       const hrAngle = (hr * Math.PI) / 6;
 
-      drawHand(
-        hrAngle,
-        radius * 0.5,
-        6,
-        theme === "dark" ? "#e5e7eb" : "#1f2937",
-      );
-      drawHand(
-        minAngle,
-        radius * 0.75,
-        4,
-        theme === "dark" ? "#9ca3af" : "#374151",
-      );
-      drawHand(
-        secAngle,
-        radius * 0.85,
-        2,
-        theme === "dark" ? "#3b82f6" : "#ef4444",
-      );
+      drawHand(hrAngle, radius * 0.5, 6, "#1f2937");
+      drawHand(minAngle, radius * 0.75, 4, "#374151");
+      drawHand(secAngle, radius * 0.85, 2, "#ef4444");
     }
 
     drawClock();
-  }, [theme]);
+  });
 
   return (
     <div className="flex justify-center items-center">
@@ -154,10 +139,7 @@ export default function RunningClockCanvas({ theme }) {
         ref={canvasRef}
         style={{
           borderRadius: "50%",
-          boxShadow:
-            theme === "dark"
-              ? "0 0 20px rgba(59, 130, 246, 0.7)"
-              : "0 0 20px rgba(96, 165, 250, 0.7)",
+          boxShadow: "0 0 20px rgba(96, 165, 250, 0.7)",
         }}
       />
     </div>

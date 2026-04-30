@@ -38,7 +38,6 @@ function Router() {
       </Route>
 
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Landing />} />
         <Route
           path="/dashboard"
           element={
@@ -104,6 +103,7 @@ function Router() {
           }
         />
       </Route>
+      <Route path="/" element={<Landing />} />
     </Routes>
   );
 }
