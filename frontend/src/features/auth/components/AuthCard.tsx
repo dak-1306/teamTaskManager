@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { Link } from "react-router-dom";
+import { Home } from "lucide-react";
 
 type AuthCardProps = {
   title: string;
@@ -56,7 +58,12 @@ function AuthCard({
             {loading ? <Spinner /> : title}
           </Button>
           {footer}
-
+          <Button variant="outline" className="w-full" asChild>
+            <Link to="/">
+              <Home className="w-4 h-4 mr-2" />
+              Quay về trang chủ
+            </Link>
+          </Button>
           {error && <p className="text-red-500 text-sm">{error}</p>}
         </CardFooter>
       </form>
