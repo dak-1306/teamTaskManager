@@ -26,9 +26,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import logoWeb from "../../assets/icons/Logo-web.svg";
+import background from "../../assets/images/background.avif";
 function Landing() {
-  const url_background =
-    "https://images.unsplash.com/photo-1533134486753-c833f0ed4866?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
   const { isLogin } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
@@ -95,8 +94,15 @@ function Landing() {
         <div className="relative h-16 overflow-hidden border-b border-white/10">
           {/* Background image */}
           <div
-            className={`absolute inset-0 bg-cover bg-center bg-[url('${url_background}')]`}
-          />
+            className="absolute inset-0"
+            >
+            <img
+              src={background}              
+              alt="Background"
+              className="w-full h-full object-cover"
+            />
+            </div>
+          
 
           {/* Overlay + blur */}
           <div className="absolute inset-0 backdrop-blur-sm" />
@@ -144,8 +150,17 @@ function Landing() {
       <main className="flex-1 pt-16 flex flex-col w-full space-y-20">
         {/* Hero Section */}
         <section
-          className={`relative flex w-full items-center h-[calc(100vh-3rem)] overflow-hidden bg-[url('${url_background}')] bg-cover bg-center`}
+          className={`relative flex w-full items-center h-[calc(100vh-3rem)] overflow-hidden`}
         >
+          <div
+            className="absolute inset-0"
+            >
+            <img
+              src={background}              
+              alt="Background"
+              className="w-full h-full object-cover"
+            />
+            </div>
           {/* Lớp Overlay để làm nổi bật text phía trên hình nền */}
           <div className="absolute inset-0 backdrop-blur-sm z-0"></div>
 
@@ -333,8 +348,14 @@ function Landing() {
       <footer className="relative overflow-hidden border-t border-white/10 bg-slate-950 text-slate-300">
         {/* Background */}
         <div
-          className={`absolute inset-0 bg-cover bg-center bg-[url('${url_background}')]`}
-        />
+            className="absolute inset-0"
+            >
+            <img
+              src={background}              
+              alt="Background"
+              className="w-full h-full object-cover"
+            />
+            </div>
 
         {/* Overlay */}
         <div className="absolute inset-0  backdrop-blur-sm" />
