@@ -1,7 +1,7 @@
 import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../features/auth/context/AuthContext";
-import LogoWeb from "@/assets/icons/logo-web.svg";
+import LogoWeb from "@/assets/icons/Logo-web.svg";
 function Header() {
   const { isLogin } = useAuth();
   return (
