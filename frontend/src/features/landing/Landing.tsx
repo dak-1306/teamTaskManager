@@ -28,13 +28,14 @@ import {
 import logoWeb from "../../assets/icons/Logo-web.svg";
 import background from "../../assets/images/background.avif";
 function Landing() {
-  const { isLogin } = useAuth();
+  const { isLogin, isServerDown } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    if (isLogin) {
+    // Chỉ chuyển hướng nếu server đã dậy và đã login thành công
+    if (isLogin && !isServerDown) {
       navigate("/dashboard");
     }
-  }, [isLogin, navigate]);
+  }, [isLogin, isServerDown, navigate]);
 
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById("features");
@@ -93,16 +94,13 @@ function Landing() {
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="relative h-16 overflow-hidden border-b border-white/10">
           {/* Background image */}
-          <div
-            className="absolute inset-0"
-            >
+          <div className="absolute inset-0">
             <img
-              src={background}              
+              src={background}
               alt="Background"
               className="w-full h-full object-cover"
             />
-            </div>
-          
+          </div>
 
           {/* Overlay + blur */}
           <div className="absolute inset-0 backdrop-blur-sm" />
@@ -152,15 +150,13 @@ function Landing() {
         <section
           className={`relative flex w-full items-center h-[calc(100vh-3rem)] overflow-hidden`}
         >
-          <div
-            className="absolute inset-0"
-            >
+          <div className="absolute inset-0">
             <img
-              src={background}              
+              src={background}
               alt="Background"
               className="w-full h-full object-cover"
             />
-            </div>
+          </div>
           {/* Lớp Overlay để làm nổi bật text phía trên hình nền */}
           <div className="absolute inset-0 backdrop-blur-sm z-0"></div>
 
@@ -206,7 +202,7 @@ function Landing() {
                   size="lg"
                   variant="outline"
                   onClick={scrollToFeatures}
-                  className="w-full sm:w-auto text-lg px-8 h-14 rounded-full bg-background/50"
+                  className="w-full sm:w-auto text-lg px-8 h-14 rounded-full"
                 >
                   Tìm hiểu thêm
                 </Button>
@@ -347,15 +343,13 @@ function Landing() {
 
       <footer className="relative overflow-hidden border-t border-white/10 bg-slate-950 text-slate-300">
         {/* Background */}
-        <div
-            className="absolute inset-0"
-            >
-            <img
-              src={background}              
-              alt="Background"
-              className="w-full h-full object-cover"
-            />
-            </div>
+        <div className="absolute inset-0">
+          <img
+            src={background}
+            alt="Background"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         {/* Overlay */}
         <div className="absolute inset-0  backdrop-blur-sm" />

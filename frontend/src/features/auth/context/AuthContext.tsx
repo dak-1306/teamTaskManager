@@ -43,6 +43,8 @@ type AuthContextType = {
   ) => Promise<AnyObj>;
   deleteAvatarProvider: (userId: string) => Promise<AnyObj>;
   error: string | null;
+  isServerDown: boolean;
+  setIsServerDown: (isDown: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +55,8 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [usersForAddMember, setUsersForAddMember] = useState<AnyObj[]>([]);
+
+  const [isServerDown, setIsServerDown] = useState<boolean>(false);
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
@@ -109,13 +113,34 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     }
   };
 
+  // const fetchUserProfile = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const user = await getUserCurrent();
+  //     setUserProfile(user);
+  //     setError(null);
+  //   } catch (err: unknown) {
+  //     const msg = err instanceof Error ? err.message : String(err);
+  //     console.error("Error fetching user profile:", msg);
+  //     setError(msg);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
       const user = await getUserCurrent();
       setUserProfile(user);
+      setIsServerDown(false); // Server chạy bình thường
       setError(null);
-    } catch (err: unknown) {
+    } catch (err: any) {
+      // KIỂM TRA LỖI SERVER NGỦ (Render thường trả về 502, 503 hoặc fetch bị fail hoàn toàn)
+      // Nếu không có response (network error) hoặc status >= 500
+      if (!err.response || err.response.status >= 500) {
+        setIsServerDown(true);
+      }
+
       const msg = err instanceof Error ? err.message : String(err);
       console.error("Error fetching user profile:", msg);
       setError(msg);
@@ -237,6 +262,8 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     uploadAvatarProvider,
     deleteAvatarProvider,
     error,
+    isServerDown,
+    setIsServerDown,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

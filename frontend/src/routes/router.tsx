@@ -20,17 +20,23 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext";
 
 const ProtectedRoute: React.FC<{ children?: ReactNode }> = ({ children }) => {
-  const { isLogin, loading } = useAuth();
+  const { isLogin, loading, isServerDown } = useAuth();
 
   if (loading) return null; // or a spinner component
+  if (isServerDown) return <Navigate to="/server-waking-up" replace />;
   if (!isLogin) return <Navigate to="/login" replace />;
 
   return <>{children}</>;
 };
 
 function Router() {
+  const { isServerDown } = useAuth();
   return (
     <Routes>
+      {/* Nếu server ngủ đông, mọi route đều có thể bị chặn hoặc redirect */}
+      {isServerDown && (
+        <Route path="*" element={<Navigate to="/server-waking-up" />} />
+      )}
       <Route element={<AuthBackground />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

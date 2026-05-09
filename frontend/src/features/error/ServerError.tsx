@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Coffee, RefreshCw, Server, Zap } from "lucide-react";
 
 const ServerWakingUp = () => {
+  const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [isServerUp, setIsServerUp] = useState(false);
 
@@ -24,7 +26,7 @@ const ServerWakingUp = () => {
           setProgress(100);
           // Đợi 1 giây để người dùng thấy progress 100% rồi chuyển hướng
           setTimeout(() => {
-            window.location.href = "/landing"; // Hoặc dùng useNavigate() nếu có React Router
+            navigate("/"); // Hoặc dùng useNavigate() nếu có React Router
           }, 1000);
         }
       } catch (error) {
