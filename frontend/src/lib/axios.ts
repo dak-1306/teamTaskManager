@@ -22,14 +22,14 @@ axiosClient.interceptors.response.use(
       if (window.location.pathname !== "/login") {
         window.location.href = "/login";
       }
-    } 
+    }
     // 2. Xử lý lỗi Server (500+) hoặc Network Error (Server Render ngủ)
     else if (!error.response || error.response?.status >= 500) {
-      if (window.location.pathname !== "/server-error") {
-        window.location.href = "/server-error";
+      if (window.location.pathname !== "/server-waking-up") {
+        window.location.href = "/server-waking-up";
       }
     }
-    
+
     return Promise.reject(error);
   },
 );
