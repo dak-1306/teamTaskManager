@@ -17,8 +17,7 @@ import { Card } from "../../../components/ui/card";
 import { Skeleton } from "../../../components/ui/skeleton";
 import SearchBar from "../../../components/common/Search";
 import Filter from "../../../components/common/Filter";
-import EmptyProjectBox from "../components/EmptyProjectBox";
-
+import EmptyState from "@/components/common/EmptyState";
 import CreateProject from "../components/CreateProject";
 
 import useProjectStore from "../stores/projectStore";
@@ -146,7 +145,16 @@ function ProjectList() {
           </div>
         </div>
       ) : !hasProjects && !hasMemberProjects ? (
-        <EmptyProjectBox onCreate={() => setOpenCreateProject(true)} />
+        <div className="w-full flex justify-center mt-10">
+          <EmptyState
+            variant="box"
+            icon={FolderPlus} // Bạn có thể đổi icon tùy ý
+            title="Chưa có dự án nào"
+            description="Thời gian đang trôi qua, hãy bắt đầu lấp đầy không gian này."
+            buttonText="Tạo dự án"
+            onAction={() => setOpenCreateProject(true)}
+          />
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
           <div className="space-y-4 border-r border-gray-200 dark:border-gray-700 pr-2">

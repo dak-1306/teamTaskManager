@@ -102,31 +102,31 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   const registerContext = async (userData: AnyObj) => {
     try {
       setLoading(true);
+      setError(null); // Reset lỗi cũ
+
       await registerUser(userData);
-      setError(null);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.error("Error registering user:", msg);
-      setError(msg);
+
+      // Nếu thành công, server chắc chắn đang thức
+      setIsServerDown(false);
+      return true; // Trả về true để Component biết mà navigate('/login')
+    } catch (err: any) {
+      const status = err.response?.status;
+      const msg = err.response?.data?.message || "Đã có lỗi xảy ra";
+
+      if (!status || status >= 500 || status === 404) {
+        // Lỗi do Render ngủ hoặc server sập
+        setIsServerDown(true);
+      } else {
+        // Lỗi nghiệp vụ (409 trùng mail, 400 thiếu field)
+        setIsServerDown(false);
+        setError(msg);
+      }
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  // const fetchUserProfile = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const user = await getUserCurrent();
-  //     setUserProfile(user);
-  //     setError(null);
-  //   } catch (err: unknown) {
-  //     const msg = err instanceof Error ? err.message : String(err);
-  //     console.error("Error fetching user profile:", msg);
-  //     setError(msg);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const fetchUserProfile = async () => {
     try {
       setLoading(true);

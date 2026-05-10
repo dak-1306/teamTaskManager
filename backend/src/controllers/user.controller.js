@@ -30,7 +30,7 @@ const getUserForAddMemberProject = async (req, res) => {
     const userForAddMember = users.filter(
       (user) => user._id.toString() !== req.user.id,
     );
-    
+
     res.status(200).json(userForAddMember);
   } catch (error) {
     res
@@ -58,14 +58,29 @@ const getUserCurrent = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+
+    // 1. Kiểm tra tồn tại trước để trả về lỗi nghiệp vụ rõ ràng
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email này đã được đăng ký." });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = new User({ username, email, password: hashedPassword });
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    await newUser.save();
+
+    // 2. Chỉ trả về thông tin cần thiết, KHÔNG trả về password
+    res.status(201).json({
+      message: "Đăng ký thành công",
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to create user", error: error.message });
+    // 3. Lỗi 500 chỉ dành cho lỗi server thực sự
+    res.status(500).json({ message: "Lỗi hệ thống", error: error.message });
   }
 };
 
@@ -82,7 +97,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     const token = generateToken(user._id);
-    
+
     res.status(200).json({
       message: "Login successful",
       token,

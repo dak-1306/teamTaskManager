@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 function Profile() {
   return (
     <>
-      <div className="max-w-2xl mx-auto mt-10">
+      <div className="max-w-2xl mx-auto">
         <Tabs defaultValue="profile">
           <TabsList>
             <TabsTrigger value="profile">Profile</TabsTrigger>

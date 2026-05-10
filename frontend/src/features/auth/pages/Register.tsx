@@ -29,8 +29,10 @@ function Register() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await registerContext(data);
-      navigate("/dashboard");
+      const success = await registerContext(data);
+      if (success) {
+        navigate("/login");
+      }
     } catch (err) {
       console.error("Register error:", err);
     }

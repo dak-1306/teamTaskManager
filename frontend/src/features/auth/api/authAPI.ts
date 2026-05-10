@@ -10,8 +10,9 @@ const registerUser = async (userData: AnyObj) => {
   try {
     const response = await axiosClient.post("/users/create", userData);
     return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to register user");
+  } catch (err: any) {
+    // Quăng nguyên err để lớp sau có thể đọc được err.response.status
+    throw err;
   }
 };
 

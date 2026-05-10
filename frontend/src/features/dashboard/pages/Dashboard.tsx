@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 import OverviewPage from "./OverviewPage";
 import MyTaskPage from "./MyTaskPage";
@@ -6,7 +7,7 @@ import RecentProjectPage from "./RecentProjectPage";
 import PieChartStatus from "../components/PieChartStatus";
 import TaskLineChart from "../components/TaskLineChart";
 import TaskLineChartByDay from "../components/TaskLineChartByDay";
-import EmptyDashboard from "../components/EmptyDashboard";
+import EmptyState from "@/components/common/EmptyState";
 
 import { Card } from "../../../components/ui/card";
 import { Skeleton } from "../../../components/ui/skeleton";
@@ -15,6 +16,7 @@ import useProjectStore from "../../project/stores/projectStore";
 import useTaskStore from "../../task/stores/taskStore";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { projects, fetchProjectMe, loading } = useProjectStore() as any;
   const { tasks, fetchTasks, taskOverview, fetchTaskOverview } =
     useTaskStore() as any;
@@ -89,7 +91,17 @@ export default function Dashboard() {
     tasks.tasks.length === 0 &&
     taskOverview.totalTasks === 0
   ) {
-    return <EmptyDashboard />;
+    return (
+      <main className="flex justify-center items-center w-full ">
+        <EmptyState
+          variant="box"
+          title="Dòng chảy thời gian đang chờ đợi"
+          description="Mọi kế hoạch vĩ đại đều bắt đầu từ một hạt cát nhỏ. Hãy khởi tạo dự án đầu tiên của bạn."
+          buttonText="Tạo dự án mới"
+          onAction={() => navigate("/projects")}
+        />
+      </main>
+    );
   } else {
     return (
       <>
@@ -104,14 +116,17 @@ export default function Dashboard() {
           loading={loading}
         />
         <hr className="border-gray-100 dark:border-gray-800 my-4" />
-        
+
         {loading ? (
           renderChartSkeletons()
         ) : (
           <>
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-4 mt-4 mb-4">
               <div className="w-full lg:w-1/2">
-                <PieChartStatus data={dataPiaChartStatus} totalData={totalTasks} />
+                <PieChartStatus
+                  data={dataPiaChartStatus}
+                  totalData={totalTasks}
+                />
               </div>
               <div className="w-full lg:w-1/2">
                 <TaskLineChartByDay tasksByDay={tasksByDay} />
