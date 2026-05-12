@@ -2,15 +2,31 @@ import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../features/auth/context/AuthContext";
 import LogoWeb from "@/assets/icons/Logo-web.svg";
+import LogoColor from "@/assets/icons/Logo-color.svg";
+import { useTheme } from "@/context/ThemContext";
+import { cn } from "@/lib/utils";
+
 function Header() {
   const { isLogin } = useAuth();
+  const { theme } = useTheme();
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-600 text-gray-800 dark:text-white h-16 px-8 flex justify-between items-center z-60">
+      <header className="fixed top-0 left-0 w-full border border-b bg-transparent backdrop-blur-sm h-16 px-8 flex justify-between items-center z-60">
         <Link to={`${isLogin ? "/dashboard" : "/"}`}>
           <div className="flex items-center space-x-2">
-            <img src={LogoWeb} alt="Team Task Manager" className="w-8" />
-            <h1 className="text-2xl font-bold">Team Task Manager</h1>
+            <img
+              src={theme === "light" ? LogoColor : LogoWeb}
+              alt="Team Task Manager"
+              className="w-8"
+            />
+            <h1
+              className={cn(
+                "text-2xl font-bold",
+                theme === "light" ? "text-primary" : "text-primary-foreground",
+              )}
+            >
+              Team Task Manager
+            </h1>
           </div>
         </Link>
 

@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import Filter from "../../../components/common/Filter";
+import Filter from "@/components/common/Filter";
 import { Label } from "@/components/ui/label";
 
 type ManageParticipantsProps = {

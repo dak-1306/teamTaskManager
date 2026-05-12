@@ -6,8 +6,8 @@ import {
   AlertDialogDescription,
   AlertDialogAction,
   AlertDialogCancel,
-} from "../../../components/ui/alert-dialog";
-import useChatStore from "../store/chatStore";
+} from "@/components/ui/alert-dialog";
+import useChatStore from "../../store/chatStore";
 
 interface Props {
   isOpen: boolean;
@@ -22,9 +22,13 @@ function DeleteConversation({ isOpen, onClose, chatId, chatName }: Props) {
   return (
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
-        <AlertDialogTitle>Xóa cuộc trò chuyện {chatName || ""}</AlertDialogTitle>
+        <AlertDialogTitle>
+          Xóa cuộc trò chuyện {chatName || ""}
+        </AlertDialogTitle>
         <AlertDialogDescription>
-          Bạn có chắc chắn muốn xóa cuộc trò chuyện này không? Toàn bộ tin nhắn và dữ liệu liên quan sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
+          Bạn có chắc chắn muốn xóa cuộc trò chuyện này không? Toàn bộ tin nhắn
+          và dữ liệu liên quan sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn
+          tác.
         </AlertDialogDescription>
         <div className="flex space-x-4 justify-center mt-4">
           <AlertDialogCancel onClick={onClose}>Hủy</AlertDialogCancel>

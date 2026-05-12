@@ -30,6 +30,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "../../../components/ui/skeleton";
 
 import Task from "../../task/pages/Task";
@@ -37,8 +39,7 @@ import Task from "../../task/pages/Task";
 import AddMember from "../components/AddMember";
 import EditProject from "../components/EditProject";
 import DeleteProject from "../components/DeleteProject";
-import Chat from "../../chat/Chat";
-import Conversation from "../../chat/conversation/Conversation";
+import ChatLayout from "@/features/chat/pages/ChatLayout";
 
 import useProjectStore from "../stores/projectStore";
 
@@ -113,7 +114,9 @@ function ProjectDetail() {
                         <ArrowBigLeft />
                       </Button>
                     </CardAction>
-                    <CardTitle>{projectDetail?.name || "Project Detail"}</CardTitle>
+                    <CardTitle>
+                      {projectDetail?.name || "Project Detail"}
+                    </CardTitle>
                     <CardDescription>
                       {projectDetail?.description || "No description provided."}
                     </CardDescription>
@@ -180,7 +183,9 @@ function ProjectDetail() {
                         </dt>
                         <dd className="ml-auto text-sm text-gray-800 dark:text-gray-100">
                           {projectDetail?.createdAt
-                            ? new Date(projectDetail.createdAt).toLocaleDateString()
+                            ? new Date(
+                                projectDetail.createdAt,
+                              ).toLocaleDateString()
                             : "Unknown"}
                         </dd>
                       </div>
@@ -227,19 +232,24 @@ function ProjectDetail() {
             </Motion.div>
           )}
         </div>
-
-        {/* Task List */}
-        <div className="col-span-12 lg:col-span-5">
-          <Task projectId={id} variant={variant} />
-        </div>
-        {/* chat  */}
-        <div className="col-span-12 lg:col-span-4">
-          <Card className="space-y-4 flex flex-col p-6 mb-10">
-            <Conversation projectId={id} taskId={undefined} variant={variant} />
-            <hr className="border-gray-200 dark:border-gray-700" />
-            <Chat conversation={null} />
-          </Card>
-        </div>
+        <Tabs
+          defaultValue="task"
+          className="w-full h-[600px] col-span-12 lg:col-span-8"
+        >
+          <TabsList>
+            <TabsTrigger value="task">Task</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+          </TabsList>
+          <TabsContent value="task">
+            <Task projectId={id} variant={variant} />
+          </TabsContent>
+          <TabsContent
+            value="chat"
+            className="w-full h-[600px] overflow-hidden"
+          >
+            <ChatLayout projectId={id} taskId={undefined} variant={variant} />
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Modals */}

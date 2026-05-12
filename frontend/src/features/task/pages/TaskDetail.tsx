@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import EditTask from "../components/EditTask";
-import Conversation from "../../chat/conversation/Conversation";
+import ChatLayout from "../../chat/pages/ChatLayout";
 import DeleteTask from "../components/DeleteTask";
 import AddAssignees from "../components/AddAssignees";
 
@@ -22,7 +22,6 @@ import MainLayout from "../../../components/layout/MainLayout";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import { Skeleton } from "../../../components/ui/skeleton";
-import Chat from "../../chat/Chat";
 
 import useTaskStore from "../stores/taskStore";
 
@@ -89,8 +88,8 @@ function TaskDetail() {
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-6">
         {taskDetail?.title || "Loading..."}
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="md:col-span-1 space-y-4">
+      <div className="grid grid-cols-12 gap-4 mb-6">
+        <div className="col-span-12 md:col-span-5 space-y-4">
           <Card className="flex items-center justify-start gap-2 p-4">
             <Motion.div
               variants={container}
@@ -144,7 +143,7 @@ function TaskDetail() {
               </Motion.div>
             </Motion.div>
           </Card>
-          
+
           {loading ? (
             renderSidebarSkeleton()
           ) : taskDetail ? (
@@ -245,23 +244,18 @@ function TaskDetail() {
             <p className="text-gray-500">Task not found.</p>
           )}
         </div>
-        <Card className="md:col-span-1 p-6 mb-10">
-          <Motion.div
-            className="space-y-4 flex flex-col"
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={inViewOptions}
-          >
-            <Conversation
-              projectId={undefined}
-              taskId={taskId}
-              variant={variant}
-            />
-            <hr className="my-3" />
-            <Chat conversation={null} />
+
+        <Motion.div
+          className="col-span-12 md:col-span-7 h-[600px] overflow-hidden"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={inViewOptions}
+        >
+          <Motion.div variants={item}>
+            <ChatLayout projectId={null} taskId={taskId} variant={variant} />
           </Motion.div>
-        </Card>
+        </Motion.div>
       </div>
       {openAddAssignees && (
         <AddAssignees

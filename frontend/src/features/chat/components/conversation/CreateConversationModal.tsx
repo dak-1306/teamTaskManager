@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import Filter from "../../../components/common/Filter";
+import Filter from "@/components/common/Filter";
 
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
