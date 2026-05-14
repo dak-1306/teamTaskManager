@@ -150,6 +150,15 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   };
 
   useEffect(() => {
+    const handleServerDown = () => setIsServerDown(true);
+    const handleUnauthorized = () => {
+      setIsLogin(false);
+      setUserProfile(null);
+    };
+
+    window.addEventListener("serverDown", handleServerDown);
+    window.addEventListener("unauthorized", handleUnauthorized);
+
     const token = localStorage.getItem("token");
     if (token) {
       setIsLogin(true);
@@ -159,6 +168,11 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
       setIsLogin(false);
       setLoading(false);
     }
+    
+    return () => {
+      window.removeEventListener("serverDown", handleServerDown);
+      window.removeEventListener("unauthorized", handleUnauthorized);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

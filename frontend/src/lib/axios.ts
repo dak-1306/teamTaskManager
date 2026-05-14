@@ -18,15 +18,11 @@ axiosClient.interceptors.response.use(
     // 1. Xử lý lỗi 401 (Hết hạn token hoặc không có quyền)
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
+      window.dispatchEvent(new Event("unauthorized"));
     }
     // 2. Xử lý lỗi Server (500+) hoặc Network Error (Server Render ngủ)
     else if (!error.response || error.response?.status >= 500) {
-      if (window.location.pathname !== "/server-waking-up") {
-        window.location.href = "/server-waking-up";
-      }
+      window.dispatchEvent(new Event("serverDown"));
     }
 
     return Promise.reject(error);

@@ -16,7 +16,7 @@ import ProjectSearchPage from "../features/project/pages/ProjectSearchPage";
 import TaskSearchPage from "../features/task/pages/TaskSearchPage";
 import ServerWakingUp from "../features/error/ServerError";
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext";
 
 const ProtectedRoute: React.FC<{ children?: ReactNode }> = ({ children }) => {
@@ -31,12 +31,14 @@ const ProtectedRoute: React.FC<{ children?: ReactNode }> = ({ children }) => {
 
 function Router() {
   const { isServerDown } = useAuth();
+  const location = useLocation();
+
+  if (isServerDown && location.pathname !== "/server-waking-up") {
+    return <Navigate to="/server-waking-up" replace state={{ from: location }} />;
+  }
+
   return (
     <Routes>
-      {/* Nếu server ngủ đông, mọi route đều có thể bị chặn hoặc redirect */}
-      {isServerDown && (
-        <Route path="*" element={<Navigate to="/server-waking-up" />} />
-      )}
       <Route element={<AuthBackground />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

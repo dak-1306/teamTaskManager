@@ -21,4 +21,7 @@ app.use("/tasks", taskRoutes);
 app.use("/conversations", conversationRoutes);
 app.use("/chats", chatRoutes);
 
+// Health check endpoint for Render sleeping detection
+app.get("/ping", (req, res) => res.status(200).send("pong"));
+
 module.exports = app;

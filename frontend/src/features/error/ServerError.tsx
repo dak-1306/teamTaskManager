@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Coffee, RefreshCw, Server, Zap } from "lucide-react";
+import { useAuth } from "../auth/context/AuthContext";
 
 const ServerWakingUp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setIsServerDown } = useAuth();
   const [progress, setProgress] = useState(0);
   const [isServerUp, setIsServerUp] = useState(false);
 
-  // URL API của bạn trên Render (ví dụ: https://your-backend.onrender.com/ping)
-  const API_URL = "YOUR_BACKEND_URL_HERE/ping";
+  // URL API của bạn trên Render
+  const API_URL = `${import.meta.env.VITE_API_URL?.replace(/\/$/, "")}/ping`;
 
   useEffect(() => {
     // 1. Chạy thanh progress giả lập
@@ -24,9 +27,11 @@ const ServerWakingUp = () => {
         if (response.ok) {
           setIsServerUp(true);
           setProgress(100);
+          setIsServerDown(false);
           // Đợi 1 giây để người dùng thấy progress 100% rồi chuyển hướng
           setTimeout(() => {
-            navigate("/"); // Hoặc dùng useNavigate() nếu có React Router
+            const from = location.state?.from?.pathname || "/";
+            navigate(from, { replace: true });
           }, 1000);
         }
       } catch (error) {
