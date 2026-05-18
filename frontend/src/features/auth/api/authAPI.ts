@@ -1,148 +1,165 @@
-import axiosClient from "../../../lib/axios";
 import type { AxiosProgressEvent } from "axios";
 
-type AnyObj = Record<string, any>;
+import axiosClient from "../../../lib/axios";
 
-const safeMessage = (err: unknown) =>
-  err instanceof Error ? err.message : String(err);
+import type {
+  ChangePasswordData,
+  LoginFormData,
+  RegisterFormData,
+  UpdateProfileData,
+} from "@/features/auth/utils/schemas";
 
-const registerUser = async (userData: AnyObj) => {
+import type { UserProfile } from "@/features/auth/utils/type";
+
+type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T;
+};
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return fallback;
+};
+
+const handleRequest = async <T>(
+  request: Promise<{ data: T }>,
+  fallbackMessage: string,
+): Promise<T> => {
   try {
-    const response = await axiosClient.post("/users/create", userData);
+    const response = await request;
+
     return response.data;
-  } catch (err: any) {
-    // Quăng nguyên err để lớp sau có thể đọc được err.response.status
-    throw err;
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error, fallbackMessage));
   }
 };
 
-const loginUser = async (credentials: AnyObj) => {
-  try {
-    const response = await axiosClient.post("/users/login", credentials);
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to login user");
-  }
+// =========================
+// Auth
+// =========================
+
+const registerUser = async (payload: RegisterFormData) => {
+  return handleRequest<UserProfile>(
+    axiosClient.post("/users/create", payload),
+    "Đăng ký tài khoản thất bại",
+  );
 };
 
-const getUserCurrent = async () => {
-  try {
-    const response = await axiosClient.get("/users/me");
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to retrieve user profile");
-  }
+const loginUser = async (payload: LoginFormData) => {
+  return handleRequest<{
+    token: string;
+    user: UserProfile;
+    message: string;
+  }>(axiosClient.post("/users/login", payload), "Đăng nhập thất bại");
 };
 
-const getAllUser = async () => {
-  try {
-    const response = await axiosClient.get("/users");
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to retrieve users");
-  }
+// =========================
+// User
+// =========================
+
+const getCurrentUser = async () => {
+  return handleRequest<UserProfile>(
+    axiosClient.get("/users/me"),
+    "Không thể lấy thông tin người dùng",
+  );
 };
 
-const updateUser = async (userId: string, updatedData: AnyObj) => {
-  try {
-    const response = await axiosClient.put(`/users/${userId}`, updatedData);
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to update user profile");
-  }
+const getAllUsers = async () => {
+  return handleRequest<UserProfile[]>(
+    axiosClient.get("/users"),
+    "Không thể lấy danh sách người dùng",
+  );
 };
 
-const changePassword = async (
-  userId: string,
-  {
-    currentPassword,
-    newPassword,
-  }: { currentPassword: string; newPassword: string },
-) => {
-  try {
-    const response = await axiosClient.put(`/users/${userId}/password`, {
-      currentPassword,
-      newPassword,
-    });
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to change password");
-  }
+const getUsersForAddMemberProject = async () => {
+  return handleRequest<UserProfile[]>(
+    axiosClient.get("/users/add-member"),
+    "Không thể lấy danh sách thành viên",
+  );
+};
+
+const updateUser = async (userId: string, payload: UpdateProfileData) => {
+  return handleRequest<UserProfile>(
+    axiosClient.put(`/users/${userId}`, payload),
+    "Cập nhật thông tin thất bại",
+  );
 };
 
 const deleteUser = async (userId: string) => {
-  try {
-    const response = await axiosClient.delete(`/users/${userId}`);
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to delete user account");
-  }
+  return handleRequest<null>(
+    axiosClient.delete(`/users/${userId}`),
+    "Xóa tài khoản thất bại",
+  );
 };
 
-const getUserForAddMemberProject = async () => {
-  try {
-    const response = await axiosClient.get("/users/add-member");
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(
-      safeMessage(err) || "Failed to retrieve users for add member project",
-    );
-  }
+// =========================
+// Password
+// =========================
+
+const changePassword = async (userId: string, payload: ChangePasswordData) => {
+  return handleRequest<null>(
+    axiosClient.put(`/users/${userId}/password`, {
+      currentPassword: payload.currentPassword,
+      newPassword: payload.newPassword,
+      confirmNewPassword: payload.confirmNewPassword,
+    }),
+    "Đổi mật khẩu thất bại",
+  );
 };
 
-export {
-  registerUser,
-  loginUser,
-  getAllUser,
-  getUserForAddMemberProject,
-  getUserCurrent,
-  updateUser,
-  changePassword,
-  deleteUser,
-};
+// =========================
+// Avatar
+// =========================
 
 const uploadAvatar = async (
   userId: string,
   file: File,
-  onUploadProgress?: (p: number) => void,
+  onUploadProgress?: (progress: number) => void,
 ) => {
-  try {
-    const formData = new FormData();
-    formData.append("avatar", file);
-    const response = await axiosClient.post(
-      `/users/${userId}/avatar`,
-      formData,
-      {
-        onUploadProgress: (progressEvent?: AxiosProgressEvent) => {
-          if (typeof onUploadProgress === "function") {
-            const loaded =
-              typeof progressEvent?.loaded === "number"
-                ? progressEvent!.loaded
-                : 0;
-            const total =
-              typeof progressEvent?.total === "number" &&
-              progressEvent!.total > 0
-                ? progressEvent!.total
-                : 1;
-            const percentCompleted = Math.round((loaded * 100) / total);
-            onUploadProgress(percentCompleted);
-          }
-        },
+  const formData = new FormData();
+
+  formData.append("avatar", file);
+
+  return handleRequest<UserProfile>(
+    axiosClient.post(`/users/${userId}/avatar`, formData, {
+      onUploadProgress: (event?: AxiosProgressEvent) => {
+        if (!onUploadProgress) return;
+
+        const loaded = event?.loaded ?? 0;
+        const total = event?.total ?? 1;
+
+        const progress = Math.round((loaded * 100) / total);
+
+        onUploadProgress(progress);
       },
-    );
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to upload avatar");
-  }
+    }),
+    "Tải ảnh đại diện thất bại",
+  );
 };
 
 const deleteAvatar = async (userId: string) => {
-  try {
-    const response = await axiosClient.delete(`/users/${userId}/avatar`);
-    return response.data;
-  } catch (err: unknown) {
-    throw new Error(safeMessage(err) || "Failed to delete avatar");
-  }
+  return handleRequest<UserProfile>(
+    axiosClient.delete(`/users/${userId}/avatar`),
+    "Xóa ảnh đại diện thất bại",
+  );
 };
 
-export { uploadAvatar, deleteAvatar };
+export const userApi = {
+  registerUser,
+  loginUser,
+
+  getCurrentUser,
+  getAllUsers,
+  getUsersForAddMemberProject,
+  updateUser,
+  deleteUser,
+
+  changePassword,
+
+  uploadAvatar,
+  deleteAvatar,
+};

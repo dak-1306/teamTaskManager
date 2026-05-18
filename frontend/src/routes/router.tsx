@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { ReactNode, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 import AuthBackground from "../features/auth/components/AuthBackground";
 import Landing from "../features/landing/Landing";
@@ -17,25 +17,45 @@ import TaskSearchPage from "../features/task/pages/TaskSearchPage";
 import ServerWakingUp from "../features/error/ServerError";
 
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../features/auth/context/AuthContext";
+import { useCurrentUser } from "../features/auth/queries/useCurrentUser";
+import { useAuthStore } from "@/features/auth/store/authStore";
+
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 const ProtectedRoute: React.FC<{ children?: ReactNode }> = ({ children }) => {
-  const { isLogin, loading, isServerDown } = useAuth();
-
-  if (loading) return null; // or a spinner component
-  if (isServerDown) return <Navigate to="/server-waking-up" replace />;
-  if (!isLogin) return <Navigate to="/login" replace />;
+  const { data: currentUser, isLoading, error } = useCurrentUser();
+  const setIsServerDown = useAuthStore((state) => state.setIsServerDown);
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load user data. Please try again later.");
+    }
+    if (error?.message === "Network Error") {
+      setIsServerDown(true);
+    }
+  }, [error]);
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    );
+  } // or a spinner component
+  if (!currentUser) return <Navigate to="/login" replace />;
 
   return <>{children}</>;
 };
 
 function Router() {
-  const { isServerDown } = useAuth();
-  const location = useLocation();
+  const isServerDown = useAuthStore((state) => state.isServerDown);
+  const navigate = useNavigate();
 
-  if (isServerDown && location.pathname !== "/server-waking-up") {
-    return <Navigate to="/server-waking-up" replace state={{ from: location }} />;
-  }
+  useEffect(() => {
+    if (isServerDown) {
+      toast.error("Server is currently down. Please try again later.");
+      navigate("/server-waking-up");
+    }
+  }, [isServerDown]);
 
   return (
     <Routes>

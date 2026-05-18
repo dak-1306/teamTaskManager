@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
+
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Dialog,
@@ -10,92 +14,155 @@ import {
   DialogTitle,
   DialogClose,
 } from "../../../components/ui/dialog";
+
 import { Button } from "../../../components/ui/button";
+
 import { Input } from "../../../components/ui/input";
+
 import { Field, FieldLabel, FieldContent } from "../../../components/ui/field";
 
-import { useAuth } from "../context/AuthContext";
+import { useUpdateProfile } from "../mutations/useUpdateProfile";
+
+import { updateProfileSchema, type UpdateProfileData } from "../utils/schemas";
+
+import type { UserProfile } from "../utils/type";
 
 type EditProfileProps = {
-  user: any;
+  user: UserProfile | null;
+
   isOpen: boolean;
+
   onClose: () => void;
 };
 
 function EditProfile({ user, isOpen, onClose }: EditProfileProps) {
-  const [updateError, setUpdateError] = useState<string | null>(null);
-  const [username, setUsername] = useState<string>(user?.username ?? "");
-  const [email, setEmail] = useState<string>(user?.email ?? "");
-  const { updateInfoUser } = useAuth() as any;
+  const {
+    register,
+
+    handleSubmit,
+
+    reset,
+
+    setError,
+
+    formState: { errors, isDirty },
+  } = useForm<UpdateProfileData>({
+    resolver: zodResolver(updateProfileSchema),
+
+    defaultValues: {
+      username: "",
+      email: "",
+    },
+  });
+
+  const {
+    mutate: updateProfile,
+
+    isPending,
+  } = useUpdateProfile();
 
   useEffect(() => {
-    if (isOpen) {
-      setUsername(user?.username ?? "");
-      setEmail(user?.email ?? "");
-      setUpdateError(null);
-    }
-  }, [isOpen, user]);
-
-  const handleSaveChanges = (e: React.FormEvent) => {
-    e.preventDefault();
-    const updatedData = {
-      username: username || undefined,
-      email: email || undefined,
-    };
-    if (
-      updatedData.username === user?.username &&
-      updatedData.email === user?.email
-    ) {
-      setUpdateError("No changes to update.");
+    if (!isOpen || !user) {
       return;
     }
-    updateInfoUser(user._id, updatedData);
-    onClose();
+
+    reset({
+      username: user.username,
+      email: user.email,
+    });
+  }, [isOpen, user, reset]);
+
+  const onSubmit = (data: UpdateProfileData) => {
+    if (!user?._id) {
+      return;
+    }
+
+    if (!isDirty) {
+      setError("root", {
+        message: "No changes to update.",
+      });
+
+      return;
+    }
+
+    updateProfile(
+      {
+        userId: user._id,
+
+        data,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+
+        onError: (error) => {
+          setError("root", {
+            message: error instanceof Error ? error.message : "Update failed",
+          });
+        },
+      },
+    );
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
       <DialogPortal>
         <DialogOverlay />
+
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Profile</DialogTitle>
           </DialogHeader>
 
           <form
+            onSubmit={handleSubmit(onSubmit)}
             className="w-full max-w-sm mt-2 space-y-4"
-            onSubmit={handleSaveChanges}
           >
             <Field>
               <FieldLabel htmlFor="username">Username</FieldLabel>
+
               <FieldContent>
-                <Input
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
+                <Input id="username" {...register("username")} />
               </FieldContent>
+
+              {errors.username && (
+                <p className="text-sm text-red-500">
+                  {errors.username.message}
+                </p>
+              )}
             </Field>
 
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
+
               <FieldContent>
-                <Input
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <Input id="email" type="email" {...register("email")} />
               </FieldContent>
+
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
             </Field>
 
-            {updateError && <p className="text-red-500">{updateError}</p>}
+            {errors.root && (
+              <p className="text-sm text-red-500">{errors.root.message}</p>
+            )}
 
             <DialogFooter className="flex justify-center gap-4">
-              <Button type="submit" variant="default" size="default">
-                Save Changes
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Saving..." : "Save Changes"}
               </Button>
+
               <DialogClose asChild>
-                <Button variant="outline" size="default">
+                <Button type="button" variant="outline">
                   Close
                 </Button>
               </DialogClose>

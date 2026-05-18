@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
+import { X } from "lucide-react";
 
 import {
   Dialog,
@@ -70,7 +71,7 @@ function EditProject({ isOpen, onClose, project }: Props) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleOnClose()}>
       <DialogContent>
         <DialogTitle>Edit Project</DialogTitle>
-        <form onSubmit={handleUpdateProject}>
+        <form onSubmit={handleUpdateProject} className="space-y-4">
           {/* Input Fields */}
           {Field.map((input) => (
             <div key={input.id} className="mb-4">
@@ -95,14 +96,14 @@ function EditProject({ isOpen, onClose, project }: Props) {
           {/* Members List */}
           {project && members && (
             <div className=" space-y-2">
-              <p className="text-gray-700 dark:text-white text-sm font-semibold">
+              <p className=" text-sm font-semibold">
                 Members ({members.length}):
               </p>
-              <ul className="list-disc list-inside">
+              <ul className="list-disc list-inside space-y-1 max-h-48 overflow-y-auto">
                 {members.map((member: any) => (
                   <li
                     key={member._id}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between p-2 rounded-md border "
                   >
                     <span>{`${member.username} (${member.email})`}</span>
                     <Button
@@ -114,7 +115,7 @@ function EditProject({ isOpen, onClose, project }: Props) {
                         )
                       }
                     >
-                      Remove
+                      <X className="w-4 h-4" />
                     </Button>
                   </li>
                 ))}

@@ -3,7 +3,7 @@ import AuthCard from "../components/AuthCard";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgotPasswordSchema, ForgotPasswordData } from "../utils/schemal";
+import { forgotPasswordSchema, ForgotPasswordData } from "../utils/schemas";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

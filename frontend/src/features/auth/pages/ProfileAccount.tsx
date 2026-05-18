@@ -1,22 +1,42 @@
 import { SquareArrowRightExit } from "lucide-react";
+import { useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "../context/AuthContext";
+import { useDeleteAccount } from "../mutations/useDeleteAccount";
+import { useCurrentUser } from "../queries/useCurrentUser";
+import { useLogout } from "../hooks/useLogout";
 import AuthDialog from "../components/AuthDialog";
 import ChangePassword from "../components/ChangePassword";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Skeleton } from "../../../components/ui/skeleton";
 export default function ProfileAccount() {
-  const { userProfile, deleteUserProvider, loading, logout } = useAuth() as any;
+  const { data: userProfile, isLoading: loading, error } = useCurrentUser();
+  const { mutate: deleteUserProvider } = useDeleteAccount();
   const navigate = useNavigate();
+  const logout = useLogout();
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load user profile. Please try again later.");
+    }
+  }, [error]);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    );
+  }
 
   const renderSkeleton = () => (
     <div className="space-y-4 p-4">
@@ -81,12 +101,12 @@ export default function ProfileAccount() {
             <AuthDialog
               title="Delete Account"
               message="Are you sure you want to delete your account?"
-              onConfirm={() => deleteUserProvider(userProfile._id)}
+              onConfirm={() => deleteUserProvider(userProfile?._id || "")}
             />
           </AlertDialog>
         </div>
         <Separator />
-        <ChangePassword userId={userProfile._id} />
+        <ChangePassword userId={userProfile?._id || ""} />
       </div>
     </>
   );

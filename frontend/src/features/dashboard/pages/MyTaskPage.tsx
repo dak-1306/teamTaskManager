@@ -63,6 +63,7 @@ const MyTaskPage: React.FC<Props> = ({ tasks, loading, fetchTasks }) => {
         currentPage={Number(tasks?.page ?? 1)}
         totalPages={Math.ceil((tasks?.total || 0) / (tasks?.limit || 1))}
         onPageChange={(page) => fetchTasks(page, tasks?.limit || 1)}
+        className="mt-6"
       />
     </div>
   );

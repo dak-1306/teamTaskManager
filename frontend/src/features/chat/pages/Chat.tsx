@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import useChatStore from "../store/chatStore";
-import { useAuth } from "@/features/auth/context/AuthContext";
+import { useCurrentUser } from "@/features/auth/queries/useCurrentUser";
 import { MessageSquare } from "lucide-react";
 
 import { ChatHeader } from "../components/chat/ChatHeader";
 import { ChatContent } from "../components/chat/ChatContent";
 import { ChatFooter } from "../components/chat/ChatFooter";
+
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 export default function ChatPanel() {
   // ... (Giữ nguyên các store và state từ file gốc của bạn) ...
@@ -16,7 +19,11 @@ export default function ChatPanel() {
   const deleteMessageStore = useChatStore((s: any) => s.deleteMessage) as any;
   const editMessageStore = useChatStore((s: any) => s.editMessage) as any;
   const loading = useChatStore((s: any) => s.loading) as boolean;
-  const { userProfile } = useAuth();
+  const {
+    data: userProfile,
+    isLoading: isUserProfileLoading,
+    isError: isUserProfileError,
+  } = useCurrentUser();
 
   const [input, setInput] = useState("");
   const [isEditing, setIsEditing] = useState<string | null>(null);
@@ -26,7 +33,13 @@ export default function ChatPanel() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const activeId = selectedConv?._id || selectedConv?.id;
-  const currentUserId = userProfile?._id || userProfile?.id;
+  const currentUserId = userProfile?._id;
+
+  useEffect(() => {
+    if (isUserProfileError) {
+      toast.error("Failed to load user profile. Please try again later.");
+    }
+  }, [isUserProfileError]);
 
   useEffect(() => {
     if (activeId) fetchMessages(activeId);
@@ -53,9 +66,16 @@ export default function ChatPanel() {
     }
   };
 
+  if (loading || isUserProfileLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    );
+  }
   if (!selectedConv) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-white dark:bg-gray-900 ">
+      <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-card">
         <MessageSquare className="w-12 h-12 mb-4 text-gray-300" />
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
           Your Messages
@@ -66,7 +86,7 @@ export default function ChatPanel() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-background dark:bg-gray-900 relative shadow-inner overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-card relative shadow-inner overflow-hidden rounded-lg">
       <ChatHeader selectedConv={selectedConv} />
 
       <ChatContent

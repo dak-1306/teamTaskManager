@@ -125,25 +125,25 @@ function Task() {
             <Button
               variant="outline"
               size="sm"
-              icon={<Funnel className="w-4 h-4 mr-2" />}
               onClick={() => setOpenFilterModal(true)}
               aria-label="Open filters"
             >
+              <Funnel className="w-4 h-4 mr-1" />
               Filter
             </Button>
             <Button
               variant="default"
               size="sm"
-              icon={<FilePlus className="w-4 h-4 mr-2" />}
               onClick={() => setOpenAddTask(true)}
               aria-label="Add task"
             >
+              <FilePlus className="w-4 h-4 mr-1" />
               Add Task
             </Button>
           </div>
         </Motion.div>
       </Card>
-      
+
       {loading ? (
         renderSkeletonGrid()
       ) : tasks.tasks && tasks.tasks.length > 0 ? (

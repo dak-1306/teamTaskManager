@@ -21,7 +21,7 @@ type AuthCardProps = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   loading?: boolean;
   isSubmitting?: boolean;
-  error?: string;
+  error?: Error | null;
   footer?: ReactNode;
 };
 
@@ -64,7 +64,7 @@ function AuthCard({
               Quay về trang chủ
             </Link>
           </Button>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-red-500 text-sm">{error.message}</p>}
         </CardFooter>
       </form>
     </Card>

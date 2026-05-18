@@ -1,4 +1,7 @@
-import { useAuth } from "../context/AuthContext";
+import { useCurrentUser } from "../queries/useCurrentUser";
+import { useUploadAvatar } from "../mutations/useUploadAvatar";
+import { useDeleteAvatar } from "../mutations/useDeleteAvatar";
+import { useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -12,20 +15,23 @@ import { User, Mail, Pencil, Camera, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditProfile from "../components/EditProfile";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 import { Skeleton } from "../../../components/ui/skeleton";
 export default function ProfileInfo() {
-  const { userProfile, loading, uploadAvatarProvider, deleteAvatarProvider } =
-    useAuth() as any;
+  const { data: userProfile, isLoading, error } = useCurrentUser();
+  const { mutate: uploadAvatarProvider } = useUploadAvatar();
+  const { mutate: deleteAvatarProvider } = useDeleteAvatar();
 
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load user profile. Please try again later.");
+    }
+  }, [error]);
   const [openEditProfile, setOpenEditProfile] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [toast, setToast] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
 
   const handleChooseAvatar = () => {
     fileInputRef.current?.click();
@@ -39,17 +45,19 @@ export default function ProfileInfo() {
       setIsProcessing(true);
       setUploadProgress(0);
 
-      await uploadAvatarProvider(userProfile._id, file, (percent: number) => {
-        setUploadProgress(percent);
+      await uploadAvatarProvider({
+        userId: userProfile?._id || "",
+        file,
+        onProgress: (progress) => setUploadProgress(progress),
       });
 
-      setToast({ type: "success", message: "Avatar uploaded" });
-      setTimeout(() => setToast(null), 3000);
+      toast.success("Avatar uploaded");
+      setTimeout(() => toast.dismiss(), 3000);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error("Avatar upload failed:", msg);
-      setToast({ type: "error", message: msg || "Upload failed" });
-      setTimeout(() => setToast(null), 4000);
+      toast.error(msg || "Upload failed");
+      setTimeout(() => toast.dismiss(), 4000);
     } finally {
       setIsProcessing(false);
       setUploadProgress(0);
@@ -61,17 +69,18 @@ export default function ProfileInfo() {
 
     try {
       setIsProcessing(true);
-      await deleteAvatarProvider(userProfile._id);
-      setToast({ type: "success", message: "Avatar deleted" });
-      setTimeout(() => setToast(null), 3000);
+      await deleteAvatarProvider(userProfile?._id || "");
+      toast.success("Avatar deleted");
+      setTimeout(() => toast.dismiss(), 3000);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      setToast({ type: "error", message: msg || "Delete failed" });
-      setTimeout(() => setToast(null), 4000);
+      toast.error(msg || "Delete failed");
+      setTimeout(() => toast.dismiss(), 4000);
     } finally {
       setIsProcessing(false);
     }
   };
+
   const renderSkeleton = () => (
     <Card className="space-y-4 p-6">
       <CardHeader>
@@ -88,9 +97,10 @@ export default function ProfileInfo() {
     </Card>
   );
 
-  if (loading || !userProfile) {
+  if (isLoading) {
     return renderSkeleton();
   }
+  console.log("User profile data:", userProfile);
   return (
     <>
       <Card className="space-y-4 p-6">
@@ -124,9 +134,9 @@ export default function ProfileInfo() {
           {/* AVATAR */}
           <div className="relative group w-40 h-40">
             <div className="w-40 h-40 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center">
-              {userProfile.avatar ? (
+              {userProfile?.avatar ? (
                 <img
-                  src={userProfile.avatar}
+                  src={userProfile.avatar} // Cache buster
                   alt="avatar"
                   className={`w-full h-full object-cover transition-opacity ${
                     isProcessing ? "opacity-40" : "opacity-100"
@@ -147,7 +157,7 @@ export default function ProfileInfo() {
             </button>
 
             {/* Delete avatar */}
-            {userProfile.avatar && !isProcessing && (
+            {userProfile?.avatar && !isProcessing && (
               <button
                 className="absolute bottom-0 left-0 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center shadow"
                 onClick={handleDeleteAvatar}
@@ -174,30 +184,18 @@ export default function ProfileInfo() {
           {/* USER INFO */}
           <div className="flex-1 space-y-4">
             <p>
-              <User className="inline mr-2" />{" "}
-              {userProfile.username || "No username"}
+              <User className="inline mr-2" /> {userProfile?.username}
             </p>
             <p>
-              <Mail className="inline mr-2" /> {userProfile.email || "No email"}
+              <Mail className="inline mr-2" /> {userProfile?.email}
             </p>
           </div>
         </CardContent>
       </Card>
-      {/* TOAST */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-50">
-          <div
-            className={`px-4 py-2 rounded-lg shadow-lg text-sm text-white ${
-              toast.type === "success" ? "bg-green-500" : "bg-red-500"
-            }`}
-          >
-            {toast.message}
-          </div>
-        </div>
-      )}
+
       {openEditProfile && (
         <EditProfile
-          user={userProfile}
+          user={userProfile ? userProfile : null}
           isOpen={openEditProfile}
           onClose={() => setOpenEditProfile(false)}
         />

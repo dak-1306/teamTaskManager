@@ -9,6 +9,7 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
 import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import useTaskStore from "../stores/taskStore";
 
 function EditTask({
@@ -78,26 +79,34 @@ function EditTask({
     onClose();
   };
 
-  const taskStatus = [{
-    value: "todo",
-    label: "To Do",
-  }, {
-    value: "doing",
-    label: "Doing",
-  }, {
-    value: "done",
-    label: "Done",
-  }];
-  const taskPriority = [{
-    value: "low",
-    label: "Low",
-  }, {
-    value: "medium",
-    label: "Medium",
-  }, {
-    value: "high",
-    label: "High",
-  }];
+  const taskStatus = [
+    {
+      value: "todo",
+      label: "To Do",
+    },
+    {
+      value: "doing",
+      label: "Doing",
+    },
+    {
+      value: "done",
+      label: "Done",
+    },
+  ];
+  const taskPriority = [
+    {
+      value: "low",
+      label: "Low",
+    },
+    {
+      value: "medium",
+      label: "Medium",
+    },
+    {
+      value: "high",
+      label: "High",
+    },
+  ];
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleCancel()}>
@@ -138,27 +147,28 @@ function EditTask({
           />
 
           <p className="font-semibold">Assigned Users</p>
-          {assignedEmailEdit.length > 0
-            ? assignedEmailEdit.map((email) => (
-                <div
-                  key={email}
-                  className="flex items-center justify-between bg-gray-50 p-2 rounded"
-                >
-                  <div className="text-sm">{email}</div>
-                  <Button
-                    variant="destructive"
-                    onClick={() =>
-                      setAssignedEmailEdit(
-                        assignedEmailEdit.filter((item) => item !== email),
-                      )
-                    }
+          <div className="mb-2 flex flex-col gap-2">
+            {assignedEmailEdit.length > 0
+              ? assignedEmailEdit.map((email) => (
+                  <div
+                    key={email}
+                    className="flex items-center justify-between bg-muted p-2 rounded-md border "
                   >
-                    Remove
-                  </Button>
-                </div>
-              ))
-            : null}
-
+                    <div className="text-sm">{email}</div>
+                    <Button
+                      variant="destructive"
+                      onClick={() =>
+                        setAssignedEmailEdit(
+                          assignedEmailEdit.filter((item) => item !== email),
+                        )
+                      }
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))
+              : null}
+          </div>
           {errorField === "noChanges" && (
             <p className="text-red-500 text-sm">No changes to update.</p>
           )}

@@ -49,13 +49,13 @@ function CreateProject({ isOpen, onClose }: Props) {
       <DialogContent>
         <DialogTitle>Create New Project</DialogTitle>
         <form
-          className="w-full max-w-sm dark:bg-gray-700"
+          className="w-full max-w-sm mx-auto mt-4 space-y-6"
           onSubmit={handleCreateProject}
         >
           <div className="mb-4">
             <label
               htmlFor="projectName"
-              className="block text-sm font-medium text-gray-700 dark:text-white mb-1"
+              className="block text-sm font-medium text-secondary-foreground mb-1"
             >
               Project Name
             </label>
@@ -73,7 +73,7 @@ function CreateProject({ isOpen, onClose }: Props) {
           <div className="mb-4">
             <label
               htmlFor="projectDescription"
-              className="block text-sm font-medium text-gray-700 dark:text-white mb-1"
+              className="block text-sm font-medium text-secondary-foreground mb-1"
             >
               Project Description
             </label>

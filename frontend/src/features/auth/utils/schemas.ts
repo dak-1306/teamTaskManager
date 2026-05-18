@@ -14,7 +14,7 @@ export const registerSchema = z.object({
 
 export const updateProfileSchema = z.object({
   username: z.string().min(3, "Tên người dùng tối thiểu 3 ký tự").optional(),
-  email: z.string().email("Email không hợp lệ").optional(),
+  email: z.email("Email không hợp lệ").optional(),
 });
 
 export const changePasswordSchema = z

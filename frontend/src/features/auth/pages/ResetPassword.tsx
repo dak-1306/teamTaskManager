@@ -8,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordSchema, ResetPasswordData } from "../utils/schemal";
+import { resetPasswordSchema, ResetPasswordData } from "../utils/schemas";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

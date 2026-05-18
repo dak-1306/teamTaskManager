@@ -69,7 +69,7 @@ export function Conversation({ projectId, taskId, variant }: any) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 bg-background rounded-lg">
+    <div className="flex flex-col h-full p-4 bg-card rounded-lg">
       <ConversationHeader
         variant={variant}
         onOpenCreate={() => setModals((p) => ({ ...p, create: true }))} // Hoặc setModals

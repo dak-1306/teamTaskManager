@@ -234,7 +234,7 @@ function ProjectDetail() {
         </div>
         <Tabs
           defaultValue="task"
-          className="w-full h-[600px] col-span-12 lg:col-span-8"
+          className="w-full h-[600px] col-span-12 lg:col-span-8 mb-4"
         >
           <TabsList>
             <TabsTrigger value="task">Task</TabsTrigger>

@@ -7,7 +7,7 @@ interface ChatHeaderProps {
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedConv }) => {
   return (
-    <div className="px-5 py-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md">
+    <div className="px-5 py-4 flex items-center justify-between border-b backdrop-blur-md">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold text-lg shadow-md shrink-0">
           {selectedConv?.name?.charAt(0)?.toUpperCase() || "C"}

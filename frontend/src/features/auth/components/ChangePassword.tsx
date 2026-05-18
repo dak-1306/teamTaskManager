@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePasswordSchema, ChangePasswordData } from "../utils/schemal";
+import { changePasswordSchema, ChangePasswordData } from "../utils/schemas";
 
-import { useAuth } from "../context/AuthContext";
+import { useChangePassword } from "../mutations/useChangePassword";
 
 import {
   Card,
@@ -17,12 +18,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+import { toast } from "sonner";
+
 type ChangePasswordProps = {
-  userId: string | null;
+  userId: string;
 };
 
 function ChangePassword({ userId }: ChangePasswordProps) {
-  const { changePasswordUser, loading, error } = useAuth() as any;
+  const { mutate: changePasswordUser, isPending, error } = useChangePassword();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        error.message || "Failed to change password. Please try again.",
+      );
+    }
+  }, [error]);
 
   const {
     register,
@@ -33,14 +44,15 @@ function ChangePassword({ userId }: ChangePasswordProps) {
   });
 
   const onSubmit = async (data: ChangePasswordData) => {
-    try {
-      await changePasswordUser(userId, {
-        currentPassword: data.currentPassword,
-        newPassword: data.newPassword,
-      });
-    } catch (err) {
-      console.error("Change password error:", err);
-    }
+    changePasswordUser(
+      ({ userId, ...data }),
+      {
+        onSuccess: () => {
+          toast.success("Password changed successfully");
+          setTimeout(() => toast.dismiss(), 3000);
+        },
+      },
+    );
   };
 
   return (
@@ -100,10 +112,8 @@ function ChangePassword({ userId }: ChangePasswordProps) {
 
         <CardFooter className="flex flex-col gap-2">
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {loading ? "Loading..." : "Change Password"}
+            Change Password
           </Button>
-
-          {error && <p className="text-red-500 text-sm">{error}</p>}
         </CardFooter>
       </form>
     </Card>

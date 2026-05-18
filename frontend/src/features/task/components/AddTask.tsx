@@ -84,7 +84,7 @@ function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
       label: "High",
     },
   ];
-  
+
   return (
     <Dialog
       open={isOpen}
@@ -96,7 +96,7 @@ function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
         <DialogTitle>Add New Task</DialogTitle>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary-foreground mb-1">
               Task Title
             </label>
             <Input
@@ -111,7 +111,7 @@ function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary-foreground mb-1">
               Description
             </label>
             <Input
@@ -126,7 +126,7 @@ function AddTask({ isOpen, onClose, projectId, memberOptions }: AddTaskProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary-foreground mb-1">
               Due Date
             </label>
             <Input

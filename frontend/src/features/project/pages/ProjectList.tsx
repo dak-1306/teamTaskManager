@@ -122,9 +122,9 @@ function ProjectList() {
             <Button
               variant="default"
               size="lg"
-              icon={<FolderPlus className="w-4 h-4 mr-2" />}
               onClick={() => setOpenCreateProject(true)}
             >
+              <FolderPlus className="w-4 h-4 mr-2" />
               Create Project
             </Button>
           </div>

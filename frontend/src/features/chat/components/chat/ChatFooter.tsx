@@ -24,7 +24,7 @@ export const ChatFooter: React.FC<ChatFooterProps> = ({
   disabled,
 }) => {
   return (
-    <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+    <div className="p-4 border-t border-card">
       {inputFile.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-2">
           {inputFile.map((file, idx) => (

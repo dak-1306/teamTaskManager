@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, RegisterFormData } from "../utils/schemal";
+import { registerSchema, RegisterFormData } from "../utils/schemas";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useRegister } from "../mutations/useRegister";
 
 import AuthCard from "../components/AuthCard";
 
@@ -15,7 +15,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 function Register() {
   const navigate = useNavigate();
-  const { registerContext, error, loading } = useAuth() as any;
+  const { mutate: registerContext, isPending, error } = useRegister();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,14 +28,12 @@ function Register() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    try {
-      const success = await registerContext(data);
-      if (success) {
+    registerContext(data, {
+      onSuccess: () => {
+        // Handle successful registration, e.g., show a success message or redirect to login
         navigate("/login");
-      }
-    } catch (err) {
-      console.error("Register error:", err);
-    }
+      },
+    });
   };
 
   return (
@@ -43,7 +41,7 @@ function Register() {
       title="Register"
       description="Create a new account"
       onSubmit={handleSubmit(onSubmit)}
-      loading={loading}
+      loading={isPending}
       isSubmitting={isSubmitting}
       error={error}
       action={

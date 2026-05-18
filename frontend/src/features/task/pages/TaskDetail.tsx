@@ -113,15 +113,14 @@ function TaskDetail() {
                 <Button
                   variant="default"
                   size="default"
-                  icon={<UserRoundPlus className="w-4 h-4 mr-2" />}
                   onClick={() => setOpenAddAssignees(true)}
                 >
+                  <UserRoundPlus className="w-4 h-4 mr-2" />
                   Add Assignees
                 </Button>
                 <Button
                   variant="default"
                   size="default"
-                  icon={<Pencil className="w-4 h-4 mr-2" />}
                   onClick={() => {
                     setTaskDetailForEdit(taskDetail);
                     setAssignedEmailEdit(
@@ -130,14 +129,15 @@ function TaskDetail() {
                     setOpenEditTask(true);
                   }}
                 >
+                  <Pencil className="w-4 h-4 mr-2" />
                   Edit Task
                 </Button>
                 <Button
                   variant="destructive"
                   size="default"
-                  icon={<Trash2 className="w-4 h-4 mr-2" />}
                   onClick={() => setOpenDeleteTask(true)}
                 >
+                  <Trash2 className="w-4 h-4 mr-2" />
                   Delete Task
                 </Button>
               </Motion.div>
@@ -209,7 +209,8 @@ function TaskDetail() {
                       size="sm"
                       onClick={() => setOpenAddAssignees(true)}
                     >
-                      Add
+                      <UserRoundPlus className="w-4 h-4 mr-1" />
+                      Add Assignees
                     </Button>
                   </div>
                   <ul className="space-y-2">

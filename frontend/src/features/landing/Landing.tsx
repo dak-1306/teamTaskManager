@@ -6,19 +6,19 @@ import HowItWorkSection from "./HowItWorkSection";
 import CTASection from "./CTASection";
 
 import { useEffect } from "react";
-import { useAuth } from "../auth/context/AuthContext";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 import logoWeb from "../../assets/icons/Logo-web.svg";
 import LandingBackground from "./LandingBackground";
 function Landing() {
-  const { isLogin, isServerDown } = useAuth();
+  const { accessToken, isServerDown } = useAuthStore();
   const navigate = useNavigate();
   useEffect(() => {
     // Chỉ chuyển hướng nếu server đã dậy và đã login thành công
-    if (isLogin && !isServerDown) {
+    if (accessToken && !isServerDown) {
       navigate("/dashboard");
     }
-  }, [isLogin, isServerDown, navigate]);
+  }, [accessToken, isServerDown, navigate]);
 
   return (
     <div className="flex flex-col min-h-screen text-foreground overflow-x-hidden">

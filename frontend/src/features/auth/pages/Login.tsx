@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginFormData } from "../utils/schemal";
+import { loginSchema, LoginFormData } from "../utils/schemas";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
+import { useLogin } from "@/features/auth/mutations";
 import AuthCard from "../components/AuthCard";
 
 import { Input } from "@/components/ui/input";
@@ -15,7 +14,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 function Login() {
   const navigate = useNavigate();
-  const { login, error, loading } = useAuth() as any;
+  const { mutate: login, isPending, error } = useLogin();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,12 +27,11 @@ function Login() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      await login(data);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Login error:", err);
-    }
+    login(data, {
+      onSuccess: () => {
+        navigate("/dashboard");
+      },
+    });
   };
 
   return (
@@ -41,7 +39,7 @@ function Login() {
       title="Login"
       description="Enter your email to access your account"
       onSubmit={handleSubmit(onSubmit)}
-      loading={loading}
+      loading={isPending}
       isSubmitting={isSubmitting}
       error={error}
       action={
