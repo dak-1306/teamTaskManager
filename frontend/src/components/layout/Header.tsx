@@ -2,7 +2,7 @@ import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
 import LogoWeb from "@/assets/icons/Logo-web.svg";
 import LogoColor from "@/assets/icons/Logo-color.svg";
-import { useTheme } from "@/context/ThemContext";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 function Header() {

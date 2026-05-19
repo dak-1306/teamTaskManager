@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./frontend/src/assets/images/dashboard.png" alt="Team Task Manager Logo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+  <img src="./frontend/src/assets/images/landing.webp" alt="Team Task Manager Logo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
   
   <h1>🚀 Team Task Manager</h1>
   <p><em>Hệ thống Quản lý Dự án & Công việc Toàn diện dành cho Đội nhóm</em></p>
@@ -23,26 +23,31 @@
 ## 📸 Giao diện Ứng dụng
 
 ### Trang Landing
-![Landing Page](./frontend/src/assets/images/landing.png)
+
+![Landing Page](./frontend/src/assets/images/dashboard.webp)
 
 ### Quản lý Dự án (Project)
-![Project Management](./frontend/src/assets/images/project.png)
+
+![Project Management](./frontend/src/assets/images/task.webp)
 
 ### Quản lý Công việc (Task)
-![Task Management](./frontend/src/assets/images/task.png)
+
+![Task Management](./frontend/src/assets/images/Chat.webp)
 
 ## 💻 Tech Stack
 
 ### Frontend
+
 - **Framework**: React 19, Vite
 - **Styling**: Tailwind CSS 4, Shadcn UI
-- **State Management**: Zustand
+- **State Management**: Zustand, tanStack Query
 - **Routing**: React Router DOM v7
 - **Data Fetching**: Axios
 - **Form Handling**: React Hook Form, Zod
 - **Animations & Charts**: Framer Motion, Recharts
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: MongoDB (Mongoose)
@@ -61,18 +66,21 @@ team-task-manager/
 ## 🚀 Hướng dẫn Cài đặt & Chạy Dự án
 
 ### Yêu cầu hệ thống
+
 - Node.js (phiên bản 18+)
 - MongoDB (Local hoặc MongoDB Atlas)
 
 ### Các bước cài đặt
 
 **1. Clone dự án**
+
 ```bash
 git clone <repo-url>
 cd team-task-manager
 ```
 
 **2. Cài đặt & Chạy Backend**
+
 ```bash
 cd backend
 npm install
@@ -80,6 +88,7 @@ npm run dev
 ```
 
 **3. Cài đặt & Chạy Frontend (Mở Terminal mới)**
+
 ```bash
 cd frontend
 npm install
@@ -87,4 +96,5 @@ npm run dev
 ```
 
 ## 👤 Tác giả
+
 - **Trần Hải Đăng**
